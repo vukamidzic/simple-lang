@@ -1,1 +1,1 @@
-# simple-lang-git
+# simple-lang
