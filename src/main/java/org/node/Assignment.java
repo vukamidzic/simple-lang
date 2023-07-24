@@ -84,7 +84,10 @@ public class Assignment extends Statement {
         if (children.size() != 0) {
             Statement nextNode = (Statement) children.get(0);
 
-            if (nextNode instanceof While) {
+            if (nextNode instanceof If) {
+                System.out.format("    br label %%if%d\n", ((If) nextNode).ifNum);
+            }
+            else if (nextNode instanceof While) {
                 System.out.format("    br label %%while%d\n", ((While) nextNode).whileNum);
             }
 

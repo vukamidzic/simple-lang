@@ -24,6 +24,7 @@ LPAR : '(';
 RPAR : ')';
 LCURL : '{';
 RCURL : '}';
+QMARK : '?';
 
 WS : [ \t\r] -> skip;
 NL : '\r\n' -> skip;
@@ -45,7 +46,13 @@ statement
     : assignment # ToAssignment
     | funcCall # ToFuncCall
     | whileStmt # ToWhile
+    | ifElseStmt # ToIfElse
     | block_of_stmts # ToBlock
+;
+
+ifElseStmt
+    : LPAR expr RPAR QMARK block_of_stmts # NonEmptyIf
+    | LPAR RPAR QMARK block_of_stmts # EmptyIf
 ;
 
 whileStmt

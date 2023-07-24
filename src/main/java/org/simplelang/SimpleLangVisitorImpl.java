@@ -45,6 +45,20 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
         return funcCallNode;
     }
 
+    @Override public Node visitNonEmptyIf(SimpleLangParser.NonEmptyIfContext ctx) {
+        If ifNode = new If(false);
+        ifNode.cond = (Expression) visit(ctx.expr());
+        ifNode.blockOfStmts = (Block) visit(ctx.block_of_stmts());
+        return ifNode;
+    }
+
+    @Override public Node visitEmptyIf(SimpleLangParser.EmptyIfContext ctx) {
+        If ifNode = new If(true);
+        ifNode.cond = new Bool(true);
+        ifNode.blockOfStmts = (Block) visit(ctx.block_of_stmts());
+        return ifNode;
+    }
+
     @Override
     public Node visitWhileStmt(SimpleLangParser.WhileStmtContext ctx) {
         While whileNode = new While();

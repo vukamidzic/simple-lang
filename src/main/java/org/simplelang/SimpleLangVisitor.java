@@ -61,12 +61,33 @@ public interface SimpleLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitToWhile(SimpleLangParser.ToWhileContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ToIfElse}
+	 * labeled alternative in {@link SimpleLangParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitToIfElse(SimpleLangParser.ToIfElseContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code ToBlock}
 	 * labeled alternative in {@link SimpleLangParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitToBlock(SimpleLangParser.ToBlockContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code NonEmptyIf}
+	 * labeled alternative in {@link SimpleLangParser#ifElseStmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNonEmptyIf(SimpleLangParser.NonEmptyIfContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code EmptyIf}
+	 * labeled alternative in {@link SimpleLangParser#ifElseStmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEmptyIf(SimpleLangParser.EmptyIfContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SimpleLangParser#whileStmt}.
 	 * @param ctx the parse tree
