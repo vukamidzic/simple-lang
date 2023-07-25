@@ -5,10 +5,16 @@ import org.error.Err;
 
 public class FuncCall extends Statement {
     static int funCallCounter = 1;
+    static int tmpCounter = 1;
+    public int tmpNum;
     public int funCallNum;
     public Expression outValue;
 
-    public FuncCall() {super(); funCallNum = funCallCounter++;}
+    public FuncCall() {
+        super();
+        funCallNum = funCallCounter++;
+        tmpNum = tmpCounter++;
+    }
 
     @Override
     public Err codegen(Ast tree) {
@@ -18,12 +24,14 @@ public class FuncCall extends Statement {
         if (outErr.errno != Err.Errno.OK) return outErr;
 
         if (outValue.exprTy == Expression.ExprTy.INT)
-            System.out.format("    call i32 (i8 *, ...)* @printf(i8* @s_i, i32 %%t%d)\n", outValue.tmpNum);
-        else if (outValue.exprTy == Expression.ExprTy.FLOAT)
-            System.out.format("    call i32 (i8 *, ...)* @printf(i8* @s_f, float %%t%d)\n", outValue.tmpNum);
+            System.out.format("    call i32 (i8 *, ...) @printf(i8* @s_i, i32 %%t%d)\n", outValue.tmpNum);
+        else if (outValue.exprTy == Expression.ExprTy.FLOAT) {
+            System.out.format("    %%tmp%d = fpext float %%t%d to double\n", tmpNum, outValue.tmpNum);
+            System.out.format("    call i32 (i8 *, ...) @printf(i8* @s_f, double %%tmp%d)\n", tmpNum);
+        }
         else {
             System.out.format("    %%tmp%d = zext i1 %%t%d to i32\n", funCallNum, outValue.tmpNum);
-            System.out.format("    call i32 (i8 *, ...)* @printf(i8* @s_i, i32 %%tmp%d)\n", funCallNum);
+            System.out.format("    call i32 (i8 *, ...) @printf(i8* @s_i, i32 %%tmp%d)\n", funCallNum);
         }
 
         if (children.size() != 0) {

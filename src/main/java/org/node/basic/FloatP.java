@@ -13,7 +13,8 @@ public class FloatP extends Expression {
         tmpNum = Expression.tmpCounter;
         Expression.tmpCounter++;
 
-        System.out.format("    %%t%d = fadd float %f, 0.0\n", tmpNum, numValue);
+        System.out.format("    %%t%d = fadd float %f, 0.0\n",
+                tmpNum, numValue);
 
         return new Err(Err.Errno.OK, -1, "");
     }
