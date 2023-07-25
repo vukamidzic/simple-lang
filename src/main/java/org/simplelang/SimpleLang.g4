@@ -29,7 +29,8 @@ QMARK : '?';
 WS : [ \t\r] -> skip;
 NL : '\r\n' -> skip;
 
-INT : [0-9]+;
+INT : '-'?[0-9]+;
+FLOAT : '-'? INT '.' INT;
 ID : ('_')?[a-zA-Z]+;
 
 program
@@ -104,6 +105,7 @@ mulOrDiv
 atom
     : bool # ToBool
     | INT # Integer
+    | FLOAT # Float
     | ID # Variable
     | LPAR compare RPAR # Parens
 ;

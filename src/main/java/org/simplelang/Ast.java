@@ -20,6 +20,7 @@ public class Ast {
     public Err generate() {
         System.out.println("target triple = \"x86_64-pc-windows-msvc19.29.30138\"\n");
         System.out.println("@s_i = constant [4 x i8] c\"%d\\0A\\00\"");
+        System.out.println("@s_f = constant [4 x i8] c\"%f\\0A\\00\"");
         System.out.println("declare i32 @printf(i8 *, ...)\n");
         System.out.println("define i32 @main() {");
         Err err = root.codegen(this);

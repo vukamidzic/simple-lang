@@ -159,6 +159,13 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
         return divNode;
     }
 
+    @Override public Node visitFloat(SimpleLangParser.FloatContext ctx) {
+        FloatP floatNode = new FloatP();
+        floatNode.lineno = ctx.getStart().getLine();
+        floatNode.numValue = Float.parseFloat(ctx.FLOAT().getText());
+        return floatNode;
+    }
+
     @Override
     public Node visitInteger(SimpleLangParser.IntegerContext ctx) {
         Int intNode = new Int();

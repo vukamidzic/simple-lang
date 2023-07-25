@@ -19,6 +19,8 @@ public class FuncCall extends Statement {
 
         if (outValue.exprTy == Expression.ExprTy.INT)
             System.out.format("    call i32 (i8 *, ...)* @printf(i8* @s_i, i32 %%t%d)\n", outValue.tmpNum);
+        else if (outValue.exprTy == Expression.ExprTy.FLOAT)
+            System.out.format("    call i32 (i8 *, ...)* @printf(i8* @s_f, float %%t%d)\n", outValue.tmpNum);
         else {
             System.out.format("    %%tmp%d = zext i1 %%t%d to i32\n", funCallNum, outValue.tmpNum);
             System.out.format("    call i32 (i8 *, ...)* @printf(i8* @s_i, i32 %%tmp%d)\n", funCallNum);

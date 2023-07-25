@@ -20,11 +20,11 @@ public class And extends Expression {
         Err rhsErr = rhs.codegen(tree);
         if (rhsErr.errno != Err.Errno.OK) return rhsErr;
 
-        if (lhs.exprTy == ExprTy.INT || rhs.exprTy == ExprTy.INT) {
-            return new Err(Err.Errno.ERR_TY, lineno, "Can't logically AND int and bool/int and int!!");
+        if (!(lhs.exprTy == ExprTy.BOOL && rhs.exprTy == ExprTy.BOOL)) {
+            return new Err(Err.Errno.ERR_TY, lineno, "Can't logically AND non-boolean types!!");
         }
 
-        System.out.format("    %%t%d = and i1 %%t%d, %%t%d", tmpNum, lhs.tmpNum, rhs.tmpNum);
+        System.out.format("    %%t%d = and i1 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
         return new Err(Err.Errno.OK, -1, "");
     }
 }

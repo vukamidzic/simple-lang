@@ -5,7 +5,7 @@ import org.error.Err;
 import org.node.Expression;
 
 public class Div extends Expression {
-    public Div() {super(); exprTy = ExprTy.INT;}
+    public Div() {super();}
 
     @Override
     public Err codegen(Ast tree) {
@@ -20,11 +20,28 @@ public class Div extends Expression {
         Err rhsErr = rhs.codegen(tree);
         if (rhsErr.errno != Err.Errno.OK) return rhsErr;
 
-        if (lhs.exprTy != ExprTy.INT || rhs.exprTy != ExprTy.INT) {
-            return new Err(Err.Errno.ERR_TY, lineno, "Can't do addition with int and bool!!");
+        if (lhs.exprTy == ExprTy.BOOL || rhs.exprTy == ExprTy.BOOL) {
+            return new Err(Err.Errno.ERR_TY, lineno, "Can't do addition with bool and other type!!");
         }
 
-        System.out.format("    %%t%d = udiv i32 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
+        if (lhs.exprTy == rhs.exprTy) {
+            switch (lhs.exprTy) {
+                case INT : {
+                    exprTy = ExprTy.INT;
+                    System.out.format("    %%t%d = udiv i32 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
+                    break;
+                }
+                case FLOAT : {
+                    exprTy = ExprTy.FLOAT;
+                    System.out.format("    %%t%d = fdiv float %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
+                    break;
+                }
+            }
+        }
+        else {
+            return new Err(Err.Errno.ERR_TY, lineno, "Can't do division with int and float!!");
+        }
+
         return new Err(Err.Errno.OK, -1, "");
     }
 }

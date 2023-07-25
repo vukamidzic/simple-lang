@@ -21,13 +21,24 @@ public class Eq extends Expression {
         if (rhsErr.errno != Err.Errno.OK) return rhsErr;
 
         if (lhs.exprTy != rhs.exprTy) {
-            return new Err(Err.Errno.ERR_TY, lineno, "Can't compare int and bool!!");
+            return new Err(Err.Errno.ERR_TY, lineno, "Can't compare different types!!");
         }
-
-        if (lhs.exprTy == ExprTy.INT)
-            System.out.format("    %%t%d = icmp eq i32 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
-        else
-            System.out.format("    %%t%d = icmp eq i1 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
+        else {
+            switch (lhs.exprTy) {
+                case INT: {
+                    System.out.format("    %%t%d = icmp eq i32 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
+                    break;
+                }
+                case FLOAT: {
+                    System.out.format("    %%t%d = fcmp eq f32 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
+                    break;
+                }
+                case BOOL: {
+                    System.out.format("    %%t%d = icmp eq i1 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
+                    break;
+                }
+            }
+        }
 
         return new Err(Err.Errno.OK, -1, "");
     }

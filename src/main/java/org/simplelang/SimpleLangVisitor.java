@@ -235,6 +235,13 @@ public interface SimpleLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitInteger(SimpleLangParser.IntegerContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code Float}
+	 * labeled alternative in {@link SimpleLangParser#atom}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFloat(SimpleLangParser.FloatContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code Variable}
 	 * labeled alternative in {@link SimpleLangParser#atom}.
 	 * @param ctx the parse tree

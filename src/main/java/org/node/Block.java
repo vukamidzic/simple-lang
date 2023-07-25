@@ -24,4 +24,6 @@ public class Block extends Statement {
 
         return new Err(Err.Errno.OK, -1, "");
     }
+
+    public Node getFirstStmt() {return stmts;}
 }
