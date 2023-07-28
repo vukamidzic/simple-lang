@@ -110,7 +110,14 @@ public class SimpleLangBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAssign(SimpleLangParser.AssignContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAssignVar(SimpleLangParser.AssignVarContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitAssignConst(SimpleLangParser.AssignConstContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

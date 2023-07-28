@@ -6,6 +6,7 @@ TRUE : 'true';
 FALSE : 'false';
 
 EQ : ':=';
+DSEMIC : '::';
 PLUS : '+';
 MINUS : '-';
 MUL : '*';
@@ -65,7 +66,8 @@ block_of_stmts
 ;
 
 assignment
-    : ID EQ expr # Assign
+    : ID EQ expr # AssignVar
+    | ID DSEMIC expr # AssignConst
 ;
 
 funcCall

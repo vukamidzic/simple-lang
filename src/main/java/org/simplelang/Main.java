@@ -37,15 +37,14 @@ public class Main {
             for (int i = 1; i < programErr.lineno; i++) {
                 rd.readLine();
             }
-            /*System.err.format(
-                    "\n\\u001B[31merror in file %s, line %d: \\u001B[0m\n",
-                    args[0], programErr.lineno);*/
+
             AnsiConsole.systemInstall();
             System.err.println(Ansi.ansi()
                     .fg(Color.RED)
                     .a("\nerror in file " + args[0] + ", line " + programErr.lineno + ":")
                     .reset());
             AnsiConsole.systemUninstall();
+
             String errLine = rd.readLine();
             errLine = errLine.trim();
             System.err.format("%d: %s\n\n", programErr.lineno, errLine);

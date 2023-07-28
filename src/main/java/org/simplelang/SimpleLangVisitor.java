@@ -102,12 +102,19 @@ public interface SimpleLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBlock(SimpleLangParser.BlockContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code Assign}
+	 * Visit a parse tree produced by the {@code AssignVar}
 	 * labeled alternative in {@link SimpleLangParser#assignment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAssign(SimpleLangParser.AssignContext ctx);
+	T visitAssignVar(SimpleLangParser.AssignVarContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AssignConst}
+	 * labeled alternative in {@link SimpleLangParser#assignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignConst(SimpleLangParser.AssignConstContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code FunctionCall}
 	 * labeled alternative in {@link SimpleLangParser#funcCall}.

@@ -1,15 +1,16 @@
 package org.simplelang;
 
+import org.javatuples.Triplet;
 import org.node.Expression;
 import org.node.Node;
 import org.error.Err;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.javatuples.Pair;
 
 public class Ast {
-    public ArrayList<HashMap<String, Pair<Expression.ExprTy, Integer>>> symTable;
+    public enum Mut {VAR, CONST}
+    public ArrayList<HashMap<String, Triplet<Expression.ExprTy, Integer, Mut>>> symTable;
 
     public Ast() {
         symTable = new ArrayList<>();
@@ -41,9 +42,9 @@ public class Ast {
         symTable.remove(n-1);
     }
 
-    public void addVariable(String _varName, Expression.ExprTy _ty, int _tmp) {
+    public void addVariable(String _varName, Expression.ExprTy _ty, int _tmp, Mut _assignTy) {
         int n = symTable.size();
-        symTable.get(n-1).put(_varName, Pair.with(_ty, _tmp));
+        symTable.get(n-1).put(_varName, Triplet.with(_ty, _tmp, _assignTy));
     }
 
     public int findVariableScope(String _varName) {

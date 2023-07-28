@@ -28,9 +28,16 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
         return statNode;
     }
 
-    @Override
-    public Node visitAssign(SimpleLangParser.AssignContext ctx) {
-        Assignment assignNode = new Assignment();
+    @Override public Node visitAssignVar(SimpleLangParser.AssignVarContext ctx) {
+        Assignment assignNode = new Assignment(Ast.Mut.VAR);
+        assignNode.lineno = ctx.getStart().getLine();
+        assignNode.varName = ctx.ID().getText();
+        assignNode.exprValue = (Expression)visit(ctx.expr());
+        return assignNode;
+    }
+
+    @Override public Node visitAssignConst(SimpleLangParser.AssignConstContext ctx) {
+        Assignment assignNode = new Assignment(Ast.Mut.CONST);
         assignNode.lineno = ctx.getStart().getLine();
         assignNode.varName = ctx.ID().getText();
         assignNode.exprValue = (Expression)visit(ctx.expr());

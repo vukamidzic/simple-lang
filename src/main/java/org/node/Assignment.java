@@ -1,17 +1,23 @@
 package org.node;
 
+import org.antlr.v4.runtime.misc.Triple;
 import org.simplelang.Ast;
 import org.error.Err;
-import org.javatuples.Pair;
+import org.javatuples.Triplet;
 
 import java.util.HashMap;
 
 public class Assignment extends Statement {
     static int assignCounter = 1;
+    public Ast.Mut assignTy;
     public int assignNum;
     public String varName;
     public Expression exprValue;
-    public Assignment() {super(); assignNum = assignCounter++;}
+    public Assignment(Ast.Mut _assignTy) {
+        super();
+        assignNum = assignCounter++;
+        assignTy = _assignTy;
+    }
 
     @Override
     public Err codegen(Ast tree) {
@@ -25,7 +31,7 @@ public class Assignment extends Statement {
         if (scopeIndex == -1) {
             switch (exprValue.exprTy) {
                 case INT : {
-                    tree.addVariable(varName, Expression.ExprTy.INT, assignNum);
+                    tree.addVariable(varName, Expression.ExprTy.INT, assignNum, assignTy);
                     System.out.format("    %%%s.%d = alloca i32\n", varName, assignNum);
                     System.out.format(
                             "    store i32 %%t%d, i32* %%%s.%d\n",
@@ -33,7 +39,7 @@ public class Assignment extends Statement {
                     break;
                 }
                 case FLOAT : {
-                    tree.addVariable(varName, Expression.ExprTy.FLOAT, assignNum);
+                    tree.addVariable(varName, Expression.ExprTy.FLOAT, assignNum, assignTy);
                     System.out.format("    %%%s.%d = alloca float\n", varName, assignNum);
                     System.out.format(
                             "    store float %%t%d, float* %%%s.%d\n",
@@ -41,7 +47,7 @@ public class Assignment extends Statement {
                     break;
                 }
                 case BOOL : {
-                    tree.addVariable(varName, Expression.ExprTy.BOOL, assignNum);
+                    tree.addVariable(varName, Expression.ExprTy.BOOL, assignNum, assignTy);
                     System.out.format("    %%%s.%d = alloca i1\n", varName, assignNum);
                     System.out.format(
                             "    store i1 %%t%d, i1* %%%s.%d\n",
@@ -51,6 +57,9 @@ public class Assignment extends Statement {
             }
         }
         else {
+            if (tree.symTable.get(scopeIndex).get(varName).getValue2() == Ast.Mut.CONST)
+                return new Err(Err.Errno.ERR_CONST, lineno, "Can't assign value to constant!!!");
+
             String register = String.format("%%%s.%d",
                     varName, tree.symTable.get(scopeIndex).get(varName).getValue1());
             Expression.ExprTy varTy = tree.symTable.get(scopeIndex).get(varName).getValue0();
@@ -63,7 +72,7 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        Pair<Expression.ExprTy, Integer> newPair = new Pair<>(Expression.ExprTy.INT, assignNum);
+                        Triplet<Expression.ExprTy, Integer, Ast.Mut> newPair = new Triplet<>(Expression.ExprTy.INT, assignNum, assignTy);
                         int n = tree.symTable.size();
                         for (int i = scopeIndex; i < n; i++) {
                             tree.symTable.get(i).put(varName, newPair);
@@ -82,7 +91,7 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        Pair<Expression.ExprTy, Integer> newPair = new Pair<>(Expression.ExprTy.FLOAT, assignNum);
+                        Triplet<Expression.ExprTy, Integer, Ast.Mut> newPair = new Triplet<>(Expression.ExprTy.FLOAT, assignNum, assignTy);
                         int n = tree.symTable.size();
                         for (int i = scopeIndex; i < n; i++) {
                             tree.symTable.get(i).put(varName, newPair);
@@ -101,7 +110,7 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        Pair<Expression.ExprTy, Integer> newPair = new Pair<>(Expression.ExprTy.BOOL, assignNum);
+                        Triplet<Expression.ExprTy, Integer, Ast.Mut> newPair = new Triplet<>(Expression.ExprTy.BOOL, assignNum, assignTy);
                         int n = tree.symTable.size();
                         for (int i = scopeIndex; i < n; i++) {
                             tree.symTable.get(i).put(varName, newPair);
