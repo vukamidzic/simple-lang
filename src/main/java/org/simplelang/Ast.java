@@ -9,17 +9,38 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Ast {
+    public enum OSVersion {WINDOWS, LINUX}
+    public OSVersion ver;
     public enum Mut {VAR, CONST}
     public ArrayList<HashMap<String, Triplet<Expression.ExprTy, Integer, Mut>>> symTable;
 
     public Ast() {
         symTable = new ArrayList<>();
+        switch (System.getProperty("os.name")) {
+            case "Windows 10" : {
+                ver = OSVersion.WINDOWS;
+                break;
+            }
+            case "Linux" : {
+                ver = OSVersion.LINUX;
+                break;
+            }
+        }
     }
 
     public Node root;
 
     public Err generate() {
-        System.out.println("target triple = \"x86_64-pc-windows-msvc19.29.30138\"\n");
+        switch (ver) {
+            case WINDOWS : {
+                System.out.println("target triple = \"x86_64-pc-windows-msvc19.29.30138\"\n");
+                break;
+            }
+            case LINUX : {
+                System.out.println("target triple = \"x86_64-pc-linux-gnu\"\n");
+                break;
+            }
+        }
         System.out.println("@s_i = constant [4 x i8] c\"%d\\0A\\00\"");
         System.out.println("@s_f = constant [4 x i8] c\"%f\\0A\\00\"");
         System.out.println("declare i32 @printf(i8 *, ...)\n");

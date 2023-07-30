@@ -27,8 +27,8 @@ LCURL : '{';
 RCURL : '}';
 QMARK : '?';
 
-WS : [ \t\r] -> skip;
-NL : '\r\n' -> skip;
+WS : ([ \t\r] | [ \t]) -> skip;
+NL : ('\r\n' | '\n') -> skip;
 
 INT : '-'?[0-9]+;
 FLOAT : '-'? INT '.' INT;

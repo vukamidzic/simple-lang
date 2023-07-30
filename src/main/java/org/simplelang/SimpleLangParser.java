@@ -40,7 +40,7 @@ public class SimpleLangParser extends Parser {
 		return new String[] {
 			null, "'while'", "'true'", "'false'", "':='", "'::'", "'+'", "'-'", "'*'", 
 			"'/'", "'<'", "'>'", "'='", "'/='", "'and'", "'or'", "'not'", "'('", 
-			"')'", "'{'", "'}'", "'?'", null, "'\\r\\n'"
+			"')'", "'{'", "'}'", "'?'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();

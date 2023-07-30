@@ -62,7 +62,6 @@ public class Main {
             errLine = errLine.trim();
             System.err.format("%d: %s\n\n", programErr.lineno, errLine);
             System.err.println(programErr.errMsg);
-
         }
 
     }

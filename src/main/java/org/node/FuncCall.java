@@ -23,15 +23,48 @@ public class FuncCall extends Statement {
         Err outErr = outValue.codegen(tree);
         if (outErr.errno != Err.Errno.OK) return outErr;
 
-        if (outValue.exprTy == Expression.ExprTy.INT)
-            System.out.format("    call i32 (i8 *, ...) @printf(i8* @s_i, i32 %%t%d)\n", outValue.tmpNum);
+        if (outValue.exprTy == Expression.ExprTy.INT) {
+            switch (tree.ver) {
+                case WINDOWS : {
+                    System.out.format("    call i32 (i8 *, ...) @printf(i8* @s_i, i32 %%t%d)\n", outValue.tmpNum);
+                    break;
+                }
+                case LINUX : {
+                    System.out.format("call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @s_i, i32 0, i32 0), i32 %%t%d)",
+                            outValue.tmpNum);
+                    break;
+                }
+            }
+
+        }
         else if (outValue.exprTy == Expression.ExprTy.FLOAT) {
             System.out.format("    %%tmp%d = fpext float %%t%d to double\n", tmpNum, outValue.tmpNum);
-            System.out.format("    call i32 (i8 *, ...) @printf(i8* @s_f, double %%tmp%d)\n", tmpNum);
+            switch (tree.ver) {
+                case WINDOWS : {
+                    System.out.format("    call i32 (i8 *, ...) @printf(i8* @s_f, double %%tmp%d)\n", tmpNum);
+                    break;
+                }
+                case LINUX : {
+                    System.out.format("call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @s_f, i32 0, i32 0), double %%tmp%d)",
+                            tmpNum);
+                    break;
+                }
+            }
         }
         else {
             System.out.format("    %%tmp%d = zext i1 %%t%d to i32\n", funCallNum, outValue.tmpNum);
-            System.out.format("    call i32 (i8 *, ...) @printf(i8* @s_i, i32 %%tmp%d)\n", funCallNum);
+            switch (tree.ver) {
+                case WINDOWS : {
+                    System.out.format("    call i32 (i8 *, ...) @printf(i8* @s_i, i32 %%tmp%d)\n", funCallNum);
+                    break;
+                }
+                case LINUX : {
+                    System.out.format("call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @s_i, i32 0, i32 0), i32 %%tmp%d)",
+                            funCallNum);
+                    break;
+                }
+            }
+
         }
 
         if (children.size() != 0) {

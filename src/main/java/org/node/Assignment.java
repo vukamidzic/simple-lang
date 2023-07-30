@@ -1,11 +1,8 @@
 package org.node;
 
-import org.antlr.v4.runtime.misc.Triple;
 import org.simplelang.Ast;
 import org.error.Err;
 import org.javatuples.Triplet;
-
-import java.util.HashMap;
 
 public class Assignment extends Statement {
     static int assignCounter = 1;
