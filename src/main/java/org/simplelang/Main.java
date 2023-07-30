@@ -47,7 +47,7 @@ public class Main {
                     break;
                 }
                 case "Linux" : {
-                    System.err.format("\\e[38;5;196m error in file %s, line %d:\n",
+                    System.err.format("\033[31merror in file %s, line %d:\n \033[0m",
                             args[0], programErr.lineno);
                     break;
                 }

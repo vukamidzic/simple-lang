@@ -30,7 +30,7 @@ public class FuncCall extends Statement {
                     break;
                 }
                 case LINUX : {
-                    System.out.format("call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @s_i, i32 0, i32 0), i32 %%t%d)",
+                    System.out.format("call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @s_i, i32 0, i32 0), i32 %%t%d)",
                             outValue.tmpNum);
                     break;
                 }
@@ -45,7 +45,7 @@ public class FuncCall extends Statement {
                     break;
                 }
                 case LINUX : {
-                    System.out.format("call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @s_f, i32 0, i32 0), double %%tmp%d)",
+                    System.out.format("call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @s_f, i32 0, i32 0), double %%tmp%d)",
                             tmpNum);
                     break;
                 }
@@ -59,7 +59,7 @@ public class FuncCall extends Statement {
                     break;
                 }
                 case LINUX : {
-                    System.out.format("call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @s_i, i32 0, i32 0), i32 %%tmp%d)",
+                    System.out.format("call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @s_i, i32 0, i32 0), i32 %%tmp%d)",
                             funCallNum);
                     break;
                 }
