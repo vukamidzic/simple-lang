@@ -72,10 +72,10 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        Triplet<Expression.ExprTy, Integer, Ast.Mut> newPair = new Triplet<>(Expression.ExprTy.INT, assignNum, assignTy);
+                        Triplet<Expression.ExprTy, Integer, Ast.Mut> newTri = new Triplet<>(Expression.ExprTy.INT, assignNum, assignTy);
                         int n = tree.symTable.size();
                         for (int i = scopeIndex; i < n; i++) {
-                            tree.symTable.get(i).put(varName, newPair);
+                            tree.symTable.get(i).put(varName, newTri);
                         }
                         System.out.format("    %%%s.%d = alloca i32\n", varName, assignNum);
                         System.out.format(
@@ -110,10 +110,10 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        Triplet<Expression.ExprTy, Integer, Ast.Mut> newPair = new Triplet<>(Expression.ExprTy.BOOL, assignNum, assignTy);
+                        Triplet<Expression.ExprTy, Integer, Ast.Mut> newTri = new Triplet<>(Expression.ExprTy.BOOL, assignNum, assignTy);
                         int n = tree.symTable.size();
                         for (int i = scopeIndex; i < n; i++) {
-                            tree.symTable.get(i).put(varName, newPair);
+                            tree.symTable.get(i).put(varName, newTri);
                         }
                         System.out.format("    %%%s.%d = alloca i1\n", varName, assignNum);
                         System.out.format(

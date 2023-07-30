@@ -30,25 +30,40 @@ public class Main {
         tree.addScope(); //generating a global scope
 
         Err programErr = tree.generate();
+        //System.getProperties().list(System.out);
+        // Windows 10 / Linux
         if (programErr.errno == Err.Errno.OK) {
             System.err.println("Success!!");
-        } else {
+        }
+        else {
+            switch (System.getProperty("os.name")) {
+                case "Windows 10" : {
+                    AnsiConsole.systemInstall();
+                    System.err.println(Ansi.ansi()
+                            .fg(Color.RED)
+                            .a("\nerror in file " + args[0] + ", line " + programErr.lineno + ":")
+                            .reset());
+                    AnsiConsole.systemUninstall();
+                    break;
+                }
+                case "Linux" : {
+                    System.err.format("\\e[38;5;196m error in file %s, line %d:\n",
+                            args[0], programErr.lineno);
+                    break;
+                }
+                default : {}
+            }
+
             BufferedReader rd = new BufferedReader(new FileReader(Paths.get(args[0]).toFile()));
             for (int i = 1; i < programErr.lineno; i++) {
                 rd.readLine();
             }
-
-            AnsiConsole.systemInstall();
-            System.err.println(Ansi.ansi()
-                    .fg(Color.RED)
-                    .a("\nerror in file " + args[0] + ", line " + programErr.lineno + ":")
-                    .reset());
-            AnsiConsole.systemUninstall();
-
             String errLine = rd.readLine();
             errLine = errLine.trim();
             System.err.format("%d: %s\n\n", programErr.lineno, errLine);
             System.err.println(programErr.errMsg);
+
         }
+
     }
 }
