@@ -3,68 +3,67 @@ package org.node;
 import org.simplelang.Ast;
 import org.error.Err;
 
-public class FuncCall extends Statement {
-    static int funCallCounter = 1;
-    static int tmpCounter = 1;
-    public int tmpNum;
-    public int funCallNum;
-    public Expression outValue;
+import java.util.ArrayList;
 
-    public FuncCall() {
+public class FuncCall extends Statement {
+    public String funcName;
+    public ArrayList<Expression> args;
+
+    public FuncCall(String _funcName) {
         super();
-        funCallNum = funCallCounter++;
-        tmpNum = tmpCounter++;
+        funcName = _funcName;
+        args = new ArrayList<>();
     }
 
     @Override
     public Err codegen(Ast tree) {
-        System.err.format("(line %d)Node: FuncCall node, depth: %d\n", lineno, tree.symTable.size());
+        System.err.format("(line %d)Node: FuncCall node, depth: %d, num_args: %d\n",
+                lineno, tree.symTable.size(), args.size());
         System.err.println(tree.symTable);
-        Err outErr = outValue.codegen(tree);
-        if (outErr.errno != Err.Errno.OK) return outErr;
-
-        if (outValue.exprTy == Expression.ExprTy.INT) {
-            switch (tree.ver) {
-                case WINDOWS : {
-                    System.out.format("    call i32 (i8 *, ...) @printf(i8* @s_i, i32 %%t%d)\n", outValue.tmpNum);
-                    break;
-                }
-                case LINUX : {
-                    System.out.format("call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @s_i, i32 0, i32 0), i32 %%t%d)",
-                            outValue.tmpNum);
-                    break;
-                }
-            }
-
+        
+        for (Expression e : this.args) {
+            Err argErr = e.codegen(tree);
+            if (argErr.errno != Err.Errno.OK) return argErr;
         }
-        else if (outValue.exprTy == Expression.ExprTy.FLOAT) {
-            System.out.format("    %%tmp%d = fpext float %%t%d to double\n", tmpNum, outValue.tmpNum);
-            switch (tree.ver) {
-                case WINDOWS : {
-                    System.out.format("    call i32 (i8 *, ...) @printf(i8* @s_f, double %%tmp%d)\n", tmpNum);
-                    break;
-                }
-                case LINUX : {
-                    System.out.format("call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @s_f, i32 0, i32 0), double %%tmp%d)",
-                            tmpNum);
-                    break;
-                }
-            }
+
+        if (funcName.contains("print")) {
+            System.out.format("    call void @%s(", this.funcName);
         }
         else {
-            System.out.format("    %%tmp%d = zext i1 %%t%d to i32\n", funCallNum, outValue.tmpNum);
-            switch (tree.ver) {
-                case WINDOWS : {
-                    System.out.format("    call i32 (i8 *, ...) @printf(i8* @s_i, i32 %%tmp%d)\n", funCallNum);
+            System.out.format("    call i32 @%s(", this.funcName);
+        }
+
+        for (int i = 0; i < this.args.size() - 1; ++i) {
+            Expression e = (Expression) this.args.get(i);
+            switch (e.exprTy) {
+                case INT : {
+                    System.out.format("i32 %%t%d,", e.tmpNum);
                     break;
                 }
-                case LINUX : {
-                    System.out.format("call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @s_i, i32 0, i32 0), i32 %%tmp%d)",
-                            funCallNum);
+                case FLOAT : {
+                    System.out.format("float %%t%d,", e.tmpNum);
+                    break;
+                }
+                case BOOL : {
+                    System.out.format("i1 %%t%d,", e.tmpNum);
                     break;
                 }
             }
-
+        }
+        Expression e = (Expression) this.args.get(this.args.size()-1);
+        switch (e.exprTy) {
+            case INT : {
+                System.out.format("i32 %%t%d)\n", e.tmpNum);
+                break;
+            }
+            case FLOAT : {
+                System.out.format("float %%t%d)\n", e.tmpNum);
+                break;
+            }
+            case BOOL : {
+                System.out.format("i1 %%t%d)\n", e.tmpNum);
+                break;
+            }
         }
 
         if (children.size() != 0) {

@@ -8,6 +8,12 @@ import org.error.Err;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.IOException;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 public class Ast {
     public enum OSVersion {WINDOWS, LINUX}
     public OSVersion ver;
@@ -41,9 +47,8 @@ public class Ast {
                 break;
             }
         }
-        System.out.println("@s_i = constant [4 x i8] c\"%d\\0A\\00\"");
-        System.out.println("@s_f = constant [4 x i8] c\"%f\\0A\\00\"");
-        System.out.println("declare i32 @printf(i8 *, ...)\n");
+        
+        getStdFuncs();
         System.out.println("define i32 @main() {");
         Err err = root.codegen(this);
         System.out.println("    ret i32 0");
@@ -74,5 +79,22 @@ public class Ast {
             if (symTable.get(i).containsKey(_varName)) return i;
 
         return -1;
+    }
+    
+    private void getStdFuncs() {
+        try {
+            String str = Files.readString(Paths.get("lib.ll"));
+            
+            Pattern pattern = Pattern.compile("(i32|void) @[a-zA-Z]+\\(((i32|float|i1).*\\%[0-9]+)?\\)");
+            Matcher matcher = pattern.matcher(str);
+            
+            while (matcher.find()) {
+                String foundStr = matcher.group();
+                System.out.println("declare " + foundStr);
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

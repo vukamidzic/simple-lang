@@ -26,6 +26,7 @@ RPAR : ')';
 LCURL : '{';
 RCURL : '}';
 QMARK : '?';
+COMMA : ',';
 
 WS : ([ \t\r] | [ \t]) -> skip;
 NL : ('\r\n' | '\n') -> skip;
@@ -71,7 +72,7 @@ assignment
 ;
 
 funcCall
-    : ID LPAR expr RPAR # FunctionCall
+    : ID LPAR expr (COMMA expr)* RPAR # FunctionCall
 ;
 
 expr
