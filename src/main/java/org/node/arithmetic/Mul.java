@@ -32,7 +32,7 @@ public class Mul extends Expression {
                 }
                 case FLOAT : {
                     exprTy = ExprTy.FLOAT;
-                    System.out.format("    %%t%d = fmul float %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
+                    System.out.format("    %%t%d = fmul double %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
                     break;
                 }
             }

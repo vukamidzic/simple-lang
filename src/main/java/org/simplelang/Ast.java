@@ -85,7 +85,7 @@ public class Ast {
         try {
             String str = Files.readString(Paths.get("lib.ll"));
             
-            Pattern pattern = Pattern.compile("(i32|void) @[a-zA-Z]+\\(((i32|float|i1).*\\%[0-9]+)?\\)");
+            Pattern pattern = Pattern.compile("(i32|void) @[a-zA-Z]+\\(((i32|double|i1).*\\%[0-9]+)?\\)");
             Matcher matcher = pattern.matcher(str);
             
             while (matcher.find()) {

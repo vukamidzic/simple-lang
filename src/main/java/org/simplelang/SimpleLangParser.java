@@ -1447,8 +1447,8 @@ public class SimpleLangParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class ParensContext extends AtomContext {
 		public TerminalNode LPAR() { return getToken(SimpleLangParser.LPAR, 0); }
-		public CompareContext compare() {
-			return getRuleContext(CompareContext.class,0);
+		public LogicalContext logical() {
+			return getRuleContext(LogicalContext.class,0);
 		}
 		public TerminalNode RPAR() { return getToken(SimpleLangParser.RPAR, 0); }
 		public ParensContext(AtomContext ctx) { copyFrom(ctx); }
@@ -1518,7 +1518,7 @@ public class SimpleLangParser extends Parser {
 				setState(157);
 				match(LPAR);
 				setState(158);
-				compare(0);
+				logical(0);
 				setState(159);
 				match(RPAR);
 				}
@@ -1754,7 +1754,7 @@ public class SimpleLangParser extends Parser {
 		"\u0000\u0000\u0000\u0099\u00a2\u0003\u001c\u000e\u0000\u009a\u00a2\u0005"+
 		"\u0019\u0000\u0000\u009b\u00a2\u0005\u001a\u0000\u0000\u009c\u00a2\u0005"+
 		"\u001b\u0000\u0000\u009d\u009e\u0005\u0011\u0000\u0000\u009e\u009f\u0003"+
-		"\u0014\n\u0000\u009f\u00a0\u0005\u0012\u0000\u0000\u00a0\u00a2\u0001\u0000"+
+		"\u0012\t\u0000\u009f\u00a0\u0005\u0012\u0000\u0000\u00a0\u00a2\u0001\u0000"+
 		"\u0000\u0000\u00a1\u0099\u0001\u0000\u0000\u0000\u00a1\u009a\u0001\u0000"+
 		"\u0000\u0000\u00a1\u009b\u0001\u0000\u0000\u0000\u00a1\u009c\u0001\u0000"+
 		"\u0000\u0000\u00a1\u009d\u0001\u0000\u0000\u0000\u00a2\u001b\u0001\u0000"+

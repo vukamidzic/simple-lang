@@ -110,7 +110,7 @@ atom
     | INT # Integer
     | FLOAT # Float
     | ID # Variable
-    | LPAR compare RPAR # Parens
+    | LPAR logical RPAR # Parens
 ;
 
 bool

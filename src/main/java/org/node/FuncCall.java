@@ -41,7 +41,7 @@ public class FuncCall extends Statement {
                     break;
                 }
                 case FLOAT : {
-                    System.out.format("float %%t%d,", e.tmpNum);
+                    System.out.format("double %%t%d,", e.tmpNum);
                     break;
                 }
                 case BOOL : {
@@ -57,7 +57,7 @@ public class FuncCall extends Statement {
                 break;
             }
             case FLOAT : {
-                System.out.format("float %%t%d)\n", e.tmpNum);
+                System.out.format("double %%t%d)\n", e.tmpNum);
                 break;
             }
             case BOOL : {

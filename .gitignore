@@ -1,6 +1,7 @@
-test.txt
+test.sl
 test.exe
 test.ll
+lib.ll
 antlr-4.13.0-complete.jar
 build.bat
 run.bat

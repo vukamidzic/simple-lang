@@ -32,7 +32,7 @@ public class Plus extends Expression {
                 }
                 case FLOAT : {
                     exprTy = ExprTy.FLOAT;
-                    System.out.format("    %%t%d = fadd float %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
+                    System.out.format("    %%t%d = fadd double %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
                     break;
                 }
             }

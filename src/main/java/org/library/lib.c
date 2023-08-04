@@ -6,7 +6,7 @@ void printInt(int n) {
     printf("%d\n", n);
 };
 
-void printFloat(float n) {
+void printFloat(double n) {
     printf("%.2f\n", n);    
 };
 

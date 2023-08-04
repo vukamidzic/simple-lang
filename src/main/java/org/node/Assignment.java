@@ -37,9 +37,9 @@ public class Assignment extends Statement {
                 }
                 case FLOAT : {
                     tree.addVariable(varName, Expression.ExprTy.FLOAT, assignNum, assignTy);
-                    System.out.format("    %%%s.%d = alloca float\n", varName, assignNum);
+                    System.out.format("    %%%s.%d = alloca double\n", varName, assignNum);
                     System.out.format(
-                            "    store float %%t%d, float* %%%s.%d\n",
+                            "    store double %%t%d, double* %%%s.%d\n",
                             exprValue.tmpNum, varName, assignNum);
                     break;
                 }
@@ -84,7 +84,7 @@ public class Assignment extends Statement {
                 case FLOAT : {
                     if (exprValue.exprTy == varTy) {
                         System.out.format(
-                                "    store float %%t%d, float* %s\n",
+                                "    store double %%t%d, double* %s\n",
                                 exprValue.tmpNum, register);
                     }
                     else {
@@ -93,9 +93,9 @@ public class Assignment extends Statement {
                         for (int i = scopeIndex; i < n; i++) {
                             tree.symTable.get(i).put(varName, newPair);
                         }
-                        System.out.format("    %%%s.%d = alloca float\n", varName, assignNum);
+                        System.out.format("    %%%s.%d = alloca double\n", varName, assignNum);
                         System.out.format(
-                                "    store float %%t%d, float* %%%s.%d\n",
+                                "    store double %%t%d, double* %%%s.%d\n",
                                 exprValue.tmpNum, varName, assignNum);
                     }
                     break;

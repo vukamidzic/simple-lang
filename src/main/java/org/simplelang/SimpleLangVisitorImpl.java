@@ -206,6 +206,6 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
 
     @Override
     public Node visitParens(SimpleLangParser.ParensContext ctx) {
-        return visit(ctx.compare());
+        return visit(ctx.logical());
     }
 }

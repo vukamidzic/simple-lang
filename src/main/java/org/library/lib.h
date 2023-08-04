@@ -2,7 +2,7 @@
 #define LIB_H
 
 void printInt(int);
-void printFloat(float);
+void printFloat(double);
 void printBool(bool);
 int num(int);
 

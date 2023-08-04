@@ -28,7 +28,7 @@ public class Var extends Expression {
                 }
                 case FLOAT : {
                     System.out.format(
-                            "    %%t%d = load float, float* %%%s.%d\n",
+                            "    %%t%d = load double, double* %%%s.%d\n",
                             tmpNum, varName,
                             tree.symTable.get(foundVariableIndex).get(varName).getValue1());
                     break;
