@@ -1,8 +1,8 @@
-#ifndef LIB_H
-#define LIB_H
+#ifndef LIB_HPP
+#define LIB_HPP
 
-void printInt(int, ...);
-void printFloat(int, ...);
+void printInts(int, ...);
+void printFloats(int, ...);
 void printBool(int, ...);
 
 #endif

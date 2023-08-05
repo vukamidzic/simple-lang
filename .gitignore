@@ -7,4 +7,5 @@ build.bat
 run.bat
 dependency-reduced-pom.xml
 .idea
+.vscode
 
