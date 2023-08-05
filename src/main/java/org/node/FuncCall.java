@@ -27,7 +27,7 @@ public class FuncCall extends Statement {
         }
 
         if (funcName.contains("print")) {
-            System.out.format("    call void @%s(", this.funcName);
+            System.out.format("    call void @%s(i32 %d,", this.funcName, this.args.size());
         }
         else {
             System.out.format("    call i32 @%s(", this.funcName);

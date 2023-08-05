@@ -1,19 +1,34 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #include "lib.h"
 
-void printInt(int n) {
-    printf("%d\n", n);
-};
+void printInt(int n, ...) {
+    va_list args;
+    va_start(args, n);
 
-void printFloat(double n) {
-    printf("%.2f\n", n);    
-};
+    for (int i = 0; i < n; ++i) {
+        printf("%d ", va_arg(args, int));
+    }
+    putchar('\n');
+}
 
-void printBool(bool n) {
-    printf((n)? "true\n" : "false\n");
-};
+void printFloat(int n, ...) {
+    va_list args;
+    va_start(args, n);
 
-int num(int n) {
-    return n;
+    for (int i = 0; i < n; ++i) {
+        printf("%.2lf ", va_arg(args, double));
+    }
+    putchar('\n');
+}
+
+void printBool(int n, ...) {
+    va_list args;
+    va_start(args, n);
+
+    for (int i = 0; i < n; ++i) {
+        printf("%s ", (va_arg(args, int)) ? "true " : "false ");
+    }
+    putchar('\n');
 }
