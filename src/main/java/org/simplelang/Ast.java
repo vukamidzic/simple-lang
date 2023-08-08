@@ -49,6 +49,7 @@ public class Ast {
         }
         
         getStdFuncs();
+        System.out.println(";###########################################");
         System.out.println("define i32 @main() {");
         Err err = root.codegen(this);
         System.out.println("    ret i32 0");

@@ -47,7 +47,7 @@ statements
 
 statement
     : assignment # ToAssignment
-    | funcCall # ToFuncCall
+    | statFuncCall # ToFuncCall
     | whileStmt # ToWhile
     | ifElseStmt # ToIfElse
     | block_of_stmts # ToBlock
@@ -71,8 +71,8 @@ assignment
     | ID DSEMIC expr # AssignConst
 ;
 
-funcCall
-    : ID LPAR expr (COMMA expr)* RPAR # FunctionCall
+statFuncCall
+    : ID LPAR expr (COMMA expr)* RPAR # SFuncCall
 ;
 
 expr
@@ -107,10 +107,15 @@ mulOrDiv
 
 atom
     : bool # ToBool
+    | exprFuncCall # ToExprFuncCall
     | INT # Integer
     | FLOAT # Float
     | ID # Variable
     | LPAR logical RPAR # Parens
+;
+
+exprFuncCall
+    : ID LPAR expr (COMMA expr)* RPAR # EFuncCall
 ;
 
 bool

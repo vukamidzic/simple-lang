@@ -116,12 +116,12 @@ public interface SimpleLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssignConst(SimpleLangParser.AssignConstContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code FunctionCall}
-	 * labeled alternative in {@link SimpleLangParser#funcCall}.
+	 * Visit a parse tree produced by the {@code SFuncCall}
+	 * labeled alternative in {@link SimpleLangParser#statFuncCall}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunctionCall(SimpleLangParser.FunctionCallContext ctx);
+	T visitSFuncCall(SimpleLangParser.SFuncCallContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code Expression}
 	 * labeled alternative in {@link SimpleLangParser#expr}.
@@ -235,6 +235,13 @@ public interface SimpleLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitToBool(SimpleLangParser.ToBoolContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ToExprFuncCall}
+	 * labeled alternative in {@link SimpleLangParser#atom}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitToExprFuncCall(SimpleLangParser.ToExprFuncCallContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code Integer}
 	 * labeled alternative in {@link SimpleLangParser#atom}.
 	 * @param ctx the parse tree
@@ -262,6 +269,13 @@ public interface SimpleLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitParens(SimpleLangParser.ParensContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code EFuncCall}
+	 * labeled alternative in {@link SimpleLangParser#exprFuncCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEFuncCall(SimpleLangParser.EFuncCallContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code True}
 	 * labeled alternative in {@link SimpleLangParser#bool}.

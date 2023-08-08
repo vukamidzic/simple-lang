@@ -1,39 +1,121 @@
 #include <stdio.h> 
+#include <stdlib.h>
 #include <stdarg.h>
+#include <math.h>
 #include "lib.h"
 
-void printInts(int n, ...) {
+void print(enum Types type, ...) {
     va_list args;
-    va_start(args, n);
-
-    for (int i = 0; i < n; ++i) {
-        printf("%d ", va_arg(args, int));
+    va_start(args, type);
+    
+    while (type != FUNC_END) {
+        switch (type) {
+            case INTEGER : 
+                printf("%d ", va_arg(args, int));
+                break;
+                
+            case DOUBLE :
+                printf("%.2f ", va_arg(args, double));
+                break;
+            
+            case BOOL : 
+                printf((va_arg(args, int))? "true " : "false ");
+                break;    
+                
+            default : 
+                fprintf(stderr, "Unknown type specifier!!!\n");
+                break;
+        }
+        
+        type = va_arg(args, enum Types);
     }
-    putchar('\n');
-
+    
     va_end(args);
+    return;
 }
 
-void printFloats(int n, ...) {
+void println(enum Types type, ...) {
     va_list args;
-    va_start(args, n);
-
-    for (int i = 0; i < n; ++i) {
-        printf("%.2f ", va_arg(args, double));
+    va_start(args, type);
+    
+    while (type != FUNC_END) {
+        switch (type) {
+            case INTEGER : 
+                printf("%d ", va_arg(args, int));
+                break;
+                
+            case DOUBLE :
+                printf("%.2f ", va_arg(args, double));
+                break;
+            
+            case BOOL : 
+                printf((va_arg(args, int))? "true " : "false ");
+                break;    
+                
+            default : 
+                fprintf(stderr, "Unknown type specifier!!!\n");
+                break;
+        }
+        
+        type = va_arg(args, enum Types);
     }
-    putchar('\n');
-
+    
     va_end(args);
+    putchar('\n');
+    return;
 }
 
-void printBool(int n, ...) {
+
+int maxValue(enum Types type, ...) {
     va_list args;
-    va_start(args, n);
+    va_start(args, type);
 
-    for (int i = 0; i < n; ++i) {
-        printf("%d ", va_arg(args, int));
+    int maxVal;
+
+    switch (type) {
+        case INTEGER : 
+            maxVal = va_arg(args, int);
+            break;
+
+        case DOUBLE : 
+            maxVal = (int)round(va_arg(args, double));
+            break;
+
+        case BOOL : 
+            maxVal = va_arg(args, int);
+            break;
+
+        default : 
+                fprintf(stderr, "Unknown type specifier!!!\n");
+                return -1;
     }
-    putchar('\n');
 
-    va_end(args);
+    type = va_arg(args, enum Types);
+
+    while (type != FUNC_END) {
+        switch (type) {
+            case INTEGER :
+                int i = va_arg(args, int);
+                maxVal = (i > maxVal) ? i : maxVal;
+                break;
+                
+            case DOUBLE :
+                int d = (int)round(va_arg(args, double));
+                maxVal = (d > maxVal) ? d : maxVal;
+                break;
+            
+            case BOOL : 
+                int b = va_arg(args, int);
+                maxVal = (b > maxVal) ? b : maxVal;
+                break;    
+                
+            default : 
+                fprintf(stderr, "Unknown type specifier!!!\n");
+                break;
+        }
+        
+        type = va_arg(args, enum Types);
+    }
+
+    return maxVal;
 }

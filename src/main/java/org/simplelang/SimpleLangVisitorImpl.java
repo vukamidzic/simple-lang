@@ -45,8 +45,8 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitFunctionCall(SimpleLangParser.FunctionCallContext ctx) {
-        FuncCall funcCallNode = new FuncCall(ctx.ID().getText());
+    public Node visitSFuncCall(SimpleLangParser.SFuncCallContext ctx) {
+        StatFuncCall funcCallNode = new StatFuncCall(ctx.ID().getText());
         funcCallNode.lineno = ctx.getStart().getLine();
         int n = ctx.expr().size();
         for (int i = 0; i < n; ++i) {
@@ -182,6 +182,17 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
         intNode.lineno = ctx.getStart().getLine();
         intNode.numValue = Integer.parseInt(ctx.INT().getText());
         return intNode;
+    }
+
+    @Override
+    public Node visitEFuncCall(SimpleLangParser.EFuncCallContext ctx) {
+        ExprFuncCall funcCallNode = new ExprFuncCall(ctx.ID().getText());
+        funcCallNode.lineno = ctx.getStart().getLine();
+        int n = ctx.expr().size();
+        for (int i = 0; i < n; ++i) {
+            funcCallNode.args.add((Expression) visit(ctx.expr(i)));
+        }
+        return funcCallNode;
     }
 
     @Override public Node visitTrue(SimpleLangParser.TrueContext ctx) {
