@@ -79,6 +79,16 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
     }
 
     @Override
+    public Node visitForStmt(SimpleLangParser.ForStmtContext ctx) {
+        For forNode = new For(ctx.ID().getText());
+        forNode.lineno = ctx.getStart().getLine();
+        forNode.startExpr = (Expression)visit(ctx.expr(0));
+        forNode.endExpr = (Expression)visit(ctx.expr(1));
+        forNode.blockOfStmts = (Block) visit(ctx.block_of_stmts());
+        return forNode;
+    }
+
+    @Override
     public Node visitExpression(SimpleLangParser.ExpressionContext ctx) {
         return visit(ctx.logical());
     }

@@ -25,5 +25,6 @@ public class Block extends Statement {
         return new Err(Err.Errno.OK, -1, "");
     }
 
+    // returns first node from inside of block
     public Node getFirstStmt() {return stmts;}
 }

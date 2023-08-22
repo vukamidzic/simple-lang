@@ -36,8 +36,8 @@ public class Main {
             System.err.println("Success!!");
         }
         else {
-            switch (System.getProperty("os.name")) {
-                case "Windows 10" : {
+            switch (tree.ver) {
+                case WINDOWS : {
                     AnsiConsole.systemInstall();
                     System.err.println(Ansi.ansi()
                             .fg(Color.RED)
@@ -46,7 +46,7 @@ public class Main {
                     AnsiConsole.systemUninstall();
                     break;
                 }
-                case "Linux" : {
+                case LINUX : {
                     System.err.format("\033[31merror in file %s, line %d:\n \033[0m",
                             args[0], programErr.lineno);
                     break;

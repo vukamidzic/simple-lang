@@ -74,6 +74,11 @@ public class Ast {
         symTable.get(n-1).put(_varName, Triplet.with(_ty, _tmp, _assignTy));
     }
 
+    public void removeVariable(String _varName) {
+        int n = symTable.size();
+        symTable.get(n-1).remove(_varName);
+    }
+
     public int findVariableScope(String _varName) {
         int n = symTable.size();
         for (int i = 0; i < n; i++)

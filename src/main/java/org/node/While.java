@@ -33,6 +33,13 @@ public class While extends Statement {
                     cond.tmpNum, whileNum, nextNum);
 
         System.out.format("body_while%d:\n", whileNum);
+        Statement fstStmt = (Statement)blockOfStmts.getFirstStmt();
+        if (fstStmt instanceof If) {
+            System.out.format("    br label %%if%d\n", ((If)fstStmt).ifNum);
+        }
+        else if (fstStmt instanceof While) {
+            System.out.format("    br label %%while%d\n", ((While)fstStmt).whileNum);
+        }
         Err blockOfStmtsErr = blockOfStmts.codegen(tree);
         if (blockOfStmtsErr.errno != Err.Errno.OK) return blockOfStmtsErr;
         System.out.format("    br label %%while%d\n", whileNum);

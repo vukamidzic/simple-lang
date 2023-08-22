@@ -56,6 +56,15 @@ public class If extends Statement {
         }
 
         System.out.format("cond%d: \n", condNum);
+
+        Statement fstStmt = (Statement)blockOfStmts.getFirstStmt();
+        if (fstStmt instanceof If) {
+            System.out.format("    br label %%if%d\n", ((If)fstStmt).ifNum);
+        }
+        else if (fstStmt instanceof While) {
+            System.out.format("    br label %%while%d\n", ((While)fstStmt).whileNum);
+        }
+
         Err blockErr = blockOfStmts.codegen(tree);
         if (blockErr.errno != Err.Errno.OK) return blockErr;
 
@@ -85,10 +94,9 @@ public class If extends Statement {
             if (currNode.isEmptyIf)
                 break;
             else {
-                If nextNode = (If) currNode.children.get(0);
-                if (nextNode == null)
+                if (!(currNode.children.get(0) instanceof If))
                     break;
-                currNode = nextNode;
+                currNode = (If) currNode.children.get(0);
             }
         }
 

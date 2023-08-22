@@ -1,6 +1,7 @@
 grammar SimpleLang;
 
 WHILE : 'while';
+FOR : 'for';
 
 TRUE : 'true';
 FALSE : 'false';
@@ -11,6 +12,7 @@ PLUS : '+';
 MINUS : '-';
 MUL : '*';
 DIV : '/';
+LARROW : '<-';
 
 LESS : '<';
 GREAT : '>';
@@ -49,6 +51,7 @@ statement
     : assignment # ToAssignment
     | statFuncCall # ToFuncCall
     | whileStmt # ToWhile
+    | forStmt #ToFor
     | ifElseStmt # ToIfElse
     | block_of_stmts # ToBlock
 ;
@@ -56,6 +59,10 @@ statement
 ifElseStmt
     : LPAR expr RPAR QMARK block_of_stmts # NonEmptyIf
     | LPAR RPAR QMARK block_of_stmts # EmptyIf
+;
+
+forStmt
+    : FOR LPAR ID LARROW expr '..' expr RPAR block_of_stmts
 ;
 
 whileStmt

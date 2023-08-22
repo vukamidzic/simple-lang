@@ -26,15 +26,15 @@ public class Neq extends Expression {
         else {
             switch (lhs.exprTy) {
                 case INT: {
-                    System.out.format("    %%t%d = icmp neq i32 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
+                    System.out.format("    %%t%d = icmp ne i32 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
                     break;
                 }
                 case FLOAT: {
-                    System.out.format("    %%t%d = fcmp neq f32 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
+                    System.out.format("    %%t%d = fcmp ne f32 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
                     break;
                 }
                 case BOOL: {
-                    System.out.format("    %%t%d = icmp neq i1 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
+                    System.out.format("    %%t%d = icmp ne i1 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
                     break;
                 }
             }
