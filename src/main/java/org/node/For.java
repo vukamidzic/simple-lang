@@ -32,12 +32,13 @@ public class For extends Statement {
         System.err.format("(line %d)Node: For node, depth: %d\n", lineno, tree.symTable.size());
         System.err.println(tree.symTable);
 
+        Err startErr = startExpr.codegen(tree);
+        if (startErr.errno != Errno.OK) return startErr;
+        System.err.println(startExpr.exprTy);
         if (startExpr.exprTy != ExprTy.INT) {
             return new Err(Errno.ERR_TY, lineno, "Can't use float/bool in for counter!!!");
         }
 
-        Err startErr = startExpr.codegen(tree);
-        if (startErr.errno != Errno.OK) return startErr;
         tree.addVariable(varName, startExpr.exprTy, forAssignNum, Ast.Mut.VAR);
         System.out.format("    %%%s.%d = alloca i32\n", varName, forAssignNum);
         System.out.format(

@@ -62,7 +62,7 @@ ifElseStmt
 ;
 
 forStmt
-    : FOR LPAR ID LARROW expr '..' expr RPAR block_of_stmts
+    : FOR LPAR ID LARROW expr ',' expr RPAR block_of_stmts
 ;
 
 whileStmt
