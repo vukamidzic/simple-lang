@@ -26,7 +26,7 @@ public class StatFuncCall extends Statement {
             if (argErr.errno != Err.Errno.OK) return argErr;
         }
 
-        if (funcName.contains("print")) {
+        if (funcName.contains("print") || funcName.contains("input")) {
             System.out.format("    call void (i32, ...) @%s(", this.funcName);
         }
 
@@ -45,20 +45,28 @@ public class StatFuncCall extends Statement {
                     System.out.format("i32 %d, i1 %%t%d, ", 2, e.tmpNum);
                     break;
                 }
+                case PTR : {
+                    System.out.format("i32 %d, i32* %%t%d, ", 3, e.tmpNum);
+                    break;
+                }
             }
         }
         Expression e = (Expression) this.args.get(this.args.size()-1);
         switch (e.exprTy) {
             case INT : {
-                System.out.format("i32 %d, i32 %%t%d, i32 %d)\n", 0, e.tmpNum, 3);
+                System.out.format("i32 %d, i32 %%t%d, i32 %d)\n", 0, e.tmpNum, 4);
                 break;
             }
             case FLOAT : {
-                System.out.format("i32 %d, double %%t%d, i32 %d)\n", 1, e.tmpNum, 3);
+                System.out.format("i32 %d, double %%t%d, i32 %d)\n", 1, e.tmpNum, 4);
                 break;
             }
             case BOOL : {
-                System.out.format("i32 %d, i1 %%t%d, i32 %d)\n", 2, e.tmpNum, 3);
+                System.out.format("i32 %d, i1 %%t%d, i32 %d)\n", 2, e.tmpNum, 4);
+                break;
+            }
+            case PTR : {
+                System.out.format("i32 %d, i32* %%t%d, i32 %d)\n", 3, e.tmpNum, 4);
                 break;
             }
         }

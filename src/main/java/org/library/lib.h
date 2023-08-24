@@ -2,15 +2,19 @@
 #define LIB_HPP
 
 enum Types {
-    INTEGER,// 0
-    DOUBLE,// 1
-    BOOL,// 2
-    FUNC_END// 3
+    INTEGER,
+    DOUBLE,
+    BOOL,
+    PTR,
+    FUNC_END
 };
 
 //*********** PRINT FUNCTIONS ******************
 void print(enum Types type, ...);
 void println(enum Types type, ...);
+
+//*********** INPUT FUNCTIONS ******************
+void input(enum Types type, ...);
 
 //***** MATHEMATICAL FUNCTIONS *****************
 int maxValue(enum Types type, ...);

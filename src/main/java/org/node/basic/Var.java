@@ -40,6 +40,13 @@ public class Var extends Expression {
                             tree.symTable.get(foundVariableIndex).get(varName).getValue1());
                     break;
                 }
+                case PTR : {
+                    System.out.format(
+                            "    %%t%d = load i32*, i32** %%%s.%d\n",
+                            tmpNum, varName,
+                            tree.symTable.get(foundVariableIndex).get(varName).getValue1());
+                    break;
+                }
             }
 
             return new Err(Err.Errno.OK, -1, "");

@@ -23,6 +23,10 @@ void print(enum Types type, ...) {
                 printf((va_arg(args, bool))? "true " : "false ");
                 break;    
                 
+            case PTR : 
+                printf("%d ", va_arg(args, int*));
+                break;
+
             default : 
                 fprintf(stderr, "Unknown type specifier!!!\n");
                 break;
@@ -53,6 +57,10 @@ void println(enum Types type, ...) {
                 printf((va_arg(args, bool))? "true " : "false ");
                 break;    
                 
+            case PTR : 
+                printf("%d ", va_arg(args, int*));
+                break;
+
             default : 
                 fprintf(stderr, "Unknown type specifier!!!\n");
                 break;
@@ -66,6 +74,40 @@ void println(enum Types type, ...) {
     return;
 }
 
+void input(enum Types type, ...) {
+    va_list args;
+    va_start(args, type);
+
+    while (type != FUNC_END) {
+        switch (type) {
+            case INTEGER : 
+                int i = va_arg(args, int);
+                int* i_ptr = &i;
+                scanf("%d", i_ptr);
+                break;
+        
+            case DOUBLE :
+                double d = va_arg(args, double);
+                double* d_ptr = &d;
+                scanf("%f", d_ptr);
+                break;
+            
+            case BOOL : 
+                int b = va_arg(args, int);
+                int* b_ptr = &b;
+                scanf("%d", b_ptr);
+                break;    
+                
+            default : 
+                fprintf(stderr, "Unknown type specifier!!!\n");
+                exit(EXIT_FAILURE);
+        }
+
+        type = va_arg(args, enum Types);
+    }
+
+    return 0;
+}
 
 int maxValue(enum Types type, ...) {
     va_list args;

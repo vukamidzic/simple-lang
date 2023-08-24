@@ -3,6 +3,7 @@ package org.simplelang;
 import org.node.*;
 import org.node.arithmetic.*;
 import org.node.basic.*;
+import org.node.basic.Pointer.PtrTy;
 import org.node.comp.*;
 import org.node.logic.*;
 
@@ -177,6 +178,22 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
         divNode.children.add(visit(ctx.mulOrDiv()));
         divNode.children.add(visit(ctx.atom()));
         return divNode;
+    }
+
+    @Override
+    public Node visitToPointer(SimpleLangParser.ToPointerContext ctx) {
+        Pointer ptrNode = new Pointer(PtrTy.TO_PTR);
+        ptrNode.lineno = ctx.getStart().getLine();
+        ptrNode.children.add(visit(ctx.atom()));
+        return ptrNode;
+    }
+
+    @Override
+    public Node visitFromPointer(SimpleLangParser.FromPointerContext ctx) {
+        Pointer ptrNode = new Pointer(PtrTy.FROM_PTR);
+        ptrNode.lineno = ctx.getStart().getLine();
+        ptrNode.children.add(visit(ctx.atom()));
+        return ptrNode;
     }
 
     @Override public Node visitFloat(SimpleLangParser.FloatContext ctx) {

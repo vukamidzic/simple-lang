@@ -51,6 +51,14 @@ public class Assignment extends Statement {
                             exprValue.tmpNum, varName, assignNum);
                     break;
                 }
+                case PTR : {
+                    tree.addVariable(varName, Expression.ExprTy.PTR, assignNum, assignTy);
+                    System.out.format("    %%%s.%d = alloca i32*\n", varName, assignNum);
+                    System.out.format(
+                            "    store i32* %%t%d, i32** %%%s.%d\n",
+                            exprValue.tmpNum, varName, assignNum);
+                    break;
+                }
             }
         }
         else {
@@ -115,6 +123,25 @@ public class Assignment extends Statement {
                         System.out.format("    %%%s.%d = alloca i1\n", varName, assignNum);
                         System.out.format(
                                 "    store i1 %%t%d, i1* %%%s.%d\n",
+                                exprValue.tmpNum, varName, assignNum);
+                    }
+                    break;
+                }
+                case PTR : {
+                    if (exprValue.exprTy == varTy) {
+                        System.out.format(
+                                "    store i32* %%t%d, i32** %s\n",
+                                exprValue.tmpNum, register);
+                    }
+                    else {
+                        Triplet<Expression.ExprTy, Integer, Ast.Mut> newTri = new Triplet<>(Expression.ExprTy.PTR, assignNum, assignTy);
+                        int n = tree.symTable.size();
+                        for (int i = scopeIndex; i < n; i++) {
+                            tree.symTable.get(i).put(varName, newTri);
+                        }
+                        System.out.format("    %%%s.%d = alloca i32*\n", varName, assignNum);
+                        System.out.format(
+                                "    store i32* %%t%d, i32** %%%s.%d\n",
                                 exprValue.tmpNum, varName, assignNum);
                     }
                     break;

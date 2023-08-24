@@ -2,6 +2,7 @@ grammar SimpleLang;
 
 WHILE : 'while';
 FOR : 'for';
+PTR : 'ptr';
 
 TRUE : 'true';
 FALSE : 'false';
@@ -109,6 +110,12 @@ plusOrMinus
 mulOrDiv
     : mulOrDiv MUL atom # Mul
     | mulOrDiv DIV atom # Div
+    | ptrOp # ToPtr 
+;
+
+ptrOp 
+    : PTR LPAR atom RPAR # ToPointer
+    | '*' atom  # FromPointer
     | atom # ToAtom
 ;
 
