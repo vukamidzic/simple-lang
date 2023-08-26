@@ -3,13 +3,54 @@ package org.node.arithmetic;
 import org.simplelang.Ast;
 import org.error.Err;
 import org.node.Expression;
+import org.node.Operation;
+
+import java.util.HashMap;
+import org.javatuples.Pair;
 
 public class Plus extends Expression {
     public Plus() {super();}
 
     @Override public Err codegen(Ast tree) {
-        tmpNum = Expression.tmpCounter;
-        Expression.tmpCounter++;
+        tmpNum = Expression.tmpCounter++;
+
+        HashMap<Pair, Operation> mp = new HashMap<Pair, Operation>(); 
+        mp.put(new Pair(ExprTy.INT, ExprTy.INT), new Operation() {
+            @Override
+            public void func(Expression lhs, Expression rhs) {
+                exprTy = ExprTy.INT;
+                System.out.format("    %%t%d = add i32 %%t%d, %%t%d\n", 
+                    tmpNum, lhs.tmpNum, rhs.tmpNum);
+            }
+        });
+        mp.put(new Pair(ExprTy.FLOAT, ExprTy.FLOAT), new Operation() {
+            @Override
+            public void func(Expression lhs, Expression rhs) {
+                exprTy = ExprTy.FLOAT;
+                System.out.format("    %%t%d = fadd double %%t%d, %%t%d\n", 
+                    tmpNum, lhs.tmpNum, rhs.tmpNum);
+            }
+        });
+        mp.put(new Pair(ExprTy.INT, ExprTy.PTR), new Operation() {
+            @Override
+            public void func(Expression lhs, Expression rhs) {
+                exprTy = ExprTy.PTR;
+                //System.out.format("    %%t%d = alloca i32*\n", tmpNum);
+                //System.out.format("    store i32* %%t%d, i32** %%t%d\n", 
+                    //rhs.tmpNum, tmpNum);
+                //tmpNum = Expression.tmpCounter++;
+                System.out.format("    %%t%d = getelementptr inbounds i32, i32* %%t%d, i32 %%t%d\n", 
+                    tmpNum, rhs.tmpNum, lhs.tmpNum);
+            }
+        });
+        mp.put(new Pair(ExprTy.PTR, ExprTy.INT), new Operation() {
+            @Override
+            public void func(Expression lhs, Expression rhs) {
+                exprTy = ExprTy.PTR;
+                System.out.format("    %%t%d = getelementptr inbounds i32, i32* %%t%d, i32 %%t%d\n", 
+                    tmpNum, lhs.tmpNum, rhs.tmpNum);
+            }
+        });
 
         Expression lhs = (Expression)children.get(0);
         Expression rhs = (Expression)children.get(1);
@@ -22,24 +63,8 @@ public class Plus extends Expression {
         if (lhs.exprTy == ExprTy.BOOL || rhs.exprTy == ExprTy.BOOL) {
             return new Err(Err.Errno.ERR_TY, lineno, "Can't do addition with bool and other type!!");
         }
-
-        if (lhs.exprTy == rhs.exprTy) {
-            switch (lhs.exprTy) {
-                case INT : {
-                    exprTy = ExprTy.INT;
-                    System.out.format("    %%t%d = add i32 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
-                    break;
-                }
-                case FLOAT : {
-                    exprTy = ExprTy.FLOAT;
-                    System.out.format("    %%t%d = fadd double %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
-                    break;
-                }
-            }
-        }
-        else {
-            return new Err(Err.Errno.ERR_TY, lineno, "Can't do addition with int and float!!");
-        }
+            
+        mp.get(new Pair(lhs.exprTy, rhs.exprTy)).func(lhs, rhs);
 
         return new Err(Err.Errno.OK, -1, "");
     }
