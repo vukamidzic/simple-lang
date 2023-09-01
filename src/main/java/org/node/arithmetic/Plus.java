@@ -35,20 +35,32 @@ public class Plus extends Expression {
             @Override
             public void func(Expression lhs, Expression rhs) {
                 exprTy = ExprTy.PTR;
-                //System.out.format("    %%t%d = alloca i32*\n", tmpNum);
-                //System.out.format("    store i32* %%t%d, i32** %%t%d\n", 
-                    //rhs.tmpNum, tmpNum);
-                //tmpNum = Expression.tmpCounter++;
-                System.out.format("    %%t%d = getelementptr inbounds i32, i32* %%t%d, i32 %%t%d\n", 
-                    tmpNum, rhs.tmpNum, lhs.tmpNum);
+                System.out.format("    %%t%d = ptrtoint ptr %%t%d to i32\n", 
+                    tmpNum, rhs.tmpNum);
+                tmpNum = Expression.tmpCounter++;
+                System.out.format("    %%t%d = add i32 %%t%d, %%t%d\n", 
+                    tmpNum, tmpNum-3, lhs.tmpNum);
+                tmpNum = Expression.tmpCounter++;
+                System.out.format("    %%t%d = alloca i32\n", 
+                    tmpNum);
+                System.out.format("    store i32 %%t%d, i32* %%t%d\n", 
+                    tmpNum-1, tmpNum);
             }
         });
         mp.put(new Pair(ExprTy.PTR, ExprTy.INT), new Operation() {
             @Override
             public void func(Expression lhs, Expression rhs) {
                 exprTy = ExprTy.PTR;
-                System.out.format("    %%t%d = getelementptr inbounds i32, i32* %%t%d, i32 %%t%d\n", 
-                    tmpNum, lhs.tmpNum, rhs.tmpNum);
+                System.out.format("    %%t%d = ptrtoint ptr %%t%d to i32\n", 
+                    tmpNum, lhs.tmpNum);
+                tmpNum = Expression.tmpCounter++;
+                System.out.format("    %%t%d = add i32 %%t%d, %%t%d\n", 
+                    tmpNum, tmpNum-3, rhs.tmpNum);
+                tmpNum = Expression.tmpCounter++;
+                System.out.format("    %%t%d = alloca i32\n", 
+                    tmpNum);
+                System.out.format("    store i32 %%t%d, i32* %%t%d\n", 
+                    tmpNum-1, tmpNum);
             }
         });
 

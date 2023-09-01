@@ -24,7 +24,7 @@ void print(enum Types type, ...) {
                 break;    
                 
             case PTR : 
-                printf("%d ", va_arg(args, int*));
+                printf("%p ", va_arg(args, int*));
                 break;
 
             default : 
@@ -58,7 +58,7 @@ void println(enum Types type, ...) {
                 break;    
                 
             case PTR : 
-                printf("%d ", va_arg(args, int*));
+                printf("%p ", va_arg(args, int*));
                 break;
 
             default : 
@@ -385,5 +385,6 @@ int mod(enum Types type, ...) {
         fprintf(stderr, "(mod) Too many arguments for this function (expected 2)");
         exit(EXIT_FAILURE);
     }
+    
     return t1 % t2;
 }
