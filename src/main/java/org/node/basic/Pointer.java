@@ -23,16 +23,6 @@ public class Pointer extends Expression {
         Err valueErr = value.codegen(tree);
         if (valueErr.errno != Err.Errno.OK) return valueErr; 
 
-        /* CONVERTING TO/FROM POINTERS
-         * 1. TO PTR:
-         * load value
-         * convert it to "ptr"
-         * 
-         * 2. FROM PTR
-         * %tmp = load i32*, i32** %p_name
-         * %v_name = load i32, i32* %tmp
-         */
-
         switch (ptrTy) {
             case TO_PTR:
                 System.out.format("    %%t%d = alloca i32\n", 
