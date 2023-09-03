@@ -54,15 +54,15 @@ public class ExprFuncCall extends Expression {
         Expression e = (Expression) this.args.get(this.args.size()-1);
         switch (e.exprTy) {
             case INT : {
-                System.out.format("i32 %d, i32 %%t%d, i32 %d)\n", 0, e.tmpNum, 3);
+                System.out.format("i32 %d, i32 %%t%d, i32 %d)\n", 0, e.tmpNum, 4);
                 break;
             }
             case FLOAT : {
-                System.out.format("i32 %d, double %%t%d, i32 %d)\n", 1, e.tmpNum, 3);
+                System.out.format("i32 %d, double %%t%d, i32 %d)\n", 1, e.tmpNum, 4);
                 break;
             }
             case BOOL : {
-                System.out.format("i32 %d, i1 %%t%d, i32 %d)\n", 2, e.tmpNum, 3);
+                System.out.format("i32 %d, i1 %%t%d, i32 %d)\n", 2, e.tmpNum, 4);
                 break;
             }
         }

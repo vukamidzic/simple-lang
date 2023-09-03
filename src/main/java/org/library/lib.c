@@ -28,8 +28,8 @@ void print(enum Types type, ...) {
                 break;
 
             default : 
-                fprintf(stderr, "Unknown type specifier!!!\n");
-                break;
+                fprintf(stderr, "(print) Unknown type specifier!!!\n");
+                return -1;
         }
         
         type = va_arg(args, enum Types);
@@ -62,8 +62,8 @@ void println(enum Types type, ...) {
                 break;
 
             default : 
-                fprintf(stderr, "Unknown type specifier!!!\n");
-                break;
+                fprintf(stderr, "(println) Unknown type specifier!!!\n");
+                return -1;
         }
         
         type = va_arg(args, enum Types);
@@ -79,34 +79,17 @@ void input(enum Types type, ...) {
     va_start(args, type);
 
     while (type != FUNC_END) {
-        switch (type) {
-            case INTEGER : 
-                int i = va_arg(args, int);
-                int* i_ptr = &i;
-                scanf("%d", i_ptr);
-                break;
-        
-            case DOUBLE :
-                double d = va_arg(args, double);
-                double* d_ptr = &d;
-                scanf("%f", d_ptr);
-                break;
-            
-            case BOOL : 
-                int b = va_arg(args, int);
-                int* b_ptr = &b;
-                scanf("%d", b_ptr);
-                break;    
-                
-            default : 
-                fprintf(stderr, "Unknown type specifier!!!\n");
-                exit(EXIT_FAILURE);
+        if (type != PTR) {
+            fprintf(stderr, "(input) Non-pointer argument!!!");
+            exit(EXIT_FAILURE);
         }
 
+        scanf("%d", va_arg(args, int*));
         type = va_arg(args, enum Types);
     }
 
-    return 0;
+    va_end(args);
+    return;
 }
 
 int maxValue(enum Types type, ...) {
@@ -129,8 +112,8 @@ int maxValue(enum Types type, ...) {
             break;
 
         default : 
-                fprintf(stderr, "Unknown type specifier!!!\n");
-                return -1;
+            fprintf(stderr, "(maxValue) Unknown type specifier!!!\n");
+            exit(EXIT_FAILURE);
     }
 
     type = va_arg(args, enum Types);
@@ -153,13 +136,14 @@ int maxValue(enum Types type, ...) {
                 break;    
                 
             default : 
-                fprintf(stderr, "Unknown type specifier!!!\n");
-                break;
+                fprintf(stderr, "(maxValue) Unknown type specifier!!!\n");
+                exit(EXIT_FAILURE);
         }
         
         type = va_arg(args, enum Types);
     }
 
+    va_end(args);
     return maxVal;
 }
 
@@ -183,8 +167,8 @@ int minValue(enum Types type, ...) {
             break;
 
         default : 
-                fprintf(stderr, "Unknown type specifier!!!\n");
-                return -1;
+            fprintf(stderr, "(minValue) Unknown type specifier!!!\n");
+            return -1;
     }
 
     type = va_arg(args, enum Types);
@@ -207,13 +191,14 @@ int minValue(enum Types type, ...) {
                 break;    
                 
             default : 
-                fprintf(stderr, "Unknown type specifier!!!\n");
-                break;
+                fprintf(stderr, "(minValue) Unknown type specifier!!!\n");
+                return -1;
         }
         
         type = va_arg(args, enum Types);
     }
 
+    va_end(args);
     return minVal;
 }
 
@@ -247,8 +232,8 @@ int gcd(enum Types type, ...) {
             break;
 
         default : 
-                fprintf(stderr, "Unknown type specifier!!!\n");
-                return -1;
+            fprintf(stderr, "(gcd) Unknown type specifier!!!\n");
+            return -1;
     }
 
     type = va_arg(args, enum Types);
@@ -271,13 +256,14 @@ int gcd(enum Types type, ...) {
                 break;    
                 
             default : 
-                fprintf(stderr, "Unknown type specifier!!!\n");
-                break;
+                fprintf(stderr, "(gcd) Unknown type specifier!!!\n");
+                return -1;
         }
         
         type = va_arg(args, enum Types);
     }
 
+    va_end(args);
     return gcdVal;
 }
 
@@ -301,7 +287,7 @@ int lcm(enum Types type, ...) {
             break;
 
         default : 
-            fprintf(stderr, "Unknown type specifier!!!\n");
+            fprintf(stderr, "(lcm) Unknown type specifier!!!\n");
             return -1;
     }
 
@@ -325,13 +311,14 @@ int lcm(enum Types type, ...) {
                 break;    
                 
             default : 
-                fprintf(stderr, "Unknown type specifier!!!\n");
-                break;
+                fprintf(stderr, "(lcm) Unknown type specifier!!!\n");
+                return -1;
         }
         
         type = va_arg(args, enum Types);
     }
 
+    va_end(args);
     return lcmVal;
 }
 
@@ -355,8 +342,8 @@ int mod(enum Types type, ...) {
             break;    
             
         default : 
-            fprintf(stderr, "Unknown type specifier!!!\n");
-            break;
+            fprintf(stderr, "(mod) Unknown type specifier!!!\n");
+            return -1;
     }
 
     type = va_arg(args, enum Types);
@@ -375,8 +362,8 @@ int mod(enum Types type, ...) {
             break;    
             
         default : 
-            fprintf(stderr, "Unknown type specifier!!!\n");
-            break;
+            fprintf(stderr, "(mod) Unknown type specifier!!!\n");
+            return -1;
     }
 
     type = va_arg(args, enum Types);
@@ -386,5 +373,6 @@ int mod(enum Types type, ...) {
         exit(EXIT_FAILURE);
     }
     
+    va_end(args);
     return t1 % t2;
 }
