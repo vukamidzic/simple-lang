@@ -21,6 +21,8 @@ public class Main {
         CharStream input = CharStreams.fromStream(Files.newInputStream(Paths.get(args[0])));
         SimpleLangLexer lexer = new SimpleLangLexer(input);
         SimpleLangParser parser = new SimpleLangParser(new CommonTokenStream(lexer));
+        parser.removeErrorListeners();
+        parser.addErrorListener(new ParseErrListener());
 
         ParseTree parseTree = parser.program();
         SimpleLangVisitorImpl simpleLangVisitor = new SimpleLangVisitorImpl();
@@ -30,8 +32,6 @@ public class Main {
         tree.addScope(); //generating a global scope
 
         Err programErr = tree.generate();
-        //System.getProperties().list(System.out);
-        // Windows 10 / Linux
         if (programErr.errno == Err.Errno.OK) {
             System.err.println("Success!!");
         }
@@ -63,6 +63,5 @@ public class Main {
             System.err.format("%d: %s\n\n", programErr.lineno, errLine);
             System.err.println(programErr.errMsg);
         }
-
     }
 }

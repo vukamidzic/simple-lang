@@ -29,7 +29,7 @@ void print(enum Types type, ...) {
 
             default : 
                 fprintf(stderr, "(print) Unknown type specifier!!!\n");
-                return -1;
+                exit(EXIT_FAILURE);
         }
         
         type = va_arg(args, enum Types);
@@ -63,14 +63,14 @@ void println(enum Types type, ...) {
 
             default : 
                 fprintf(stderr, "(println) Unknown type specifier!!!\n");
-                return -1;
+                exit(EXIT_FAILURE);
         }
         
         type = va_arg(args, enum Types);
     }
     
     va_end(args);
-    putchar('\n');
+    putc('\n', stdout);
     return;
 }
 
@@ -120,21 +120,21 @@ int maxValue(enum Types type, ...) {
 
     while (type != FUNC_END) {
         switch (type) {
-            case INTEGER :
+            case INTEGER : {
                 int i = va_arg(args, int);
-                maxVal = (i > maxVal) ? i : maxVal;
+                maxVal = (i > maxVal) ? i : maxVal;                
                 break;
-                
-            case DOUBLE :
+			}
+            case DOUBLE : {
                 int d = (int)round(va_arg(args, double));
                 maxVal = (d > maxVal) ? d : maxVal;
                 break;
-            
-            case BOOL : 
+			}
+            case BOOL : {
                 int b = va_arg(args, int);
                 maxVal = (b > maxVal) ? b : maxVal;
                 break;    
-                
+			}    
             default : 
                 fprintf(stderr, "(maxValue) Unknown type specifier!!!\n");
                 exit(EXIT_FAILURE);
@@ -168,31 +168,31 @@ int minValue(enum Types type, ...) {
 
         default : 
             fprintf(stderr, "(minValue) Unknown type specifier!!!\n");
-            return -1;
+            exit(EXIT_FAILURE);
     }
 
     type = va_arg(args, enum Types);
 
     while (type != FUNC_END) {
         switch (type) {
-            case INTEGER :
+            case INTEGER : {
                 int i = va_arg(args, int);
                 minVal = (i < minVal) ? i : minVal;
                 break;
-                
-            case DOUBLE :
+			}
+            case DOUBLE : {
                 int d = (int)round(va_arg(args, double));
                 minVal = (d < minVal) ? d : minVal;
                 break;
-            
-            case BOOL : 
+			}
+            case BOOL : {
                 int b = va_arg(args, int);
                 minVal = (b < minVal) ? b : minVal;
                 break;    
-                
+			}
             default : 
                 fprintf(stderr, "(minValue) Unknown type specifier!!!\n");
-                return -1;
+                exit(EXIT_FAILURE);
         }
         
         type = va_arg(args, enum Types);
@@ -233,31 +233,31 @@ int gcd(enum Types type, ...) {
 
         default : 
             fprintf(stderr, "(gcd) Unknown type specifier!!!\n");
-            return -1;
+            exit(EXIT_FAILURE);
     }
 
     type = va_arg(args, enum Types);
 
     while (type != FUNC_END) {
         switch (type) {
-            case INTEGER :
+            case INTEGER : {
                 int i = va_arg(args, int);
                 gcdVal = _gcd(gcdVal, i);
                 break;
-                
-            case DOUBLE :
+			}
+            case DOUBLE : {
                 int d = (int)round(va_arg(args, double));
                 gcdVal = _gcd(gcdVal, d);
                 break;
-            
-            case BOOL : 
+			}
+            case BOOL : {
                 int b = va_arg(args, int);
                 gcdVal = _gcd(gcdVal, b);
                 break;    
-                
+			}
             default : 
                 fprintf(stderr, "(gcd) Unknown type specifier!!!\n");
-                return -1;
+                exit(EXIT_FAILURE);
         }
         
         type = va_arg(args, enum Types);
@@ -288,31 +288,31 @@ int lcm(enum Types type, ...) {
 
         default : 
             fprintf(stderr, "(lcm) Unknown type specifier!!!\n");
-            return -1;
+            exit(EXIT_FAILURE);
     }
 
     type = va_arg(args, enum Types);
 
     while (type != FUNC_END) {
         switch (type) {
-            case INTEGER :
+            case INTEGER : {
                 int i = va_arg(args, int);
                 lcmVal = (lcmVal*i)/_gcd(lcmVal, i);
                 break;
-                
-            case DOUBLE :
+			}
+            case DOUBLE : {
                 int d = (int)round(va_arg(args, double));
                 lcmVal = (lcmVal*d)/_gcd(lcmVal, d);
                 break;
-            
-            case BOOL : 
+			}
+            case BOOL : {
                 int b = va_arg(args, int);
                 lcmVal = (lcmVal*b)/_gcd(lcmVal, b);
                 break;    
-                
+			}
             default : 
                 fprintf(stderr, "(lcm) Unknown type specifier!!!\n");
-                return -1;
+                exit(EXIT_FAILURE);
         }
         
         type = va_arg(args, enum Types);
@@ -343,7 +343,7 @@ int mod(enum Types type, ...) {
             
         default : 
             fprintf(stderr, "(mod) Unknown type specifier!!!\n");
-            return -1;
+            exit(EXIT_FAILURE);
     }
 
     type = va_arg(args, enum Types);
@@ -363,7 +363,7 @@ int mod(enum Types type, ...) {
             
         default : 
             fprintf(stderr, "(mod) Unknown type specifier!!!\n");
-            return -1;
+            exit(EXIT_FAILURE);
     }
 
     type = va_arg(args, enum Types);
