@@ -29,39 +29,41 @@ public class Main {
         Ast tree = new Ast();
 
         tree.root = simpleLangVisitor.visit(parseTree); //defining root of AST
-        tree.addScope(); //generating a global scope
+        if (tree.root != null) {
+            tree.addScope(); //generating a global scope
 
-        Err programErr = tree.generate();
-        if (programErr.errno == Err.Errno.OK) {
-            System.err.println("Success!!");
-        }
-        else {
-            switch (tree.ver) {
-                case WINDOWS : {
-                    AnsiConsole.systemInstall();
-                    System.err.println(Ansi.ansi()
-                            .fg(Color.RED)
-                            .a("\nerror in file " + args[0] + ", line " + programErr.lineno + ":")
-                            .reset());
-                    AnsiConsole.systemUninstall();
-                    break;
-                }
-                case LINUX : {
-                    System.err.format("\033[31merror in file %s, line %d:\n \033[0m",
-                            args[0], programErr.lineno);
-                    break;
-                }
-                default : {}
+            Err programErr = tree.generate();
+            if (programErr.errno == Err.Errno.OK) {
+                System.err.println("Success!!");
             }
+            else {
+                switch (Ast.ver) {
+                    case WINDOWS : {
+                        AnsiConsole.systemInstall();
+                        System.err.println(Ansi.ansi()
+                                .fg(Color.RED)
+                                .a("\nerror in file " + args[0] + ", line " + programErr.lineno + ":")
+                                .reset());
+                        AnsiConsole.systemUninstall();
+                        break;
+                    }
+                    case LINUX : {
+                        System.err.format("\033[31merror in file %s, line %d:\n \033[0m",
+                                args[0], programErr.lineno);
+                        break;
+                    }
+                    default : {}
+                }
 
-            BufferedReader rd = new BufferedReader(new FileReader(Paths.get(args[0]).toFile()));
-            for (int i = 1; i < programErr.lineno; i++) {
-                rd.readLine();
+                BufferedReader rd = new BufferedReader(new FileReader(Paths.get(args[0]).toFile()));
+                for (int i = 1; i < programErr.lineno; i++) {
+                    rd.readLine();
+                }
+                String errLine = rd.readLine();
+                errLine = errLine.trim();
+                System.err.format("%d: %s\n\n", programErr.lineno, errLine);
+                System.err.println(programErr.errMsg);
             }
-            String errLine = rd.readLine();
-            errLine = errLine.trim();
-            System.err.format("%d: %s\n\n", programErr.lineno, errLine);
-            System.err.println(programErr.errMsg);
         }
     }
 }

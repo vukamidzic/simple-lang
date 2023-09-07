@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 
 public class Ast {
     public enum OSVersion {WINDOWS, LINUX}
-    public OSVersion ver;
+    public static OSVersion ver;
     public enum Mut {VAR, CONST}
     public ArrayList<HashMap<String, Triplet<Expression.ExprTy, Integer, Mut>>> symTable;
 

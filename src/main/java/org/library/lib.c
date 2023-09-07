@@ -369,7 +369,7 @@ int mod(enum Types type, ...) {
     type = va_arg(args, enum Types);
 
     if (type != FUNC_END) {
-        fprintf(stderr, "(mod) Too many arguments for this function (expected 2)");
+        fprintf(stderr, "(mod) Too many arguments for this function (expected 2)\n");
         exit(EXIT_FAILURE);
     }
     

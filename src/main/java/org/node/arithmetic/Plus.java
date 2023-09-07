@@ -76,7 +76,13 @@ public class Plus extends Expression {
             return new Err(Err.Errno.ERR_TY, lineno, "Can't do addition with bool and other type!!");
         }
             
-        mp.get(new Pair(lhs.exprTy, rhs.exprTy)).func(lhs, rhs);
+        Operation op = mp.get(new Pair(lhs.exprTy, rhs.exprTy));
+        if (op != null) {
+            op.func(lhs, rhs);
+        }
+        else {
+            return new Err(Err.Errno.ERR_TY, lineno, "Can't do addition with given types!!");
+        }
 
         return new Err(Err.Errno.OK, -1, "");
     }
