@@ -5,7 +5,24 @@
 #include <math.h>
 #include "lib.h"
 
-void print(enum Types type, ...) {
+char* type_to_str(Types type) {
+    switch (type) {
+        case INTEGER : {
+            return "INT";
+        }
+        case DOUBLE : {
+            return "INT";
+        }
+        case BOOL : {
+            return "INT";
+        }
+        case PTR : {
+            return "PTR";
+        }
+    }
+}
+
+void print(Types type, ...) {
     va_list args;
     va_start(args, type);
     
@@ -32,14 +49,14 @@ void print(enum Types type, ...) {
                 exit(EXIT_FAILURE);
         }
         
-        type = va_arg(args, enum Types);
+        type = va_arg(args, Types);
     }
     
     va_end(args);
     return;
 }
 
-void println(enum Types type, ...) {
+void println(Types type, ...) {
     va_list args;
     va_start(args, type);
     
@@ -66,7 +83,7 @@ void println(enum Types type, ...) {
                 exit(EXIT_FAILURE);
         }
         
-        type = va_arg(args, enum Types);
+        type = va_arg(args, Types);
     }
     
     va_end(args);
@@ -74,7 +91,7 @@ void println(enum Types type, ...) {
     return;
 }
 
-void input(enum Types type, ...) {
+void input(Types type, ...) {
     va_list args;
     va_start(args, type);
 
@@ -85,14 +102,14 @@ void input(enum Types type, ...) {
         }
 
         scanf("%d", va_arg(args, int*));
-        type = va_arg(args, enum Types);
+        type = va_arg(args, Types);
     }
 
     va_end(args);
     return;
 }
 
-int maxValue(enum Types type, ...) {
+int maxValue(Types type, ...) {
     va_list args;
     va_start(args, type);
 
@@ -116,7 +133,7 @@ int maxValue(enum Types type, ...) {
             exit(EXIT_FAILURE);
     }
 
-    type = va_arg(args, enum Types);
+    type = va_arg(args, Types);
 
     while (type != FUNC_END) {
         switch (type) {
@@ -140,14 +157,14 @@ int maxValue(enum Types type, ...) {
                 exit(EXIT_FAILURE);
         }
         
-        type = va_arg(args, enum Types);
+        type = va_arg(args, Types);
     }
 
     va_end(args);
     return maxVal;
 }
 
-int minValue(enum Types type, ...) {
+int minValue(Types type, ...) {
     va_list args;
     va_start(args, type);
 
@@ -171,7 +188,7 @@ int minValue(enum Types type, ...) {
             exit(EXIT_FAILURE);
     }
 
-    type = va_arg(args, enum Types);
+    type = va_arg(args, Types);
 
     while (type != FUNC_END) {
         switch (type) {
@@ -195,7 +212,7 @@ int minValue(enum Types type, ...) {
                 exit(EXIT_FAILURE);
         }
         
-        type = va_arg(args, enum Types);
+        type = va_arg(args, Types);
     }
 
     va_end(args);
@@ -212,7 +229,7 @@ int _gcd(int a, int b) {
     return a;
 }
 
-int gcd(enum Types type, ...) {
+int gcd(Types type, ...) {
     va_list args;
     va_start(args, type);
 
@@ -236,7 +253,7 @@ int gcd(enum Types type, ...) {
             exit(EXIT_FAILURE);
     }
 
-    type = va_arg(args, enum Types);
+    type = va_arg(args, Types);
 
     while (type != FUNC_END) {
         switch (type) {
@@ -260,14 +277,14 @@ int gcd(enum Types type, ...) {
                 exit(EXIT_FAILURE);
         }
         
-        type = va_arg(args, enum Types);
+        type = va_arg(args, Types);
     }
 
     va_end(args);
     return gcdVal;
 }
 
-int lcm(enum Types type, ...) {
+int lcm(Types type, ...) {
     va_list args;
     va_start(args, type);
 
@@ -291,7 +308,7 @@ int lcm(enum Types type, ...) {
             exit(EXIT_FAILURE);
     }
 
-    type = va_arg(args, enum Types);
+    type = va_arg(args, Types);
 
     while (type != FUNC_END) {
         switch (type) {
@@ -315,14 +332,14 @@ int lcm(enum Types type, ...) {
                 exit(EXIT_FAILURE);
         }
         
-        type = va_arg(args, enum Types);
+        type = va_arg(args, Types);
     }
 
     va_end(args);
     return lcmVal;
 }
 
-int mod(enum Types type, ...) {
+int mod(Types type, ...) {
     va_list args;
     va_start(args, type);
 
@@ -346,7 +363,7 @@ int mod(enum Types type, ...) {
             exit(EXIT_FAILURE);
     }
 
-    type = va_arg(args, enum Types);
+    type = va_arg(args, Types);
 
     switch (type) {
         case INTEGER :
@@ -366,7 +383,7 @@ int mod(enum Types type, ...) {
             exit(EXIT_FAILURE);
     }
 
-    type = va_arg(args, enum Types);
+    type = va_arg(args, Types);
 
     if (type != FUNC_END) {
         fprintf(stderr, "(mod) Too many arguments for this function (expected 2)\n");
@@ -375,4 +392,28 @@ int mod(enum Types type, ...) {
     
     va_end(args);
     return t1 % t2;
+}
+
+double sini(Types type, ...) {
+    va_list args;
+    va_start(args, type);
+
+    if (type != INTEGER) {
+        fprintf(stderr, "Expected INT, got %s", type_to_str(type));
+        exit(EXIT_FAILURE);
+    }
+
+    return sin(va_arg(args, int));
+}
+
+double cosi(Types type, ...) {
+    va_list args;
+    va_start(args, type);
+
+    if (type != INTEGER) {
+        fprintf(stderr, "Expected INT, got %s", type_to_str(type));
+        exit(EXIT_FAILURE);
+    }
+
+    return cos(va_arg(args, int));
 }

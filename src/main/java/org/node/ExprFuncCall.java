@@ -25,7 +25,8 @@ public class ExprFuncCall extends Expression {
         tmpNum = Expression.tmpCounter;
         Expression.tmpCounter++;
 
-        switch (tree.functions.get(funcName)) {
+        String funcType = tree.functions.get(funcName);
+        switch (funcType) {
             case "i32" : {
                 exprTy = ExprTy.INT;
                 break;
@@ -46,7 +47,7 @@ public class ExprFuncCall extends Expression {
             if (argErr.errno != Err.Errno.OK) return argErr;
         }
 
-        System.out.format("    %%t%d = call i32 (i32, ...) @%s(", tmpNum, this.funcName);
+        System.out.format("    %%t%d = call %s (i32, ...) @%s(", tmpNum, funcType, this.funcName);
 
         for (Expression e : this.args) {
             switch (e.exprTy) {
