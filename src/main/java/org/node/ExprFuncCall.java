@@ -5,7 +5,6 @@ import org.simplelang.Ast;
 import java.util.ArrayList;
 
 import org.error.Err;
-import org.node.Expression;
 
 public class ExprFuncCall extends Expression {
     public String funcName;
@@ -13,7 +12,6 @@ public class ExprFuncCall extends Expression {
 
     public ExprFuncCall(String _funcName) {
         super();
-        exprTy = ExprTy.INT;
         funcName = _funcName;
         args = new ArrayList<>();
     }
@@ -27,6 +25,22 @@ public class ExprFuncCall extends Expression {
         tmpNum = Expression.tmpCounter;
         Expression.tmpCounter++;
 
+        switch (tree.functions.get(funcName)) {
+            case "i32" : {
+                exprTy = ExprTy.INT;
+                break;
+            }
+            case "double" : {
+                exprTy = ExprTy.FLOAT;
+                break;
+            }
+            case "i1" : {
+                exprTy = ExprTy.BOOL;
+                break;
+            }
+        }
+
+
         for (Expression e : this.args) {
             Err argErr = e.codegen(tree);
             if (argErr.errno != Err.Errno.OK) return argErr;
@@ -34,8 +48,7 @@ public class ExprFuncCall extends Expression {
 
         System.out.format("    %%t%d = call i32 (i32, ...) @%s(", tmpNum, this.funcName);
 
-        for (int i = 0; i < this.args.size() - 1; ++i) {
-            Expression e = (Expression) this.args.get(i);
+        for (Expression e : this.args) {
             switch (e.exprTy) {
                 case INT : {
                     System.out.format("i32 %d, i32 %%t%d, ", 0, e.tmpNum);
@@ -49,23 +62,13 @@ public class ExprFuncCall extends Expression {
                     System.out.format("i32 %d, i1 %%t%d, ", 2, e.tmpNum);
                     break;
                 }
+                case PTR : {
+                    System.out.format("i32 %d, i32* %%t%d, ", 3, e.tmpNum);
+                    break;
+                }
             }
         }
-        Expression e = (Expression) this.args.get(this.args.size()-1);
-        switch (e.exprTy) {
-            case INT : {
-                System.out.format("i32 %d, i32 %%t%d, i32 %d)\n", 0, e.tmpNum, 4);
-                break;
-            }
-            case FLOAT : {
-                System.out.format("i32 %d, double %%t%d, i32 %d)\n", 1, e.tmpNum, 4);
-                break;
-            }
-            case BOOL : {
-                System.out.format("i32 %d, i1 %%t%d, i32 %d)\n", 2, e.tmpNum, 4);
-                break;
-            }
-        }
+        System.out.format("i32 %d)\n", 4);
 
         return new Err(Err.Errno.OK, -1, "");
     }

@@ -18,10 +18,13 @@ public class Ast {
     public enum OSVersion {WINDOWS, LINUX}
     public static OSVersion ver;
     public enum Mut {VAR, CONST}
+    public HashMap<String, String> functions;
     public ArrayList<HashMap<String, Triplet<Expression.ExprTy, Integer, Mut>>> symTable;
+    public Node root;
 
     public Ast() {
         symTable = new ArrayList<>();
+        functions = new HashMap<>();
         switch (System.getProperty("os.name")) {
             case "Windows 10" : {
                 ver = OSVersion.WINDOWS;
@@ -33,8 +36,6 @@ public class Ast {
             }
         }
     }
-
-    public Node root;
 
     public Err generate() {
         switch (ver) {
@@ -91,12 +92,15 @@ public class Ast {
         try {
             String str = Files.readString(Paths.get("lib.ll"));
             
-            Pattern pattern = Pattern.compile("(i32|void) @[a-zA-Z]+\\(((i32|double|i1).*\\%[0-9]+\\,.*)+\\)");
+            Pattern pattern = Pattern.compile("(i1|double|i32|void) @([a-zA-Z]+)\\(((i32|double|i1).*\\%[0-9]+\\,.*)+\\)");
             Matcher matcher = pattern.matcher(str);
             
             while (matcher.find()) {
                 String foundStr = matcher.group();
+                String funcType = matcher.group(1);
+                String funcString = matcher.group(2);
                 System.out.println("declare " + foundStr);
+                this.functions.put(funcString, funcType);
             }
         }
         catch (IOException e) {

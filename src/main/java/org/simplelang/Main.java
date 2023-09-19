@@ -35,6 +35,7 @@ public class Main {
             Err programErr = tree.generate();
             if (programErr.errno == Err.Errno.OK) {
                 System.err.println("Success!!");
+                System.err.println(tree.functions);
             }
             else {
                 switch (Ast.ver) {
