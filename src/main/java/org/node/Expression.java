@@ -5,7 +5,8 @@ abstract public class Expression extends Node {
         INT, 
         FLOAT, 
         BOOL, 
-        PTR
+        PTR,
+        ARRAY
     }
     public ExprTy exprTy;
     public static int tmpCounter;

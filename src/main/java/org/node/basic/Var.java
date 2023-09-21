@@ -47,6 +47,13 @@ public class Var extends Expression {
                             tree.symTable.get(foundVariableIndex).get(varName).getValue1());
                     break;
                 }
+                case ARRAY : {
+                    System.out.format(
+                            "    %%t%d = load %%struct.Array, %%struct.Array* %%%s.%d\n",
+                            tmpNum, varName,
+                            tree.symTable.get(foundVariableIndex).get(varName).getValue1());
+                    break;
+                }
             }
 
             return new Err(Err.Errno.OK, -1, "");

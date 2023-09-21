@@ -39,6 +39,10 @@ public class ExprFuncCall extends Expression {
                 exprTy = ExprTy.BOOL;
                 break;
             }
+            case "{ i32*, i32 }" : {
+                exprTy = ExprTy.ARRAY;
+                break;
+            }
         }
 
 
@@ -67,9 +71,16 @@ public class ExprFuncCall extends Expression {
                     System.out.format("i32 %d, i32* %%t%d, ", 3, e.tmpNum);
                     break;
                 }
+                case ARRAY : {
+                    System.out.format("i32 %d, %%struct.Array %%t%d, ", 4, e.tmpNum);
+                    break;
+                }
+                default : {
+                    return new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!");
+                }
             }
         }
-        System.out.format("i32 %d)\n", 4);
+        System.out.format("i32 %d)\n", 5);
 
         return new Err(Err.Errno.OK, -1, "");
     }

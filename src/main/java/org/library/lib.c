@@ -78,6 +78,18 @@ void println(Types type, ...) {
                 printf("%p ", va_arg(args, int*));
                 break;
 
+            case ARRAY : {
+                Array arr = va_arg(args, Array);
+                putchar('[');
+                for (int i = 0; i < arr.size; ++i) {
+                    (i == arr.size-1)? 
+                        printf("%d", arr.elems[i]) :
+                        printf("%d, ", arr.elems[i]);
+                }
+                putchar(']');
+                break;
+            }
+
             default : 
                 fprintf(stderr, "(println) Unknown type specifier!!!\n");
                 exit(EXIT_FAILURE);
@@ -416,4 +428,48 @@ double cosi(Types type, ...) {
     }
 
     return cos(va_arg(args, int));
+}
+
+Array newArray(Types type, ...) {
+    va_list args;
+    va_start(args, type);
+
+    int size = va_arg(args, int);
+
+    type = va_arg(args, Types);
+
+    int elem = va_arg(args, int);
+
+    Array arr = {
+        .elems = malloc(size*sizeof(int)),
+        .size = size
+    };
+
+    for (int i = 0; i < size; ++i) {
+        arr.elems[i] = elem;
+    }
+
+    return arr;
+}
+
+int arrayGet(Types type, ...) {
+    va_list args;
+    va_start(args, type);
+
+    Array arr = va_arg(args, Array);
+
+    type = va_arg(args, Types);
+
+    int ind = va_arg(args, int);
+
+    return arr.elems[ind];
+}
+
+int arrayLen(Types type, ...) {
+    va_list args;
+    va_start(args, type);
+
+    Array arr = va_arg(args, Array);
+
+    return arr.size;
 }

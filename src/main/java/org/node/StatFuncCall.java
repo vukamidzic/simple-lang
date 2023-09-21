@@ -46,9 +46,13 @@ public class StatFuncCall extends Statement {
                     System.out.format("i32 %d, i32* %%t%d, ", 3, e.tmpNum);
                     break;
                 }
+                case ARRAY : {
+                    System.out.format("i32 %d, %%struct.Array %%t%d, ", 4, e.tmpNum);
+                    break;
+                }
             }
         }
-        System.out.format("i32 %d)\n", 4);
+        System.out.format("i32 %d)\n", 5);
 
         if (children.size() != 0) {
             Statement nextNode = (Statement) children.get(0);

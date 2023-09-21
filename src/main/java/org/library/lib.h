@@ -6,8 +6,14 @@ typedef enum Types {
     DOUBLE,
     BOOL,
     PTR,
+    ARRAY,
     FUNC_END
 } Types;
+
+typedef struct Array {
+    int* elems;
+    int size;
+} Array;
 
 //*********** PRINT FUNCTIONS ******************
 void print(Types type, ...);
@@ -24,5 +30,10 @@ int lcm(Types type, ...);
 int mod(Types type, ...);
 double sini(Types type, ...);
 double cosi(Types type, ...);
+
+//***** ARRAY FUNCTIONS *****************
+Array newArray(Types type, ...);
+int arrayGet(Types type, ...);
+int arrayLen(Types type, ...);
 
 #endif

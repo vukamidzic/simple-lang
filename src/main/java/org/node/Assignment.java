@@ -4,6 +4,19 @@ import org.simplelang.Ast;
 import org.error.Err;
 import org.javatuples.Triplet;
 
+/*%2 = alloca %struct.Array, align 8
+  store i32 0, i32* %1, align 4
+  %3 = call { i32*, i32 } @newArray()
+  %4 = bitcast %struct.Array* %2 to { i32*, i32 }*
+  %5 = getelementptr inbounds { i32*, i32 }, { i32*, i32 }* %4, i32 0, i32 0
+  %6 = extractvalue { i32*, i32 } %3, 0
+  store i32* %6, i32** %5, align 8
+  %7 = getelementptr inbounds { i32*, i32 }, { i32*, i32 }* %4, i32 0, i32 1
+  %8 = extractvalue { i32*, i32 } %3, 1
+  store i32 %8, i32* %7, align 8
+  ret i32 0
+*/
+
 public class Assignment extends Statement {
     static int assignCounter = 1;
     public Ast.Mut assignTy;
@@ -58,6 +71,19 @@ public class Assignment extends Statement {
                             "    store i32* %%t%d, i32** %%%s.%d\n",
                             exprValue.tmpNum, varName, assignNum);
                     break;
+                }
+                case ARRAY : {
+                    tree.addVariable(varName, Expression.ExprTy.ARRAY, assignNum, assignTy);
+                    System.out.format("    %%%s.%d = alloca %%struct.Array\n", varName, assignNum);
+                    System.out.format("    %%t%d = bitcast %%struct.Array* %%%s.%d to { i32*, i32 }*\n", 
+                            Expression.tmpCounter++, varName, assignNum);
+                    System.out.format(
+                            "    store { i32*, i32 } %%t%d, { i32*, i32 }* %%t%d\n",
+                            exprValue.tmpNum, Expression.tmpCounter-1);
+                    break;
+                }
+                default : {
+                    return new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!");
                 }
             }
         }
@@ -145,6 +171,9 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, varName, assignNum);
                     }
                     break;
+                }
+                default : {
+                    return new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!");
                 }
             }
         }
