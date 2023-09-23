@@ -110,7 +110,22 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
             }*/
             funcDefNode.args.put(ctx.ID(i).getText(), ExprTy.INT);
         }
+
+        switch (ctx.TYPE(sz-1).getText()) {
+            case "int" :  funcDefNode.funcRetType = "i32"; break;
+            case "float" :  funcDefNode.funcRetType = "double"; break;
+            case "bool" :  funcDefNode.funcRetType = "i1"; break;
+            default : return null;
+        }
+
         return funcDefNode;
+    }
+
+    @Override
+    public Node visitReturn(SimpleLangParser.ReturnContext ctx) {
+        Return retNode = new Return();
+        retNode.retExpr = (Expression) visit(ctx.expr());
+        return retNode;
     }
 
     @Override

@@ -4,6 +4,7 @@ import org.javatuples.Triplet;
 import org.node.Expression;
 import org.node.Node;
 import org.error.Err;
+import org.javatuples.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +19,8 @@ public class Ast {
     public enum OSVersion {WINDOWS, LINUX}
     public static OSVersion ver;
     public enum Mut {VAR, CONST}
-    public HashMap<String, String> functions;
+    public enum FuncType {LIB, NONLIB}
+    public HashMap<String, Pair<String, FuncType>> functions;
     public ArrayList<HashMap<String, Triplet<Expression.ExprTy, Integer, Mut>>> symTable;
     public Node root;
 
@@ -101,7 +103,8 @@ public class Ast {
                 String funcType = matcher.group(1);
                 String funcString = matcher.group(2);
                 System.out.println("declare " + foundStr);
-                this.functions.put(funcString, funcType);
+                Pair<String, FuncType> funcPair = new Pair<>(funcType, FuncType.LIB); 
+                this.functions.put(funcString, funcPair);
             }
         }
         catch (IOException e) {

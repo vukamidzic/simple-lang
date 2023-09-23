@@ -58,6 +58,7 @@ statement
     | ifElseStmt # ToIfElse
     | block_of_stmts # ToBlock
     | functionDef # ToFuncDef
+    | functionExit # ToReturn
 ;
 
 ifElseStmt
@@ -78,7 +79,11 @@ block_of_stmts
 ;
 
 functionDef 
-    : 'proc' ID LPAR (ID TYPE)?(',' ID TYPE)* RPAR block_of_stmts # FuncDef
+    : 'proc' ID LPAR (ID TYPE)?(',' ID TYPE)* RPAR TYPE block_of_stmts # FuncDef
+;
+
+functionExit
+    : 'ret' expr # Return
 ;
 
 assignment

@@ -2,6 +2,7 @@ package org.node.comp;
 
 import org.simplelang.Ast;
 import org.error.Err;
+import org.error.Err.Errno;
 import org.node.Expression;
 
 public class Great extends Expression {
@@ -36,6 +37,9 @@ public class Great extends Expression {
                 case BOOL: {
                     System.out.format("    %%t%d = icmp sgt i1 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
                     break;
+                }
+                default : {
+                    return new Err(Errno.ERR_TY, lineno, "Undefined type!!");
                 }
             }
         }
