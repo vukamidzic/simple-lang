@@ -1,6 +1,7 @@
 package org.simplelang;
 
 import org.node.*;
+import org.node.Expression.ExprTy;
 import org.node.arithmetic.*;
 import org.node.basic.*;
 import org.node.basic.Pointer.PtrTy;
@@ -87,6 +88,29 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
         forNode.endExpr = (Expression)visit(ctx.expr(1));
         forNode.blockOfStmts = (Block) visit(ctx.block_of_stmts());
         return forNode;
+    }
+
+    @Override
+    public Node visitFuncDef(SimpleLangParser.FuncDefContext ctx) {
+        FuncDef funcDefNode = new FuncDef(ctx.ID(0).getText());
+        funcDefNode.blockOfStmts = (Block) visit(ctx.block_of_stmts());
+        int sz = ctx.ID().size();
+        for (int i = 1; i < sz; ++i) {
+            //Expression.ExprTy ty = null;
+            /*switch (ctx.TYPE(i).getText()) {
+                case "int" : 
+                    ty = ExprTy.INT;
+                    break;
+                case "float" : 
+                    ty = ExprTy.FLOAT;
+                    break;
+                case "bool" : 
+                    ty = ExprTy.BOOL;
+                    break;
+            }*/
+            funcDefNode.args.put(ctx.ID(i).getText(), ExprTy.INT);
+        }
+        return funcDefNode;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package org.simplelang;
 
-// Generated from src/main/java/org/simplelang/SimpleLang.g4 by ANTLR 4.13.0
+// Generated from src/main/java/org/simplelang/SimpleLang.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -82,6 +82,13 @@ public interface SimpleLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitToBlock(SimpleLangParser.ToBlockContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ToFuncDef}
+	 * labeled alternative in {@link SimpleLangParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitToFuncDef(SimpleLangParser.ToFuncDefContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code NonEmptyIf}
 	 * labeled alternative in {@link SimpleLangParser#ifElseStmt}.
 	 * @param ctx the parse tree
@@ -114,6 +121,13 @@ public interface SimpleLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitBlock(SimpleLangParser.BlockContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code FuncDef}
+	 * labeled alternative in {@link SimpleLangParser#functionDef}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFuncDef(SimpleLangParser.FuncDefContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code AssignVar}
 	 * labeled alternative in {@link SimpleLangParser#assignment}.

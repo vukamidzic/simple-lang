@@ -25,13 +25,13 @@
     <dependency>
       <groupId>org.antlr</groupId>
       <artifactId>antlr4-runtime</artifactId>
-      <version>4.13.0</version>
+      <version>4.13.1</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.antlr/antlr4 -->
     <dependency>
       <groupId>org.antlr</groupId>
       <artifactId>antlr4</artifactId>
-      <version>4.13.0</version>
+      <version>4.13.1</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.javatuples/javatuples -->
     <dependency>

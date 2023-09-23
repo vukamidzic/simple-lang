@@ -52,10 +52,10 @@ public class Ast {
         System.out.println("%struct.Array = type { i32*, i32 }");
         getStdFuncs();
         System.out.println(";###########################################");
-        System.out.println("define i32 @main() {");
+        //System.out.println("define i32 @main() {");
         Err err = root.codegen(this);
-        System.out.println("    ret i32 0");
-        System.out.println("}");
+        //System.out.println("    ret i32 0");
+        //System.out.println("}");
         return err;
     }
 

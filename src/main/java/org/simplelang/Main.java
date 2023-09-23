@@ -29,6 +29,7 @@ public class Main {
         Ast tree = new Ast();
 
         tree.root = simpleLangVisitor.visit(parseTree); //defining root of AST
+        //System.err.println(tree.root.toString());
         if (tree.root != null) {
             tree.addScope(); //generating a global scope
 

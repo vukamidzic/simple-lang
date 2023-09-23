@@ -32,8 +32,8 @@ double sini(Types type, ...);
 double cosi(Types type, ...);
 
 //***** ARRAY FUNCTIONS *****************
-Array newArray(Types type, ...);
-int arrayGet(Types type, ...);
-int arrayLen(Types type, ...);
+Array array(Types type, ...);
+int get(Types type, ...);
+int len(Types type, ...);
 
 #endif

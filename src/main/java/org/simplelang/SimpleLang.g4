@@ -7,6 +7,8 @@ PTR : 'ptr';
 TRUE : 'true';
 FALSE : 'false';
 
+TYPE : 'int'|'float'|'bool';
+
 EQ : ':=';
 DSEMIC : '::';
 PLUS : '+';
@@ -52,9 +54,10 @@ statement
     : assignment # ToAssignment
     | statFuncCall # ToFuncCall
     | whileStmt # ToWhile
-    | forStmt #ToFor
+    | forStmt # ToFor
     | ifElseStmt # ToIfElse
     | block_of_stmts # ToBlock
+    | functionDef # ToFuncDef
 ;
 
 ifElseStmt
@@ -72,6 +75,10 @@ whileStmt
 
 block_of_stmts
     : LCURL statements RCURL # Block
+;
+
+functionDef 
+    : 'proc' ID LPAR (ID TYPE)?(',' ID TYPE)* RPAR block_of_stmts # FuncDef
 ;
 
 assignment

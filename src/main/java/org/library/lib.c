@@ -1,9 +1,13 @@
+#include "lib.h"
+
 #include <stdio.h> 
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdarg.h>
+
 #include <math.h>
-#include "lib.h"
+#include <limits.h>
+#include <string.h>
 
 char* type_to_str(Types type) {
     switch (type) {
@@ -11,15 +15,26 @@ char* type_to_str(Types type) {
             return "INT";
         }
         case DOUBLE : {
-            return "INT";
+            return "FLOAT";
         }
         case BOOL : {
-            return "INT";
+            return "BOOL";
         }
         case PTR : {
             return "PTR";
         }
+        case ARRAY : {
+            return "ARRAY";
+        }
+        default : {
+            return "UNDEFINED";
+        }
     }
+}
+
+char* get_filename(char* path) {
+    char* file = strrchr(path, '/');
+    return file+1; // return string from the '/' 
 }
 
 void print(Types type, ...) {
@@ -44,8 +59,24 @@ void print(Types type, ...) {
                 printf("%p ", va_arg(args, int*));
                 break;
 
+            case ARRAY : {
+                Array arr = va_arg(args, Array);
+                putchar('[');
+                for (int i = 0; i < arr.size; ++i) {
+                    (i == arr.size-1)? 
+                        printf("%d", arr.elems[i]) :
+                        printf("%d, ", arr.elems[i]);
+                }
+                putchar(']');
+                break;
+            }
+
             default : 
-                fprintf(stderr, "(print) Unknown type specifier!!!\n");
+                fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
+                    get_filename(__FILE__),
+                    __func__,
+                    type_to_str(type)
+                );
                 exit(EXIT_FAILURE);
         }
         
@@ -91,7 +122,11 @@ void println(Types type, ...) {
             }
 
             default : 
-                fprintf(stderr, "(println) Unknown type specifier!!!\n");
+                fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
+                    get_filename(__FILE__),
+                    __func__,
+                    type_to_str(type)
+                );
                 exit(EXIT_FAILURE);
         }
         
@@ -109,7 +144,10 @@ void input(Types type, ...) {
 
     while (type != FUNC_END) {
         if (type != PTR) {
-            fprintf(stderr, "(input) Non-pointer argument!!!");
+            fprintf(stderr, "[\033[35m%s\033[0m] %s(): Non-pointer argument\n", 
+                get_filename(__FILE__),
+                __func__
+            );
             exit(EXIT_FAILURE);
         }
 
@@ -125,27 +163,7 @@ int maxValue(Types type, ...) {
     va_list args;
     va_start(args, type);
 
-    int maxVal;
-
-    switch (type) {
-        case INTEGER : 
-            maxVal = va_arg(args, int);
-            break;
-
-        case DOUBLE : 
-            maxVal = (int)round(va_arg(args, double));
-            break;
-
-        case BOOL : 
-            maxVal = va_arg(args, int);
-            break;
-
-        default : 
-            fprintf(stderr, "(maxValue) Unknown type specifier!!!\n");
-            exit(EXIT_FAILURE);
-    }
-
-    type = va_arg(args, Types);
+    int maxVal = INT_MIN;
 
     while (type != FUNC_END) {
         switch (type) {
@@ -165,7 +183,11 @@ int maxValue(Types type, ...) {
                 break;    
 			}    
             default : 
-                fprintf(stderr, "(maxValue) Unknown type specifier!!!\n");
+                fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n", 
+                    get_filename(__FILE__),
+                    __func__,
+                    type_to_str(type)
+                );
                 exit(EXIT_FAILURE);
         }
         
@@ -180,27 +202,7 @@ int minValue(Types type, ...) {
     va_list args;
     va_start(args, type);
 
-    int minVal;
-
-    switch (type) {
-        case INTEGER : 
-            minVal = va_arg(args, int);
-            break;
-
-        case DOUBLE : 
-            minVal = (int)round(va_arg(args, double));
-            break;
-
-        case BOOL : 
-            minVal = va_arg(args, int);
-            break;
-
-        default : 
-            fprintf(stderr, "(minValue) Unknown type specifier!!!\n");
-            exit(EXIT_FAILURE);
-    }
-
-    type = va_arg(args, Types);
+    int minVal = INT_MAX;
 
     while (type != FUNC_END) {
         switch (type) {
@@ -220,7 +222,11 @@ int minValue(Types type, ...) {
                 break;    
 			}
             default : 
-                fprintf(stderr, "(minValue) Unknown type specifier!!!\n");
+                fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
+                    get_filename(__FILE__),
+                    __func__,
+                    type_to_str(type)
+                );
                 exit(EXIT_FAILURE);
         }
         
@@ -261,7 +267,11 @@ int gcd(Types type, ...) {
             break;
 
         default : 
-            fprintf(stderr, "(gcd) Unknown type specifier!!!\n");
+            fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
+                get_filename(__FILE__),
+                __func__,
+                type_to_str(type)
+            );
             exit(EXIT_FAILURE);
     }
 
@@ -285,7 +295,11 @@ int gcd(Types type, ...) {
                 break;    
 			}
             default : 
-                fprintf(stderr, "(gcd) Unknown type specifier!!!\n");
+                fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
+                    get_filename(__FILE__),
+                    __func__,
+                    type_to_str(type)
+                );
                 exit(EXIT_FAILURE);
         }
         
@@ -316,7 +330,11 @@ int lcm(Types type, ...) {
             break;
 
         default : 
-            fprintf(stderr, "(lcm) Unknown type specifier!!!\n");
+            fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
+                get_filename(__FILE__),
+                __func__,
+                type_to_str(type)
+            );
             exit(EXIT_FAILURE);
     }
 
@@ -340,7 +358,11 @@ int lcm(Types type, ...) {
                 break;    
 			}
             default : 
-                fprintf(stderr, "(lcm) Unknown type specifier!!!\n");
+                fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
+                    get_filename(__FILE__),
+                    __func__,
+                    type_to_str(type)
+                );
                 exit(EXIT_FAILURE);
         }
         
@@ -371,7 +393,11 @@ int mod(Types type, ...) {
             break;    
             
         default : 
-            fprintf(stderr, "(mod) Unknown type specifier!!!\n");
+            fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
+                get_filename(__FILE__),
+                __func__,
+                type_to_str(type)
+            );
             exit(EXIT_FAILURE);
     }
 
@@ -391,14 +417,21 @@ int mod(Types type, ...) {
             break;    
             
         default : 
-            fprintf(stderr, "(mod) Unknown type specifier!!!\n");
+            fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
+                get_filename(__FILE__),
+                __func__,
+                type_to_str(type)
+            );
             exit(EXIT_FAILURE);
     }
 
     type = va_arg(args, Types);
 
     if (type != FUNC_END) {
-        fprintf(stderr, "(mod) Too many arguments for this function (expected 2)\n");
+        fprintf(stderr, "[\033[35m%s\033[0m] %s(): Too many arguments for this function (expected 2)\n", 
+            get_filename(__FILE__),
+            __func__
+        );
         exit(EXIT_FAILURE);
     }
     
@@ -411,7 +444,11 @@ double sini(Types type, ...) {
     va_start(args, type);
 
     if (type != INTEGER) {
-        fprintf(stderr, "Expected INT, got %s", type_to_str(type));
+        fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected INT, got %s\n", 
+            get_filename(__FILE__),
+            __func__, 
+            type_to_str(type)
+        );
         exit(EXIT_FAILURE);
     }
 
@@ -423,28 +460,38 @@ double cosi(Types type, ...) {
     va_start(args, type);
 
     if (type != INTEGER) {
-        fprintf(stderr, "Expected INT, got %s", type_to_str(type));
+        fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected INT, got %s\n", 
+            get_filename(__FILE__),
+            __func__, 
+            type_to_str(type)
+        );
         exit(EXIT_FAILURE);
     }
 
     return cos(va_arg(args, int));
 }
 
-Array newArray(Types type, ...) {
+Array array(Types type, ...) {
     va_list args;
     va_start(args, type);
 
     int size = va_arg(args, int);
+    if (size < 1) {
+        fprintf(stderr, "[\033[35m%s\033[0m] %s(): Array size should be greater or equal to 1\n", 
+            get_filename(__FILE__), 
+            __func__
+        );
+        exit(EXIT_FAILURE);
+    }
 
     type = va_arg(args, Types);
-
     int elem = va_arg(args, int);
 
     Array arr = {
         .elems = malloc(size*sizeof(int)),
         .size = size
     };
-
+    
     for (int i = 0; i < size; ++i) {
         arr.elems[i] = elem;
     }
@@ -452,24 +499,61 @@ Array newArray(Types type, ...) {
     return arr;
 }
 
-int arrayGet(Types type, ...) {
+int get(Types type, ...) {
     va_list args;
     va_start(args, type);
 
-    Array arr = va_arg(args, Array);
+    switch (type) {
+        case ARRAY : {
+            Array arr = va_arg(args, Array);
+            type = va_arg(args, Types);
 
-    type = va_arg(args, Types);
+            if (type != INTEGER) {
+                fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected INT, got %s\n", 
+                    get_filename(__FILE__),
+                    __func__, 
+                    type_to_str(type)
+                );
+                exit(EXIT_FAILURE);    
+            }
 
-    int ind = va_arg(args, int);
-
-    return arr.elems[ind];
+            int index = va_arg(args, int);
+            if (index < 0 || index >= arr.size) {
+                fprintf(stderr, "[\033[35m%s\033[0m] %s(): Index out of bounds\n", 
+                    get_filename(__FILE__),
+                    __func__
+                );
+                exit(EXIT_FAILURE);    
+            }
+            return arr.elems[index];
+        }
+        default : {
+            fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
+                get_filename(__FILE__),
+                __func__, 
+                type_to_str(type)
+            );
+            exit(EXIT_FAILURE);
+        }
+    }
 }
 
-int arrayLen(Types type, ...) {
+int len(Types type, ...) {
     va_list args;
     va_start(args, type);
 
-    Array arr = va_arg(args, Array);
-
-    return arr.size;
+    switch (type) {
+        case ARRAY : {
+            Array arr = va_arg(args, Array);
+            return arr.size;
+        }
+        default : {
+            fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
+                get_filename(__FILE__),
+                __func__, 
+                type_to_str(type)
+            );
+            exit(EXIT_FAILURE);
+        }
+    }
 }
