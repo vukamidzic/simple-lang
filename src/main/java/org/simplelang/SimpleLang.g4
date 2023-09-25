@@ -2,7 +2,7 @@ grammar SimpleLang;
 
 WHILE : 'while';
 FOR : 'for';
-PTR : 'ptr';
+PTR : 'addr';
 
 TRUE : 'true';
 FALSE : 'false';
@@ -127,7 +127,7 @@ mulOrDiv
 
 ptrOp 
     : PTR LPAR atom RPAR # ToPointer
-    | '*' atom  # FromPointer
+    | 'at' LPAR atom RPAR  # FromPointer
     | atom # ToAtom
 ;
 

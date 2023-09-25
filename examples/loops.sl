@@ -1,6 +1,9 @@
 proc main(argc int) int {
+    n := 0
+    input(addr(n))
+
     i := 1
-    while (i < 10) {
+    while (i < n) {
         (i < 5)? {
             println(i * i)
         }
@@ -11,7 +14,7 @@ proc main(argc int) int {
         i := i + 1
     }
 
-    for (j <- 1,9) {
+    for (j <- 1,n - 1) {
         (j < 5)? {
             println(j * j)
         }

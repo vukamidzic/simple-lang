@@ -1,6 +1,6 @@
 proc main(argc int) int {
     n := 0
-    input(ptr(n))
+    input(addr(n))
 
     (n < 0)? {
         m := n * n

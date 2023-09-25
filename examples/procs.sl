@@ -8,7 +8,7 @@ proc sq(x int) int {
 
 proc main(argc int) int {
     a := 0 b := 0
-    input(ptr(a), ptr(b))
+    input(addr(a), addr(b))
 
     println(add(sq(a), sq(b)))
 
