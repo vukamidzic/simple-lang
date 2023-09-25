@@ -22,7 +22,7 @@ public class Main {
         SimpleLangLexer lexer = new SimpleLangLexer(input);
         SimpleLangParser parser = new SimpleLangParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
-        parser.addErrorListener(new ParseErrListener());
+        parser.addErrorListener(new ParseErrListener(args[0]));
 
         ParseTree parseTree = parser.program();
         SimpleLangVisitorImpl simpleLangVisitor = new SimpleLangVisitorImpl();

@@ -35,5 +35,6 @@ double cosi(Types type, ...);
 Array array(Types type, ...);
 int get(Types type, ...);
 int len(Types type, ...);
+void put(Types type, ...);
 
 #endif

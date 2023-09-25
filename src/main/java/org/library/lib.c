@@ -557,3 +557,28 @@ int len(Types type, ...) {
         }
     }
 }
+
+void put(Types type, ...) {
+    va_list args;
+    va_start(args, type);
+
+    switch (type) {
+        case ARRAY : {
+            Array arr = va_arg(args, Array);
+            type = va_arg(args, Types);
+            int index = va_arg(args, int);
+            type = va_arg(args, Types);
+            int x = va_arg(args, int);
+            arr.elems[index] = x;
+            return;
+        }
+        default : {
+            fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
+                get_filename(__FILE__),
+                __func__, 
+                type_to_str(type)
+            );
+            exit(EXIT_FAILURE);
+        }
+    }
+}
