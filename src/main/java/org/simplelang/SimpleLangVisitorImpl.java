@@ -95,9 +95,10 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
         FuncDef funcDefNode = new FuncDef(ctx.ID(0).getText());
         funcDefNode.blockOfStmts = (Block) visit(ctx.block_of_stmts());
         int sz = ctx.ID().size();
+        
         for (int i = 1; i < sz; ++i) {
-            //Expression.ExprTy ty = null;
-            /*switch (ctx.TYPE(i).getText()) {
+            Expression.ExprTy ty = ExprTy.INT;
+            switch (ctx.TYPE(i-1).getText()) {
                 case "int" : 
                     ty = ExprTy.INT;
                     break;
@@ -107,14 +108,18 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
                 case "bool" : 
                     ty = ExprTy.BOOL;
                     break;
-            }*/
-            funcDefNode.args.put(ctx.ID(i).getText(), ExprTy.INT);
+                case "array" : 
+                    ty = ExprTy.ARRAY;
+                    break;
+            }
+            funcDefNode.args.put(ctx.ID(i).getText(), ty);
         }
 
         switch (ctx.TYPE(sz-1).getText()) {
             case "int" :  funcDefNode.funcRetType = "i32"; break;
             case "float" :  funcDefNode.funcRetType = "double"; break;
             case "bool" :  funcDefNode.funcRetType = "i1"; break;
+            case "array" :  funcDefNode.funcRetType = "{i32*,i32}"; break;
             default : return null;
         }
 

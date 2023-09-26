@@ -1,16 +1,36 @@
-proc add(x int, y int) int {
-    ret x + y
-}
+proc f(a array, x int) int {
+    n := len(a)
+    l := 0
+    d := n - 1
 
-proc sq(x int) int {
-    ret x * x
+    while (l < d or l = d) {
+        s := (l + d) / 2
+        e := get(a, s)
+
+        (e = x)? { ret s }
+        (e > x)? { d := s }
+        ()? { l := s + 1 }
+    }    
+
+    ret -1
 }
 
 proc main(argc int) int {
-    a := 0 b := 0
-    input(addr(a), addr(b))
+    n := 0
+    input(addr(n))
 
-    println(add(sq(a), sq(b)))
+    a := newArray(n, 0)
+    for (i <- 0,n - 1) {
+        t := 0
+        input(addr(t))
+        put(a, i, t)
+    }
+
+    x := 0
+    input(addr(x))
+
+    b := f(a, x)
+    println(b)
 
     ret 0
 }

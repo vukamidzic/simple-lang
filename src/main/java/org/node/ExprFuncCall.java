@@ -103,6 +103,10 @@ public class ExprFuncCall extends Expression {
                         System.out.format("i1, ");
                         break;
                     }
+                    case ARRAY : {
+                        System.out.format("%%struct.Array, ");
+                        break;
+                    }
                     default : {
                         return new Err(Errno.ERR_TY, lineno, "Undefined type!!");
                     }
@@ -120,6 +124,10 @@ public class ExprFuncCall extends Expression {
                 }
                 case BOOL : {
                     System.out.format("i1) ");
+                    break;
+                }
+                case ARRAY : {
+                    System.out.format("%%struct.Array, ");
                     break;
                 }
                 default : {
@@ -142,6 +150,10 @@ public class ExprFuncCall extends Expression {
                         System.out.format("i1 %%t%d, ", e.tmpNum);
                         break;
                     }
+                    case ARRAY : {
+                        System.out.format("%%struct.Array %%t%d, ", e.tmpNum);
+                        break;
+                    }
                     default : {
                         return new Err(Errno.ERR_TY, lineno, "Undefined type!!");
                     }
@@ -159,6 +171,10 @@ public class ExprFuncCall extends Expression {
                 }
                 case BOOL : {
                     System.out.format("i1 %%t%d)\n", e.tmpNum);
+                    break;
+                }
+                case ARRAY : {
+                    System.out.format("%%struct.Array %%t%d)\n", e.tmpNum);
                     break;
                 }
                 default : {

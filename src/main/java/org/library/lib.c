@@ -471,7 +471,7 @@ double cosi(Types type, ...) {
     return cos(va_arg(args, int));
 }
 
-Array array(Types type, ...) {
+Array newArray(Types type, ...) {
     va_list args;
     va_start(args, type);
 

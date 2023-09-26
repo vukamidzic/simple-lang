@@ -32,7 +32,7 @@ double sini(Types type, ...);
 double cosi(Types type, ...);
 
 //***** ARRAY FUNCTIONS *****************
-Array array(Types type, ...);
+Array newArray(Types type, ...);
 int get(Types type, ...);
 int len(Types type, ...);
 void put(Types type, ...);

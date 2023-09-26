@@ -45,10 +45,12 @@ public class FuncDef extends Statement {
                 case BOOL : 
                     ty = "i1";
                     break;
+                case ARRAY : 
+                    ty = "%struct.Array";
+                    break;
                 default : 
                     return new Err(Errno.ERR_TY, lineno, "Undefined type!!");
             }
-            //int tmp = Assignment.assignCounter++;
             System.out.format("%s %%%s, ", ty, args_names.get(i));
             tree.addVariable(args_names.get(i), t, Assignment.assignCounter++, Ast.Mut.VAR);
         }
@@ -64,32 +66,88 @@ public class FuncDef extends Statement {
             case BOOL : 
                 ty = "i1";
                 break;
+            case ARRAY : 
+                ty = "%struct.Array";
+                break;
             default : 
                 return new Err(Errno.ERR_TY, lineno, "Undefined type!!");
         }
-        //int tmp = Assignment.assignCounter++;
         System.out.format("%s %%%s", ty, args_names.get(n-1));
         tree.addVariable(args_names.get(n-1), t, Assignment.assignCounter++, Ast.Mut.VAR);
 
         System.out.format(") {\n");
         for (String name : args_names) {
-            System.out.format("    %%%s.%d = alloca %s\n", 
-                name,
-                tree.symTable.get(tree.findVariableScope(name)).get(name).getValue1(),
-                exprTypeToString(args.get(name))
-            );
-            System.out.format("    store i32 %%%s, i32* %%%s.%d\n", 
-                name, 
-                name, 
-                tree.symTable.get(tree.findVariableScope(name)).get(name).getValue1()
-            );
+            switch (args.get(name)) {
+                case INT : {
+                    System.out.format("    %%%s.%d = alloca %s\n", 
+                        name,
+                        tree.symTable.get(tree.findVariableScope(name)).get(name).getValue1(),
+                        exprTypeToString(args.get(name))
+                    );
+                    System.out.format("    store i32 %%%s, i32* %%%s.%d\n", 
+                        name, 
+                        name, 
+                        tree.symTable.get(tree.findVariableScope(name)).get(name).getValue1()
+                    );
+                    break;
+                }
+                case FLOAT : {
+                    System.out.format("    %%%s.%d = alloca %s\n", 
+                        name,
+                        tree.symTable.get(tree.findVariableScope(name)).get(name).getValue1(),
+                        exprTypeToString(args.get(name))
+                    );
+                    System.out.format("    store double %%%s, double* %%%s.%d\n", 
+                        name, 
+                        name, 
+                        tree.symTable.get(tree.findVariableScope(name)).get(name).getValue1()
+                    );
+                    break;
+                }
+                case BOOL : {
+                    System.out.format("    %%%s.%d = alloca %s\n", 
+                        name,
+                        tree.symTable.get(tree.findVariableScope(name)).get(name).getValue1(),
+                        exprTypeToString(args.get(name))
+                    );
+                    System.out.format("    store i1 %%%s, i1* %%%s.%d\n", 
+                        name, 
+                        name, 
+                        tree.symTable.get(tree.findVariableScope(name)).get(name).getValue1()
+                    );
+                    break;
+                }
+                case ARRAY : {
+                    System.out.format("    %%%s.%d = alloca %%struct.Array\n", 
+                        name,
+                        tree.symTable.get(tree.findVariableScope(name)).get(name).getValue1()
+                    );
+                    System.out.format("    store %%struct.Array %%%s, %%struct.Array* %%%s.%d\n", 
+                        name, 
+                        name, 
+                        tree.symTable.get(tree.findVariableScope(name)).get(name).getValue1()
+                    );
+                    break;
+                }
+            }
         }
+
+        if (blockOfStmts.stmts instanceof If) {
+            System.out.format("    br label %%if%d\n", ((If)blockOfStmts.stmts).ifNum);
+        }
+        else if (blockOfStmts.stmts instanceof While) {
+            System.out.format("    br label %%if%d\n", ((While)blockOfStmts.stmts).whileNum);
+        } 
+        else if (blockOfStmts.stmts instanceof For) {
+            System.out.format("    br label %%for%d\n", ((For)blockOfStmts.stmts).forNum);
+        }
+
         Err blockErr = blockOfStmts.codegen(tree);
         if (blockErr.errno != Errno.OK) return blockErr;
         System.out.format("}\n");
 
         Pair<String, Ast.FuncType> funcPair = new Pair<String,Ast.FuncType>(funcRetType, Ast.FuncType.NONLIB);
-        tree.functions.put(funcName, funcPair); //(ty, NONLIB)
+        tree.functions.put(funcName, funcPair);
         for (String v : args_names) {
             tree.removeVariable(v);
         }
