@@ -27,4 +27,16 @@ public class Block extends Statement {
 
     // returns first node from inside of block
     public Node getFirstStmt() {return stmts;}
+
+    // checks if the block contains any return statements
+    public boolean containsRetStmt() {
+        Statement curr = (Statement) this.stmts;
+
+        while (curr.children.size() > 0) {
+            if (curr instanceof Return) return true; 
+            curr = (Statement) curr.children.get(0);
+        }
+
+        return (curr instanceof Return);
+    }
 }

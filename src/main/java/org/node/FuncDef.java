@@ -27,6 +27,9 @@ public class FuncDef extends Statement {
         System.err.println(tree.symTable);
         System.err.println(args);
 
+        Pair<String, Ast.FuncType> funcPair = new Pair<String,Ast.FuncType>(funcRetType, Ast.FuncType.NONLIB);
+        tree.functions.put(funcName, funcPair);
+
         System.out.format("define %s @%s(", funcRetType, funcName);
 
         ArrayList<String> args_names = new ArrayList<>();
@@ -146,8 +149,6 @@ public class FuncDef extends Statement {
         if (blockErr.errno != Errno.OK) return blockErr;
         System.out.format("}\n");
 
-        Pair<String, Ast.FuncType> funcPair = new Pair<String,Ast.FuncType>(funcRetType, Ast.FuncType.NONLIB);
-        tree.functions.put(funcName, funcPair);
         for (String v : args_names) {
             tree.removeVariable(v);
         }

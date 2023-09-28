@@ -34,8 +34,12 @@ public class If extends Statement {
 
     @Override
     public Err codegen(Ast tree) {
+        System.err.println("-------------------------------");
         System.err.format("(line %d)Node: If node, depth: %d\n", lineno, tree.symTable.size());
+        System.err.println("If-block contains return statement: " + blockOfStmts.containsRetStmt()); 
+        System.err.println("If-node next num: " + nextNum);
         System.err.println(tree.symTable);
+        System.err.println("-------------------------------");
 
         System.out.format("if%d:\n", ifNum);
         Err condErr = cond.codegen(tree);
@@ -51,8 +55,13 @@ public class If extends Statement {
                     cond.tmpNum, condNum, ((While) nextNode).whileNum);
         }
         else {
-            System.out.format("    br i1 %%t%d, label %%cond%d, label %%next%d\n",
-                    cond.tmpNum, condNum, nextNum);
+            if (nextNode != null && !blockOfStmts.containsRetStmt()) {
+                System.out.format("    br i1 %%t%d, label %%cond%d, label %%next%d\n",
+                    cond.tmpNum, condNum, nextNum);    
+            }
+            else {
+                System.out.format("    br label %%cond%d\n", condNum);
+            }
         }
 
         System.out.format("cond%d: \n", condNum);
@@ -69,19 +78,27 @@ public class If extends Statement {
         if (blockErr.errno != Err.Errno.OK) return blockErr;
 
         int jumpToNum = getJumpToNum();
-        System.out.format("    br label %%next%d\n", jumpToNum);
-        System.out.format("next%d: \n", nextNum);
-        if (nextNode instanceof If) {
-            System.out.format("    br label %%if%d\n", ((If) nextNode).ifNum);
-        }
-        else if (nextNode instanceof While) {
-            System.out.format("    br label %%while%d\n", ((While) nextNode).whileNum);
-        }
-
-
         if (nextNode != null) {
+            if (!blockOfStmts.containsRetStmt()) {
+                    System.out.format("    br label %%next%d\n", jumpToNum);
+                    System.out.format("next%d: \n", nextNum);
+            }
+
+            if (nextNode instanceof If) {
+                System.out.format("    br label %%if%d\n", ((If) nextNode).ifNum);
+            }
+            else if (nextNode instanceof While) {
+                System.out.format("    br label %%while%d\n", ((While) nextNode).whileNum);
+            }
+            
             Err nextErr = nextNode.codegen(tree);
             if (nextErr.errno != Err.Errno.OK) return nextErr;
+        }
+        else {
+            if (!blockOfStmts.containsRetStmt()) {
+                    System.out.format("    br label %%next%d\n", jumpToNum);
+                    System.out.format("next%d: \n", nextNum);
+            }
         }
 
         return new Err(Err.Errno.OK, -1, "");
