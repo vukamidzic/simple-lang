@@ -3,6 +3,9 @@ package org.node;
 import org.simplelang.Ast;
 import org.error.Err;
 import org.javatuples.Triplet;
+import org.node.basic.Bool;
+import org.node.basic.FloatP;
+import org.node.basic.Int;
 
 public class Assignment extends Statement {
     static int assignCounter = 1;
@@ -22,33 +25,54 @@ public class Assignment extends Statement {
         System.err.println(tree.symTable);
         int scopeIndex = tree.findVariableScope(varName);
 
-        Err exprErr = exprValue.codegen(tree);
+        if (tree.symTable.size() > 1) {
+            Err exprErr = exprValue.codegen(tree);
         if (exprErr.errno != Err.Errno.OK) return exprErr;
+        }
 
         if (scopeIndex == -1) {
             switch (exprValue.exprTy) {
                 case INT : {
                     tree.addVariable(varName, Expression.ExprTy.INT, assignNum, assignTy);
-                    System.out.format("    %%%s.%d = alloca i32\n", varName, assignNum);
-                    System.out.format(
+                    if (tree.symTable.size() == 1 && exprValue instanceof Int) {
+                        System.out.format("@%s.%d = global i32 %d\n", 
+                            varName, assignNum, ((Int)exprValue).numValue);
+                    }
+                    else {
+                        System.out.format("    %%%s.%d = alloca i32\n", varName, assignNum);
+                        System.out.format(
                             "    store i32 %%t%d, i32* %%%s.%d\n",
                             exprValue.tmpNum, varName, assignNum);
+                    }
+                    
                     break;
                 }
                 case FLOAT : {
                     tree.addVariable(varName, Expression.ExprTy.FLOAT, assignNum, assignTy);
-                    System.out.format("    %%%s.%d = alloca double\n", varName, assignNum);
-                    System.out.format(
+                    if (tree.symTable.size() == 1 && exprValue instanceof FloatP) {
+                        System.out.format("@%s.%d = global double %f\n", 
+                            varName, assignNum, ((FloatP)exprValue).numValue);
+                    }
+                    else {
+                        System.out.format("    %%%s.%d = alloca double\n", varName, assignNum);
+                        System.out.format(
                             "    store double %%t%d, double* %%%s.%d\n",
                             exprValue.tmpNum, varName, assignNum);
+                    }
                     break;
                 }
                 case BOOL : {
                     tree.addVariable(varName, Expression.ExprTy.BOOL, assignNum, assignTy);
-                    System.out.format("    %%%s.%d = alloca i1\n", varName, assignNum);
-                    System.out.format(
+                    if (tree.symTable.size() == 1 && exprValue instanceof Bool) {
+                        System.out.format("@%s.%d = global i1 %d\n", 
+                            varName, assignNum, (((Bool)exprValue).boolValue) ? 1 : 0);
+                    }
+                    else {
+                        System.out.format("    %%%s.%d = alloca i1\n", varName, assignNum);
+                        System.out.format(
                             "    store i1 %%t%d, i1* %%%s.%d\n",
                             exprValue.tmpNum, varName, assignNum);
+                    }
                     break;
                 }
                 case PTR : {

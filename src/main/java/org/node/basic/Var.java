@@ -2,6 +2,7 @@ package org.node.basic;
 
 import org.simplelang.Ast;
 import org.error.Err;
+import org.error.Err.Errno;
 import org.node.Expression;
 
 public class Var extends Expression {
@@ -20,38 +21,73 @@ public class Var extends Expression {
             exprTy = tree.symTable.get(foundVariableIndex).get(varName).getValue0();
             switch (exprTy) {
                 case INT : {
-                    System.out.format(
+                    if (foundVariableIndex == 0) {
+                        System.out.format(
+                            "    %%t%d = load i32, i32* @%s.%d\n",
+                            tmpNum, varName,
+                            tree.symTable.get(foundVariableIndex).get(varName).getValue1());    
+                    }
+                    else {
+                        System.out.format(
                             "    %%t%d = load i32, i32* %%%s.%d\n",
                             tmpNum, varName,
                             tree.symTable.get(foundVariableIndex).get(varName).getValue1());
+                    }                    
                     break;
                 }
                 case FLOAT : {
-                    System.out.format(
+                    if (foundVariableIndex == 0) {
+                        System.out.format(
+                            "    %%t%d = load double, double* @%s.%d\n",
+                            tmpNum, varName,
+                            tree.symTable.get(foundVariableIndex).get(varName).getValue1());
+                    }
+                    else {
+                        System.out.format(
                             "    %%t%d = load double, double* %%%s.%d\n",
                             tmpNum, varName,
                             tree.symTable.get(foundVariableIndex).get(varName).getValue1());
+                    }  
                     break;
                 }
                 case BOOL : {
-                    System.out.format(
+                    if (foundVariableIndex == 0) {
+                        System.out.format(
+                            "    %%t%d = load i1, i1* @%s.%d\n",
+                            tmpNum, varName,
+                            tree.symTable.get(foundVariableIndex).get(varName).getValue1());
+                    }
+                    else {
+                        System.out.format(
                             "    %%t%d = load i1, i1* %%%s.%d\n",
                             tmpNum, varName,
                             tree.symTable.get(foundVariableIndex).get(varName).getValue1());
+                    }
+                    
                     break;
                 }
                 case PTR : {
-                    System.out.format(
+                    if (foundVariableIndex == 0) {
+                        return new Err(Errno.ERR_VAR, lineno, "Can't use pointers globally");
+                    }
+                    else {
+                        System.out.format(
                             "    %%t%d = load i32*, i32** %%%s.%d\n",
                             tmpNum, varName,
                             tree.symTable.get(foundVariableIndex).get(varName).getValue1());
+                    }
                     break;
                 }
                 case ARRAY : {
-                    System.out.format(
+                    if (foundVariableIndex == 0) {
+                        return new Err(Errno.ERR_VAR, lineno, "Can't use arrays globally");
+                    }
+                    else {
+                        System.out.format(
                             "    %%t%d = load %%struct.Array, %%struct.Array* %%%s.%d\n",
                             tmpNum, varName,
                             tree.symTable.get(foundVariableIndex).get(varName).getValue1());
+                    }
                     break;
                 }
             }

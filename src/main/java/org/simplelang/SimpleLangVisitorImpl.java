@@ -120,7 +120,7 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
             case "float" :  funcDefNode.funcRetType = "double"; break;
             case "bool" :  funcDefNode.funcRetType = "i1"; break;
             case "array" :  funcDefNode.funcRetType = "{i32*,i32}"; break;
-            default : return null;
+            default : funcDefNode.funcRetType = "void"; break;
         }
 
         return funcDefNode;

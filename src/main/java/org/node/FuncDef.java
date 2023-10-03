@@ -29,6 +29,7 @@ public class FuncDef extends Statement {
 
         Pair<String, Ast.FuncType> funcPair = new Pair<String,Ast.FuncType>(funcRetType, Ast.FuncType.NONLIB);
         tree.functions.put(funcName, funcPair);
+        blockOfStmts.canAddScope = false;
 
         System.out.format("define %s @%s(", funcRetType, funcName);
 
@@ -36,6 +37,7 @@ public class FuncDef extends Statement {
         args_names.addAll(args.keySet());
         int n = args_names.size();
         String ty = "";
+        tree.addScope();
         for (int i = 0; i < n-1; ++i) {
             ExprTy t = args.get(args_names.get(i));
             switch (t) { 

@@ -5,14 +5,15 @@ import org.error.Err;
 
 public class Block extends Statement {
     public Node stmts;
-
+    public boolean canAddScope = true;
     public Block() {super();}
 
     @Override
     public Err codegen(Ast tree) {
         System.err.format("(line %d)Node: Block node, depth: %d\n", lineno, tree.symTable.size());
         System.err.println(tree.symTable);
-        tree.addScope();
+        
+        if (canAddScope) tree.addScope();
         Err stmtsErr = stmts.codegen(tree);
         if (stmtsErr.errno != Err.Errno.OK) return stmtsErr;
         tree.removeScope();

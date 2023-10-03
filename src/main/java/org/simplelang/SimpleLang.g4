@@ -7,7 +7,7 @@ PTR : 'addr';
 TRUE : 'true';
 FALSE : 'false';
 
-TYPE : 'int'|'float'|'bool'|'array';
+TYPE : 'int'|'float'|'bool'|'array'|'void';
 
 EQ : ':=';
 DSEMIC : '::';
