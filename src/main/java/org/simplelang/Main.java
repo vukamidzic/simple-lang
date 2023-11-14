@@ -10,6 +10,7 @@ import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.Ansi.Color;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,7 +19,10 @@ import org.error.Err;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        CharStream input = CharStreams.fromStream(Files.newInputStream(Paths.get(args[0])));
+        System.err.println(Files.readString(Paths.get(args[0])));
+        String formattedInput = Macros.changeMacros(Files.readString(Paths.get(args[0])));
+        System.err.println(formattedInput);
+        CharStream input = CharStreams.fromStream(new ByteArrayInputStream(formattedInput.getBytes()));
         SimpleLangLexer lexer = new SimpleLangLexer(input);
         SimpleLangParser parser = new SimpleLangParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
@@ -29,7 +33,6 @@ public class Main {
         Ast tree = new Ast();
 
         tree.root = simpleLangVisitor.visit(parseTree); //defining root of AST
-        //System.err.println(tree.root.toString());
         if (tree.root != null) {
             tree.addScope(); //generating a global scope
 

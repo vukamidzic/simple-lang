@@ -5,6 +5,8 @@ lib.ll
 antlr-4.13.1-complete.jar
 build.bat
 run.bat
+build.sh
+run.sh
 dependency-reduced-pom.xml
 .idea
 .vscode
