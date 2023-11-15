@@ -21,7 +21,13 @@ public class Main {
     public static void main(String[] args) throws Exception {
         System.err.println(Files.readString(Paths.get(args[0])));
         String formattedInput = Macros.changeMacros(Files.readString(Paths.get(args[0])));
-        System.err.println(formattedInput);
+        // System.err.println(formattedInput);
+
+        if (Macros.infiniteMacros) {
+            System.err.format("\033[31merror in file %s: infinite macros!!!\n", args[0]);
+            return;
+        }
+
         CharStream input = CharStreams.fromStream(new ByteArrayInputStream(formattedInput.getBytes()));
         SimpleLangLexer lexer = new SimpleLangLexer(input);
         SimpleLangParser parser = new SimpleLangParser(new CommonTokenStream(lexer));
