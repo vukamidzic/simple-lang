@@ -33,6 +33,7 @@ RCURL : '}';
 QMARK : '?';
 COMMA : ',';
 
+COMMENT : '//{' .*? '}//' -> skip;
 WS : ([ \t\r] | [ \t]) -> skip;
 NL : ('\r\n' | '\n') -> skip;
 
