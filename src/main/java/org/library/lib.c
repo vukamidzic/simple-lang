@@ -523,6 +523,15 @@ Array array(Types type, ...) {
             }
             break;
         }
+        case CHAR : {
+            char elem = va_arg(args, char);
+            arr.elems = (char*)malloc(size*sizeof(char));
+            
+            for (int i = 0; i < size; ++i) {
+                ((char*)arr.elems)[i] = elem;
+            }
+            break;
+        }
         default : {
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected INT|FLOAT|BOOL, got %s\n", 
                 get_filename(__FILE__),
@@ -655,6 +664,27 @@ double getf(Types type, ...) {
         type = va_arg(args, Types);
         int index = va_arg(args, int);
         double res = ((double*)arr.elems)[index];
+        return res;
+    }
+}
+
+char getch(Types type, ...) {
+    va_list args;
+    va_start(args, type);
+
+    if (type != ARRAY) {
+        fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
+            get_filename(__FILE__),
+            __func__, 
+            type_to_str(type)
+        );
+        exit(EXIT_FAILURE);
+    }
+    else {
+        Array arr = va_arg(args, Array);
+        type = va_arg(args, Types);
+        int index = va_arg(args, int);
+        char res = ((char*)arr.elems)[index];
         return res;
     }
 }

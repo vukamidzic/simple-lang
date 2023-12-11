@@ -1,5 +1,7 @@
 package org.node;
 
+import java.util.Stack;
+
 import org.error.Err;
 import org.error.Err.Errno;
 import org.node.Expression.ExprTy;
@@ -14,9 +16,9 @@ public class Return extends Statement {
     }
 
     @Override
-    public Err codegen(Ast tree) {
-        Err exprErr = retExpr.codegen(tree);
-        if (exprErr.errno != Errno.OK) return exprErr;
+    public Stack<Err> codegen(Ast tree) {
+        Stack<Err> exprErrs = retExpr.codegen(tree);
+        if (exprErrs.size() != 0) return exprErrs;
 
         retType = retExpr.exprTy;
         switch (retType) {
@@ -37,17 +39,19 @@ public class Return extends Statement {
                 break;
             }
             default : {
-                return new Err(Errno.ERR_TY, lineno, "Undefined type!!");
+                Stack<Err> stackErrs = new Stack<Err>();
+                stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                return stackErrs;
             }
         }
 
         if (children.size() != 0) {
             Statement nextNode = (Statement) children.get(0);
 
-            Err nextErr = nextNode.codegen(tree);
-            if (nextErr.errno != Err.Errno.OK) return nextErr;
+            Stack<Err> nextErrs = nextNode.codegen(tree);
+            if (nextErrs.size() != 0) return nextErrs;
         }
 
-        return new Err(Errno.OK, -1, "");
+        return new Stack<Err>();
     }
 }

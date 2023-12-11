@@ -2,6 +2,7 @@ package org.node;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import org.simplelang.Ast;
 import org.error.Err;
@@ -22,7 +23,7 @@ public class FuncDef extends Statement {
     }
 
     @Override
-    public Err codegen(Ast tree) {
+    public Stack<Err> codegen(Ast tree) {
         System.err.format("(line %d)Node: FuncDef node, depth: %d\n", lineno, tree.symTable.size());
         System.err.println(tree.symTable);
         System.err.println(args);
@@ -56,8 +57,11 @@ public class FuncDef extends Statement {
                 case ARRAY : 
                     ty = "%struct.Array";
                     break;
-                default : 
-                    return new Err(Errno.ERR_TY, lineno, "Undefined type!!");
+                default : {
+                    Stack<Err> stackErrs = new Stack<Err>();
+                    stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                    return stackErrs;
+                }
             }
             System.out.format("%s %%%s, ", ty, args_names.get(i));
             tree.addVariable(args_names.get(i), t, Assignment.assignCounter++, Ast.Mut.VAR);
@@ -80,8 +84,11 @@ public class FuncDef extends Statement {
             case ARRAY : 
                 ty = "%struct.Array";
                 break;
-            default : 
-                return new Err(Errno.ERR_TY, lineno, "Undefined type!!");
+            default : {
+                Stack<Err> stackErrs = new Stack<Err>();
+                stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                return stackErrs;
+            }
         }
         System.out.format("%s %%%s", ty, args_names.get(n-1));
         tree.addVariable(args_names.get(n-1), t, Assignment.assignCounter++, Ast.Mut.VAR);
@@ -153,6 +160,7 @@ public class FuncDef extends Statement {
                     );
                     break;
                 }
+                default: break;
             }
         }
 
@@ -166,8 +174,8 @@ public class FuncDef extends Statement {
             System.out.format("    br label %%for%d\n", ((For)blockOfStmts.stmts).forNum);
         }
 
-        Err blockErr = blockOfStmts.codegen(tree);
-        if (blockErr.errno != Errno.OK) return blockErr;
+        Stack<Err> blockErrs = blockOfStmts.codegen(tree);
+        if (blockErrs.size() != 0) return blockErrs;
         System.out.format("}\n");
 
         for (String v : args_names) {
@@ -177,11 +185,10 @@ public class FuncDef extends Statement {
         if (children.size() != 0) {
             Statement nextNode = (Statement) children.get(0);
 
-            Err nextErr = nextNode.codegen(tree);
-            if (nextErr.errno != Err.Errno.OK) return nextErr;
+            Stack<Err> nextErrs = nextNode.codegen(tree);
+            if (nextErrs.size() != 0) return nextErrs;
         }
-
-        return new Err(Errno.OK, -1, "");
+        return new Stack<Err>();
     }
 
     private String exprTypeToString(Expression.ExprTy type) {

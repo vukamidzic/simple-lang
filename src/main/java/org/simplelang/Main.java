@@ -9,6 +9,7 @@ import org.fusesource.jansi.AnsiConsole;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.Ansi.Color;
 
+import java.util.Stack;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.FileReader;
@@ -41,38 +42,34 @@ public class Main {
         if (tree.root != null) {
             tree.addScope(); //generating a global scope
 
-            Err programErr = tree.generate();
-            if (programErr.errno == Err.Errno.OK) {
+            Stack<Err> programErrs = tree.generate();
+            if (programErrs.size() == 0) {
                 System.err.println("Success!!");
                 System.err.println(tree.functions);
             }
             else {
                 switch (Ast.ver) {
-                    case WINDOWS : {
-                        AnsiConsole.systemInstall();
-                        System.err.println(Ansi.ansi()
-                                .fg(Color.RED)
-                                .a("\nerror in file " + args[0] + ", line " + programErr.lineno + ":")
-                                .reset());
-                        AnsiConsole.systemUninstall();
-                        break;
-                    }
+                    case WINDOWS : break;
                     case LINUX : {
-                        System.err.format("[\033[31m\033[1mERR\033[0m] (%s) line %d:\n",
-                                args[0], programErr.lineno);
+                        System.err.println("***********************");
+                        for (Err e : programErrs) {
+                            System.err.format("[\033[31m\033[1mERR\033[0m] (%s) line %d:\n",
+                                args[0], e.lineno);
+
+                            BufferedReader rd = new BufferedReader(new FileReader(Paths.get(args[0]).toFile()));
+                            for (int i = 1; i < e.lineno; i++) {
+                                rd.readLine();
+                            }
+                            String errLine = rd.readLine();
+                            errLine = errLine.trim();
+                            System.err.format("%d: %s\n\n", e.lineno, errLine);
+                            System.err.println(e.errMsg);
+                        }
+                        System.err.println("***********************");
                         break;
                     }
-                    default : {}
+                    default : break;
                 }
-
-                BufferedReader rd = new BufferedReader(new FileReader(Paths.get(args[0]).toFile()));
-                for (int i = 1; i < programErr.lineno; i++) {
-                    rd.readLine();
-                }
-                String errLine = rd.readLine();
-                errLine = errLine.trim();
-                System.err.format("%d: %s\n\n", programErr.lineno, errLine);
-                System.err.println(programErr.errMsg);
             }
         }
     }

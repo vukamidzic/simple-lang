@@ -38,5 +38,6 @@ int len(Types type, ...);
 void put(Types type, ...);
 int geti(Types type, ...);
 double getf(Types type, ...);
+char getch(Types type, ...);
 
 #endif

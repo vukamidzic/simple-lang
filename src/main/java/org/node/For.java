@@ -1,5 +1,7 @@
 package org.node;
 
+import java.util.Stack;
+
 import org.simplelang.Ast;
 import org.error.Err;
 import org.error.Err.Errno;
@@ -25,18 +27,20 @@ public class For extends Statement {
     }
 
     @Override
-    public Err codegen(Ast tree) {
+    public Stack<Err> codegen(Ast tree) {
         tmp = Expression.tmpCounter++;
         forCondNum = Expression.tmpCounter++;
 
         System.err.format("(line %d)Node: For node, depth: %d\n", lineno, tree.symTable.size());
         System.err.println(tree.symTable);
 
-        Err startErr = startExpr.codegen(tree);
-        if (startErr.errno != Errno.OK) return startErr;
+        Stack<Err> startErrs = startExpr.codegen(tree);
+        if (startErrs.size() != 0) return startErrs;
         System.err.println(startExpr.exprTy);
         if (startExpr.exprTy != ExprTy.INT) {
-            return new Err(Errno.ERR_TY, lineno, "Can't use float/bool in for counter!!!");
+            Stack<Err> stackErrs = new Stack<Err>();
+            stackErrs.add(new Err(Errno.ERR_TY, lineno, "Can't use float/bool in for counter!!!"));
+            return stackErrs;
         }
 
         tree.addVariable(varName, startExpr.exprTy, forAssignNum, Ast.Mut.VAR);
@@ -49,8 +53,8 @@ public class For extends Statement {
 
         System.out.format("for%d:\n", forNum);
 
-        Err endErr = endExpr.codegen(tree);
-        if (endErr.errno != Errno.OK) return endErr;
+        Stack<Err> endErrs = endExpr.codegen(tree);
+        if (endErrs.size() != 0) return endErrs;
 
         System.out.format("    %%tmp%d = load i32, i32* %%%s.%d\n", 
                     tmp, varName, forAssignNum);
@@ -67,8 +71,8 @@ public class For extends Statement {
         else if (fstStmt instanceof While) {
             System.out.format("    br label %%while%d\n", ((While)fstStmt).whileNum);
         }
-        Err blockOfStmtsErr = blockOfStmts.codegen(tree);
-        if (blockOfStmtsErr.errno != Err.Errno.OK) return blockOfStmtsErr;
+        Stack<Err> blockOfStmtsErrs = blockOfStmts.codegen(tree);
+        if (blockOfStmtsErrs.size() != 0) return blockOfStmtsErrs;
 
         tmp = Expression.tmpCounter++;
         System.out.format("    %%tmp%d = load i32, i32* %%%s.%d\n", 
@@ -87,10 +91,10 @@ public class For extends Statement {
 
         if (children.size() != 0) {
             Statement nextNode = (Statement) children.get(0);
-            Err nextErr = nextNode.codegen(tree);
-            if (nextErr.errno != Err.Errno.OK) return nextErr;
+            Stack<Err> nextErrs = nextNode.codegen(tree);
+            if (nextErrs.size() != 0) return nextErrs;
         }
 
-        return new Err(Errno.OK, 0, "");
+        return new Stack<Err>();
     }
 }

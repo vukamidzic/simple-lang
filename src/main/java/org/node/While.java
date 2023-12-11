@@ -1,5 +1,7 @@
 package org.node;
 
+import java.util.Stack;
+
 import org.simplelang.Ast;
 import org.error.Err;
 
@@ -17,17 +19,21 @@ public class While extends Statement {
     }
 
     @Override
-    public Err codegen(Ast tree) {
+    public Stack<Err> codegen(Ast tree) {
         System.err.format("(line %d)Node: While node, depth: %d\n", lineno, tree.symTable.size());
         System.err.println(tree.symTable);
 
         System.out.format("while%d:\n", whileNum);
 
-        Err condErr = cond.codegen(tree);
-        if (condErr.errno != Err.Errno.OK) return condErr;
+        Stack<Err> condErrs = cond.codegen(tree);
+        if (condErrs.size() != 0) return condErrs;
 
-        if (cond.exprTy != Expression.ExprTy.BOOL)
-            return new Err(Err.Errno.ERR_COND, lineno, "Condition must be bool type!!!");
+        if (cond.exprTy != Expression.ExprTy.BOOL) {
+            Stack<Err> stackErrs = new Stack<Err>();
+            stackErrs.add(new Err(Err.Errno.ERR_COND, lineno, "Condition must be bool type!!!"));
+            return stackErrs;
+        }
+            
 
         System.out.format("    br i1 %%t%d, label %%body_while%d, label %%next%d\n",
                     cond.tmpNum, whileNum, nextNum);
@@ -40,18 +46,18 @@ public class While extends Statement {
         else if (fstStmt instanceof While) {
             System.out.format("    br label %%while%d\n", ((While)fstStmt).whileNum);
         }
-        Err blockOfStmtsErr = blockOfStmts.codegen(tree);
-        if (blockOfStmtsErr.errno != Err.Errno.OK) return blockOfStmtsErr;
+        Stack<Err> blockOfStmtsErrs = blockOfStmts.codegen(tree);
+        if (blockOfStmtsErrs.size() != 0) return blockOfStmtsErrs;
         System.out.format("    br label %%while%d\n", whileNum);
 
         System.out.format("next%d:\n", nextNum);
 
         if (children.size() != 0) {
             Statement nextNode = (Statement) children.get(0);
-            Err nextErr = nextNode.codegen(tree);
-            if (nextErr.errno != Err.Errno.OK) return nextErr;
+            Stack<Err> nextErrs = nextNode.codegen(tree);
+            if (nextErrs.size() != 0) return nextErrs;
         }
 
-        return new Err(Err.Errno.OK, -1, "");
+        return new Stack<Err>();
     }
 }

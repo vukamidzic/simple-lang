@@ -1,5 +1,7 @@
 package org.node.basic;
 
+import java.util.Stack;
+
 import org.simplelang.Ast;
 import org.error.Err;
 import org.node.Expression;
@@ -15,7 +17,7 @@ public class Pointer extends Expression {
     }
 
     @Override
-    public Err codegen(Ast tree) {
+    public Stack<Err> codegen(Ast tree) {
         tmpNum = Expression.tmpCounter;
         Expression.tmpCounter++;
 
@@ -35,20 +37,22 @@ public class Pointer extends Expression {
                             tmpNum, tmpNum-1);
                     }
                     else {
-                        return new Err(Err.Errno.ERR_VAR, lineno, "Variable '" + varName + "' not defined!!");
+                        Stack<Err> stackErrs = new Stack<Err>();
+                        stackErrs.add(new Err(Err.Errno.ERR_VAR, lineno, "Variable '" + varName + "' not defined!!"));
+                        return stackErrs;
                     }
                 }
                 break;
             case FROM_PTR: 
                 exprTy = ExprTy.INT;
-                Err valueErr = value.codegen(tree);
-                if (valueErr.errno != Err.Errno.OK) return valueErr; 
+                Stack<Err> stackErrs = value.codegen(tree);
+                if (stackErrs.size() != 0) return stackErrs; 
                 System.out.format("    %%t%d = load i32, i32* %%t%d\n",
                     tmpNum, value.tmpNum);
                 break;
             default: break;
         }
 
-        return new Err(Err.Errno.OK, -1, "");
+        return new Stack<Err>();
     }
 }

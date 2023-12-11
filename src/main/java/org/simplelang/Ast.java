@@ -8,7 +8,7 @@ import org.javatuples.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.Stack;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class Ast {
         }
     }
 
-    public Err generate() {
+    public Stack<Err> generate() {
         switch (ver) {
             case WINDOWS : {
                 System.out.println("target triple = \"x86_64-pc-windows-msvc19.29.30138\"\n");
@@ -55,10 +55,10 @@ public class Ast {
         getStdFuncs();
         System.out.println(";###########################################");
         //System.out.println("define i32 @main() {");
-        Err err = root.codegen(this);
+        Stack<Err> errs = root.codegen(this);
         //System.out.println("    ret i32 0");
         //System.out.println("}");
-        return err;
+        return errs;
     }
 
     public void addScope() {
@@ -95,13 +95,13 @@ public class Ast {
         try {
             String str = Files.readString(Paths.get("lib.ll"));
             
-            Pattern pattern = Pattern.compile("(\\{ i64, i8\\* \\}|i1|double|i32|void) @([a-zA-Z]+)\\(((i64|i32|double|i1).*\\%[0-9]+\\,.*)+\\)");
+            Pattern pattern = Pattern.compile("define .* ((\\{ i64, i8\\* \\}|i1|i8|double|i32|void) @([a-zA-Z]+)\\(((i64|i32|double|i1).*\\%[0-9]+\\,.*)+\\))");
             Matcher matcher = pattern.matcher(str);
             
             while (matcher.find()) {
-                String foundStr = matcher.group();
-                String funcType = matcher.group(1);
-                String funcString = matcher.group(2);
+                String foundStr = matcher.group(1);
+                String funcType = matcher.group(2);
+                String funcString = matcher.group(3);
                 System.out.println("declare " + foundStr);
                 Pair<String, FuncType> funcPair = new Pair<>(funcType, FuncType.LIB); 
                 this.functions.put(funcString, funcPair);

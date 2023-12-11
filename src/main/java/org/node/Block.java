@@ -1,5 +1,7 @@
 package org.node;
 
+import java.util.Stack;
+
 import org.simplelang.Ast;
 import org.error.Err;
 
@@ -9,21 +11,21 @@ public class Block extends Statement {
     public Block() {super();}
 
     @Override
-    public Err codegen(Ast tree) {
+    public Stack<Err> codegen(Ast tree) {
         System.err.format("(line %d)Node: Block node, depth: %d\n", lineno, tree.symTable.size());
         System.err.println(tree.symTable);
         
         if (canAddScope) tree.addScope();
-        Err stmtsErr = stmts.codegen(tree);
-        if (stmtsErr.errno != Err.Errno.OK) return stmtsErr;
+        Stack<Err> stmtsErrs = stmts.codegen(tree);
+        if (stmtsErrs.size() != 0) return stmtsErrs;
         tree.removeScope();
         if (children.size() != 0) {
             Statement nextNode = (Statement) children.get(0);
-            Err nextErr = nextNode.codegen(tree);
-            if (nextErr.errno != Err.Errno.OK) return nextErr;
+            Stack<Err> nextErrs = nextNode.codegen(tree);
+            if (nextErrs.size() != 0) return nextErrs;
         }
 
-        return new Err(Err.Errno.OK, -1, "");
+        return new Stack<Err>();
     }
 
     // returns first node from inside of block

@@ -1,5 +1,7 @@
 package org.node.basic;
 
+import java.util.Stack;
+
 import org.simplelang.Ast;
 import org.error.Err;
 import org.error.Err.Errno;
@@ -10,13 +12,16 @@ public class Var extends Expression {
     public Var() {super();}
 
     @Override
-    public Err codegen(Ast tree) {
+    public Stack<Err> codegen(Ast tree) {
         tmpNum = Expression.tmpCounter;
         Expression.tmpCounter++;
 
         int foundVariableIndex = tree.findVariableScope(varName);
-        if (foundVariableIndex == -1)
-            return new Err(Err.Errno.ERR_VAR, lineno, "Variable '" + varName + "' not defined!!");
+        if (foundVariableIndex == -1) {
+            Stack<Err> stackErrs = new Stack<Err>();
+            stackErrs.add(new Err(Err.Errno.ERR_VAR, lineno, "Variable '" + varName + "' not defined!!"));
+            return stackErrs;
+        }  
         else {
             exprTy = tree.symTable.get(foundVariableIndex).get(varName).getValue0();
             switch (exprTy) {
@@ -63,7 +68,6 @@ public class Var extends Expression {
                             tmpNum, varName,
                             tree.symTable.get(foundVariableIndex).get(varName).getValue1());
                     }
-                    
                     break;
                 }
                 case CHAR : {
@@ -79,12 +83,13 @@ public class Var extends Expression {
                             tmpNum, varName,
                             tree.symTable.get(foundVariableIndex).get(varName).getValue1());
                     }
-                    
                     break;
                 }
                 case PTR : {
                     if (foundVariableIndex == 0) {
-                        return new Err(Errno.ERR_VAR, lineno, "Can't use pointers globally");
+                        Stack<Err> stackErrs = new Stack<Err>();
+                        stackErrs.add(new Err(Errno.ERR_VAR, lineno, "Can't use pointers globally"));
+                        return stackErrs;
                     }
                     else {
                         System.out.format(
@@ -96,7 +101,9 @@ public class Var extends Expression {
                 }
                 case ARRAY : {
                     if (foundVariableIndex == 0) {
-                        return new Err(Errno.ERR_VAR, lineno, "Can't use arrays globally");
+                        Stack<Err> stackErrs = new Stack<Err>();
+                        stackErrs.add(new Err(Errno.ERR_VAR, lineno, "Can't use arrays globally"));
+                        return stackErrs;
                     }
                     else {
                         System.out.format(
@@ -108,7 +115,7 @@ public class Var extends Expression {
                 }
             }
 
-            return new Err(Err.Errno.OK, -1, "");
+            return new Stack<Err>();
         }
     }
 }

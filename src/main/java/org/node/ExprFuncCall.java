@@ -1,10 +1,10 @@
 package org.node;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
 import org.simplelang.Ast;
 import org.simplelang.Ast.FuncType;
-
-import java.util.ArrayList;
-
 import org.error.Err;
 import org.error.Err.Errno;
 
@@ -19,7 +19,7 @@ public class ExprFuncCall extends Expression {
     }
 
     @Override
-    public Err codegen(Ast tree) {
+    public Stack<Err> codegen(Ast tree) {
         System.err.format("(line %d)Node: FuncCall node, depth: %d, num_args: %d\n",
                 lineno, tree.symTable.size(), args.size());
         System.err.println(tree.symTable);
@@ -52,8 +52,8 @@ public class ExprFuncCall extends Expression {
         }
 
         for (Expression e : this.args) {
-            Err argErr = e.codegen(tree);
-            if (argErr.errno != Err.Errno.OK) return argErr;
+            Stack<Err> argErrs = e.codegen(tree);
+            if (argErrs.size() != 0) return argErrs;
         }
 
         if (tree.functions.get(funcName).getValue1() == FuncType.LIB) {
@@ -86,7 +86,9 @@ public class ExprFuncCall extends Expression {
                         break;
                     }
                     default : {
-                        return new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!");
+                        Stack<Err> stackErrs = new Stack<Err>();
+                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!"));
+                        return stackErrs;
                     }
                 }
             }
@@ -120,7 +122,9 @@ public class ExprFuncCall extends Expression {
                         break;
                     }
                     default : {
-                        return new Err(Errno.ERR_TY, lineno, "Undefined type!!");
+                        Stack<Err> stackErrs = new Stack<Err>();
+                        stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                        return stackErrs;
                     }
                 }
             }
@@ -147,7 +151,9 @@ public class ExprFuncCall extends Expression {
                     break;
                 }
                 default : {
-                    return new Err(Errno.ERR_TY, lineno, "Undefined type!!");
+                    Stack<Err> stackErrs = new Stack<Err>();
+                    stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                    return stackErrs;
                 }
             }
             System.out.format("@%s (", funcName);
@@ -175,7 +181,9 @@ public class ExprFuncCall extends Expression {
                         break;
                     }
                     default : {
-                        return new Err(Errno.ERR_TY, lineno, "Undefined type!!");
+                        Stack<Err> stackErrs = new Stack<Err>();
+                        stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                        return stackErrs;
                     }
                 }
             }
@@ -202,11 +210,14 @@ public class ExprFuncCall extends Expression {
                     break;
                 }
                 default : {
-                    return new Err(Errno.ERR_TY, lineno, "Undefined type!!");
+                    // return ;
+                    Stack<Err> stackErrs = new Stack<Err>();
+                    stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                    return stackErrs;
                 }
             }
         }
 
-        return new Err(Err.Errno.OK, -1, "");
+        return new Stack<Err>();
     }
 }

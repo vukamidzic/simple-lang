@@ -1,9 +1,10 @@
 package org.node;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
 import org.simplelang.Ast;
 import org.error.Err;
-
-import java.util.ArrayList;
 
 public class StatFuncCall extends Statement {
     public String funcName;
@@ -16,14 +17,14 @@ public class StatFuncCall extends Statement {
     }
 
     @Override
-    public Err codegen(Ast tree) {
+    public Stack<Err> codegen(Ast tree) {
         System.err.format("(line %d)Node: FuncCall node, depth: %d, num_args: %d\n",
                 lineno, tree.symTable.size(), args.size());
         System.err.println(tree.symTable);
         
         for (Expression e : this.args) {
-            Err argErr = e.codegen(tree);
-            if (argErr.errno != Err.Errno.OK) return argErr;
+            Stack<Err> argErrs = e.codegen(tree);
+            if (argErrs.size() != 0) return argErrs;
         }
 
         System.out.format("    call void (i32, ...) @%s(", this.funcName);        
@@ -68,10 +69,10 @@ public class StatFuncCall extends Statement {
                 System.out.format("    br label %%while%d\n", ((While) nextNode).whileNum);
             }
 
-            Err nextErr = nextNode.codegen(tree);
-            if (nextErr.errno != Err.Errno.OK) return nextErr;
+            Stack<Err> nextErrs = nextNode.codegen(tree);
+            if (nextErrs.size() != 0) return nextErrs;
         }
 
-        return new Err(Err.Errno.OK, -1, "");
+        return new Stack<Err>();
     }
 }

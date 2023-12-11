@@ -1,5 +1,7 @@
 package org.node;
 
+import java.util.Stack;
+
 import org.error.Err;
 import org.simplelang.Ast;
 
@@ -33,7 +35,7 @@ public class If extends Statement {
     }
 
     @Override
-    public Err codegen(Ast tree) {
+    public Stack<Err> codegen(Ast tree) {
         System.err.println("-------------------------------");
         System.err.format("(line %d)Node: If node, depth: %d\n", lineno, tree.symTable.size());
         System.err.println("If-block contains return statement: " + blockOfStmts.containsRetStmt()); 
@@ -42,8 +44,8 @@ public class If extends Statement {
         System.err.println("-------------------------------");
 
         System.out.format("if%d:\n", ifNum);
-        Err condErr = cond.codegen(tree);
-        if (condErr.errno != Err.Errno.OK) return condErr;
+        Stack<Err> condErrs = cond.codegen(tree);
+        if (condErrs.size() != 0) return condErrs;
 
         Statement nextNode = (children.size() != 0) ? (Statement) children.get(0) : null;
         if (nextNode instanceof If) {
@@ -74,8 +76,8 @@ public class If extends Statement {
             System.out.format("    br label %%while%d\n", ((While)fstStmt).whileNum);
         }
 
-        Err blockErr = blockOfStmts.codegen(tree);
-        if (blockErr.errno != Err.Errno.OK) return blockErr;
+        Stack<Err> blockErrs = blockOfStmts.codegen(tree);
+        if (blockErrs.size() != 0) return blockErrs;
 
         int jumpToNum = getJumpToNum();
         if (nextNode != null) {
@@ -91,8 +93,8 @@ public class If extends Statement {
                 System.out.format("    br label %%while%d\n", ((While) nextNode).whileNum);
             }
             
-            Err nextErr = nextNode.codegen(tree);
-            if (nextErr.errno != Err.Errno.OK) return nextErr;
+            Stack<Err> nextErrs = nextNode.codegen(tree);
+            if (nextErrs.size() != 0) return nextErrs;
         }
         else {
             if (!blockOfStmts.containsRetStmt()) {
@@ -101,7 +103,7 @@ public class If extends Statement {
             }
         }
 
-        return new Err(Err.Errno.OK, -1, "");
+        return new Stack<Err>();
     }
 
     private int getJumpToNum() {

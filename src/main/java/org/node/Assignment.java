@@ -1,5 +1,7 @@
 package org.node;
 
+import java.util.Stack;
+
 import org.simplelang.Ast;
 import org.error.Err;
 // import org.javatuples.Triplet;
@@ -21,14 +23,14 @@ public class Assignment extends Statement {
     }
 
     @Override
-    public Err codegen(Ast tree) {
+    public Stack<Err> codegen(Ast tree) {
         System.err.format("(line %d)Node: Assign node, depth: %d\n", lineno, tree.symTable.size());
         System.err.println(tree.symTable);
         int scopeIndex = tree.findVariableScope(varName);
 
         if (tree.symTable.size() > 1) {
-            Err exprErr = exprValue.codegen(tree);
-        if (exprErr.errno != Err.Errno.OK) return exprErr;
+            Stack<Err> exprErrs = exprValue.codegen(tree);
+            if (exprErrs.size() != 0) return exprErrs;
         }
 
         if (scopeIndex == -1) {
@@ -109,13 +111,19 @@ public class Assignment extends Statement {
                     break;
                 }
                 default : {
-                    return new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!");
+                    Stack<Err> stackErrs = new Stack<Err>();
+                    stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!"));
+                    return stackErrs;
                 }
             }
         }
         else {
-            if (tree.symTable.get(scopeIndex).get(varName).getValue2() == Ast.Mut.CONST)
-                return new Err(Err.Errno.ERR_CONST, lineno, "Can't assign value to constant!!!");
+            if (tree.symTable.get(scopeIndex).get(varName).getValue2() == Ast.Mut.CONST) {
+                Stack<Err> stackErrs = new Stack<Err>();
+                stackErrs.add(new Err(Err.Errno.ERR_CONST, lineno, "Can't assign value to constant!!!"));
+                return stackErrs;
+            }
+               
 
             String register = String.format("%%%s.%d",
                     varName, tree.symTable.get(scopeIndex).get(varName).getValue1());
@@ -129,7 +137,9 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        return new Err(Err.Errno.ERR_TY, lineno, "Can't assign INT value to non-INT variable!!!");
+                        Stack<Err> stackErrs = new Stack<Err>();
+                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign INT value to non-INT variable!!!"));
+                        return stackErrs;
                     }
                     break;
                 }
@@ -140,7 +150,9 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        return new Err(Err.Errno.ERR_TY, lineno, "Can't assign FLOAT value to non-FLOAT variable!!!");
+                        Stack<Err> stackErrs = new Stack<Err>();
+                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign FLOAT value to non-FLOAT variable!!!"));
+                        return stackErrs;
                     }
                     break;
                 }
@@ -151,7 +163,9 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        return new Err(Err.Errno.ERR_TY, lineno, "Can't assign BOOL value to non-BOOL variable!!!");
+                        Stack<Err> stackErrs = new Stack<Err>();
+                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign BOOL value to non-BOOL variable!!!"));
+                        return stackErrs;
                     }
                     break;
                 }
@@ -162,7 +176,9 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        return new Err(Err.Errno.ERR_TY, lineno, "Can't assign CHAR value to non-CHAR variable!!!");
+                        Stack<Err> stackErrs = new Stack<Err>();
+                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign CHAR value to non-CHAR variable!!!"));
+                        return stackErrs;
                     }
                     break;
                 }
@@ -173,12 +189,16 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        return new Err(Err.Errno.ERR_TY, lineno, "Can't assign PTR value to non-PTR variable!!!");
+                        Stack<Err> stackErrs = new Stack<Err>();
+                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign PTR value to non-PTR variable!!!"));
+                        return stackErrs;
                     }
                     break;
                 }
                 default : {
-                    return new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!");
+                    Stack<Err> stackErrs = new Stack<Err>();
+                    stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!"));
+                    return stackErrs;
                 }
             }
         }
@@ -193,10 +213,10 @@ public class Assignment extends Statement {
                 System.out.format("    br label %%while%d\n", ((While) nextNode).whileNum);
             }
 
-            Err nextErr = nextNode.codegen(tree);
-            if (nextErr.errno != Err.Errno.OK) return nextErr;
+            Stack<Err> nextErrs = nextNode.codegen(tree);
+            if (nextErrs.size() != 0) return nextErrs;
         }
 
-        return new Err(Err.Errno.OK, -1, "");
+        return new Stack<Err>();
     }
 }
