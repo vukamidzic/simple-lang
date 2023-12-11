@@ -31,6 +31,14 @@ public class Minus extends Expression {
                     tmpNum, lhs.tmpNum, rhs.tmpNum);
             }
         });
+        mp.put(new Pair(ExprTy.CHAR, ExprTy.CHAR), new Operation() {
+            @Override
+            public void func(Expression lhs, Expression rhs) {
+                exprTy = ExprTy.CHAR;
+                System.out.format("    %%t%d = sub i8 %%t%d, %%t%d\n", 
+                    tmpNum, lhs.tmpNum, rhs.tmpNum);
+            }
+        });
         mp.put(new Pair(ExprTy.INT, ExprTy.PTR), new Operation() {
             @Override
             public void func(Expression lhs, Expression rhs) {

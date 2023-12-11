@@ -4,12 +4,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdarg.h>
+#include <stdint.h>
 
 #include <math.h>
 #include <limits.h>
 #include <string.h>
 
-char* type_to_str(Types type) {
+static inline char* type_to_str(Types type) {
     switch (type) {
         case INTEGER : {
             return "INT";
@@ -19,6 +20,9 @@ char* type_to_str(Types type) {
         }
         case BOOL : {
             return "BOOL";
+        }
+        case CHAR : {
+            return "CHAR";
         }
         case PTR : {
             return "PTR";
@@ -32,7 +36,7 @@ char* type_to_str(Types type) {
     }
 }
 
-char* get_filename(char* path) {
+static inline char* get_filename(char* path) {
     char* file = strrchr(path, '/');
     return file+1; // return string from the '/' 
 }
@@ -55,17 +59,69 @@ void print(Types type, ...) {
                 printf((va_arg(args, bool))? "true " : "false ");
                 break;    
                 
+            case CHAR : 
+                printf("%c ", va_arg(args, char));
+                break;
+
             case PTR : 
                 printf("%p ", va_arg(args, int*));
                 break;
 
             case ARRAY : {
                 Array arr = va_arg(args, Array);
+                uint32_t size = arr.data & (((1 << 16) - 1));
                 putchar('[');
-                for (int i = 0; i < arr.size; ++i) {
-                    (i == arr.size-1)? 
-                        printf("%d", arr.elems[i]) :
-                        printf("%d, ", arr.elems[i]);
+                for (int i = 0; i < size; ++i) {
+                    uint32_t ty = arr.data >> 16;
+                    if (i == size-1) {
+                        switch (ty) {
+                            case INTEGER : { 
+                                printf("%d", ((int*)arr.elems)[i]);
+                                break;
+                            }
+                            case DOUBLE : { 
+                                printf("%.2f", ((double*)arr.elems)[i]);
+                                break;
+                            }
+                            case BOOL : { 
+                                printf("%d", ((bool*)arr.elems)[i]);
+                                break;
+                            }
+                            case CHAR : { 
+                                printf("%c", ((char*)arr.elems)[i]);
+                                break;
+                            }
+                            case PTR : { 
+                                printf("%p", ((int*)arr.elems)[i]);
+                                break;
+                            }
+                        }
+                    } 
+                    else {
+                        switch (ty) {
+                            case INTEGER : { 
+                                printf("%d, ", ((int*)arr.elems)[i]);
+                                break;
+                            }
+                            case DOUBLE : { 
+                                printf("%.2f, ", ((double*)arr.elems)[i]);
+                                break;
+                            }
+                            case BOOL : { 
+                                printf("%d, ", ((bool*)arr.elems)[i]);
+                                break;
+                            }
+                            case CHAR : { 
+                                printf("%c, ", ((char*)arr.elems)[i]);
+                                break;
+                            }
+                            case PTR : { 
+                                printf("%p, ", ((int*)arr.elems)[i]);
+                                break;
+                            }
+                        }
+                    }
+                        
                 }
                 putchar(']');
                 break;
@@ -84,57 +140,7 @@ void print(Types type, ...) {
     }
     
     va_end(args);
-    return;
-}
-
-void println(Types type, ...) {
-    va_list args;
-    va_start(args, type);
-    
-    while (type != FUNC_END) {
-        switch (type) {
-            case INTEGER : 
-                printf("%d ", va_arg(args, int));
-                break;
-                
-            case DOUBLE :
-                printf("%.2f ", va_arg(args, double));
-                break;
-            
-            case BOOL : 
-                printf((va_arg(args, bool))? "true " : "false ");
-                break;    
-                
-            case PTR : 
-                printf("%p ", va_arg(args, int*));
-                break;
-
-            case ARRAY : {
-                Array arr = va_arg(args, Array);
-                putchar('[');
-                for (int i = 0; i < arr.size; ++i) {
-                    (i == arr.size-1)? 
-                        printf("%d", arr.elems[i]) :
-                        printf("%d, ", arr.elems[i]);
-                }
-                putchar(']');
-                break;
-            }
-
-            default : 
-                fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
-                    get_filename(__FILE__),
-                    __func__,
-                    type_to_str(type)
-                );
-                exit(EXIT_FAILURE);
-        }
-        
-        type = va_arg(args, Types);
-    }
-    
-    va_end(args);
-    putc('\n', stdout);
+    putchar('\n');
     return;
 }
 
@@ -237,7 +243,7 @@ int minValue(Types type, ...) {
     return minVal;
 }
 
-int _gcd(int a, int b) {
+static inline int _gcd(int a, int b) {
     while (b != 0) {
         int tmp = a % b;
         a = b;
@@ -471,7 +477,7 @@ double cosi(Types type, ...) {
     return cos(va_arg(args, int));
 }
 
-Array newArray(Types type, ...) {
+Array array(Types type, ...) {
     va_list args;
     va_start(args, type);
 
@@ -485,56 +491,67 @@ Array newArray(Types type, ...) {
     }
 
     type = va_arg(args, Types);
-    int elem = va_arg(args, int);
+    Array arr;
 
-    Array arr = {
-        .elems = malloc(size*sizeof(int)),
-        .size = size
-    };
-    
-    for (int i = 0; i < size; ++i) {
-        arr.elems[i] = elem;
-    }
-
-    return arr;
-}
-
-int get(Types type, ...) {
-    va_list args;
-    va_start(args, type);
+    arr.data = (type << 16) | size;
 
     switch (type) {
-        case ARRAY : {
-            Array arr = va_arg(args, Array);
-            type = va_arg(args, Types);
-
-            if (type != INTEGER) {
-                fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected INT, got %s\n", 
-                    get_filename(__FILE__),
-                    __func__, 
-                    type_to_str(type)
-                );
-                exit(EXIT_FAILURE);    
+        case INTEGER : {
+            int elem = va_arg(args, int);
+            arr.elems = (int*)malloc(size*sizeof(int));
+            
+            for (int i = 0; i < size; ++i) {
+                ((int*)arr.elems)[i] = elem;
+            }   
+            break;
+        }
+        case DOUBLE : {
+            double elem = va_arg(args, double);
+            arr.elems = (double*)malloc(size*sizeof(double));
+            
+            for (int i = 0; i < size; ++i) {
+                ((double*)arr.elems)[i] = elem;
             }
-
-            int index = va_arg(args, int);
-            if (index < 0 || index >= arr.size) {
-                fprintf(stderr, "[\033[35m%s\033[0m] %s(): Index out of bounds\n", 
-                    get_filename(__FILE__),
-                    __func__
-                );
-                exit(EXIT_FAILURE);    
+            break;
+        }
+        case BOOL : {
+            bool elem = va_arg(args, bool);
+            arr.elems = (bool*)malloc(size*sizeof(bool));
+            
+            for (int i = 0; i < size; ++i) {
+                ((bool*)arr.elems)[i] = elem;
             }
-            return arr.elems[index];
+            break;
         }
         default : {
-            fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
+            fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected INT|FLOAT|BOOL, got %s\n", 
                 get_filename(__FILE__),
                 __func__, 
                 type_to_str(type)
             );
             exit(EXIT_FAILURE);
         }
+    }
+
+    return arr;
+}
+
+int elemType(Types type, ...) { 
+    va_list args;
+    va_start(args, type);
+
+    if (type != ARRAY) {
+        fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
+            get_filename(__FILE__),
+            __func__, 
+            type_to_str(type)
+        );
+        exit(EXIT_FAILURE);
+    }
+    else {
+        Array arr = va_arg(args, Array);
+        uint32_t ty = arr.data >> 16;
+        return ty;
     }
 }
 
@@ -545,7 +562,7 @@ int len(Types type, ...) {
     switch (type) {
         case ARRAY : {
             Array arr = va_arg(args, Array);
-            return arr.size;
+            return arr.data & (((1 << 16) - 1)); 
         }
         default : {
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
@@ -568,9 +585,26 @@ void put(Types type, ...) {
             type = va_arg(args, Types);
             int index = va_arg(args, int);
             type = va_arg(args, Types);
-            int x = va_arg(args, int);
-            arr.elems[index] = x;
-            return;
+
+            switch (type) {
+                case INTEGER : {
+                    int x = va_arg(args, int);
+                    ((int*)arr.elems)[index] = x;
+                    return;    
+                }
+                case DOUBLE : {
+                    double x = va_arg(args, double);
+                    ((double*)arr.elems)[index] = x;
+                    return;    
+                }
+                case BOOL : {
+                    bool x = va_arg(args, bool);
+                    ((bool*)arr.elems)[index] = x;
+                    return;    
+                }
+            }
+            
+            
         }
         default : {
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
@@ -580,5 +614,47 @@ void put(Types type, ...) {
             );
             exit(EXIT_FAILURE);
         }
+    }
+}
+
+int geti(Types type, ...) {
+    va_list args;
+    va_start(args, type);
+
+    if (type != ARRAY) {
+        fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
+            get_filename(__FILE__),
+            __func__, 
+            type_to_str(type)
+        );
+        exit(EXIT_FAILURE);
+    }
+    else {
+        Array arr = va_arg(args, Array);
+        type = va_arg(args, Types);
+        int index = va_arg(args, int);
+        int res = ((int*)arr.elems)[index];
+        return res;
+    }
+}
+
+double getf(Types type, ...) {
+    va_list args;
+    va_start(args, type);
+
+    if (type != ARRAY) {
+        fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
+            get_filename(__FILE__),
+            __func__, 
+            type_to_str(type)
+        );
+        exit(EXIT_FAILURE);
+    }
+    else {
+        Array arr = va_arg(args, Array);
+        type = va_arg(args, Types);
+        int index = va_arg(args, int);
+        double res = ((double*)arr.elems)[index];
+        return res;
     }
 }

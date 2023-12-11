@@ -2,8 +2,9 @@ package org.node;
 
 import org.simplelang.Ast;
 import org.error.Err;
-import org.javatuples.Triplet;
+// import org.javatuples.Triplet;
 import org.node.basic.Bool;
+import org.node.basic.Char;
 import org.node.basic.FloatP;
 import org.node.basic.Int;
 
@@ -75,6 +76,20 @@ public class Assignment extends Statement {
                     }
                     break;
                 }
+                case CHAR : {
+                    tree.addVariable(varName, Expression.ExprTy.CHAR, assignNum, assignTy);
+                    if (tree.symTable.size() == 1 && exprValue instanceof Char) {
+                        System.out.format("@%s.%d = global i8 %d\n", 
+                            varName, assignNum, (((Char)exprValue).charValue));
+                    }
+                    else {
+                        System.out.format("    %%%s.%d = alloca i8\n", varName, assignNum);
+                        System.out.format(
+                            "    store i8 %%t%d, i8* %%%s.%d\n",
+                            exprValue.tmpNum, varName, assignNum);
+                    }
+                    break;
+                }
                 case PTR : {
                     tree.addVariable(varName, Expression.ExprTy.PTR, assignNum, assignTy);
                     System.out.format("    %%%s.%d = alloca i32*\n", varName, assignNum);
@@ -86,10 +101,10 @@ public class Assignment extends Statement {
                 case ARRAY : {
                     tree.addVariable(varName, Expression.ExprTy.ARRAY, assignNum, assignTy);
                     System.out.format("    %%%s.%d = alloca %%struct.Array\n", varName, assignNum);
-                    System.out.format("    %%t%d = bitcast %%struct.Array* %%%s.%d to { i32*, i32 }*\n", 
+                    System.out.format("    %%t%d = bitcast %%struct.Array* %%%s.%d to { i64, i8* }*\n", 
                             Expression.tmpCounter++, varName, assignNum);
                     System.out.format(
-                            "    store { i32*, i32 } %%t%d, { i32*, i32 }* %%t%d\n",
+                            "    store { i64, i8* } %%t%d, { i64, i8* }* %%t%d\n",
                             exprValue.tmpNum, Expression.tmpCounter-1);
                     break;
                 }
@@ -114,15 +129,7 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        Triplet<Expression.ExprTy, Integer, Ast.Mut> newTri = new Triplet<>(Expression.ExprTy.INT, assignNum, assignTy);
-                        int n = tree.symTable.size();
-                        for (int i = scopeIndex; i < n; i++) {
-                            tree.symTable.get(i).put(varName, newTri);
-                        }
-                        System.out.format("    %%%s.%d = alloca i32\n", varName, assignNum);
-                        System.out.format(
-                                "    store i32 %%t%d, i32* %%%s.%d\n",
-                                exprValue.tmpNum, varName, assignNum);
+                        return new Err(Err.Errno.ERR_TY, lineno, "Can't assign INT value to non-INT variable!!!");
                     }
                     break;
                 }
@@ -133,15 +140,7 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        Triplet<Expression.ExprTy, Integer, Ast.Mut> newPair = new Triplet<>(Expression.ExprTy.FLOAT, assignNum, assignTy);
-                        int n = tree.symTable.size();
-                        for (int i = scopeIndex; i < n; i++) {
-                            tree.symTable.get(i).put(varName, newPair);
-                        }
-                        System.out.format("    %%%s.%d = alloca double\n", varName, assignNum);
-                        System.out.format(
-                                "    store double %%t%d, double* %%%s.%d\n",
-                                exprValue.tmpNum, varName, assignNum);
+                        return new Err(Err.Errno.ERR_TY, lineno, "Can't assign FLOAT value to non-FLOAT variable!!!");
                     }
                     break;
                 }
@@ -152,15 +151,18 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        Triplet<Expression.ExprTy, Integer, Ast.Mut> newTri = new Triplet<>(Expression.ExprTy.BOOL, assignNum, assignTy);
-                        int n = tree.symTable.size();
-                        for (int i = scopeIndex; i < n; i++) {
-                            tree.symTable.get(i).put(varName, newTri);
-                        }
-                        System.out.format("    %%%s.%d = alloca i1\n", varName, assignNum);
+                        return new Err(Err.Errno.ERR_TY, lineno, "Can't assign BOOL value to non-BOOL variable!!!");
+                    }
+                    break;
+                }
+                case CHAR : {
+                    if (exprValue.exprTy == varTy) {
                         System.out.format(
-                                "    store i1 %%t%d, i1* %%%s.%d\n",
-                                exprValue.tmpNum, varName, assignNum);
+                                "    store i8 %%t%d, i8* %s\n",
+                                exprValue.tmpNum, register);
+                    }
+                    else {
+                        return new Err(Err.Errno.ERR_TY, lineno, "Can't assign CHAR value to non-CHAR variable!!!");
                     }
                     break;
                 }
@@ -171,15 +173,7 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        Triplet<Expression.ExprTy, Integer, Ast.Mut> newTri = new Triplet<>(Expression.ExprTy.PTR, assignNum, assignTy);
-                        int n = tree.symTable.size();
-                        for (int i = scopeIndex; i < n; i++) {
-                            tree.symTable.get(i).put(varName, newTri);
-                        }
-                        System.out.format("    %%%s.%d = alloca i32*\n", varName, assignNum);
-                        System.out.format(
-                                "    store i32* %%t%d, i32** %%%s.%d\n",
-                                exprValue.tmpNum, varName, assignNum);
+                        return new Err(Err.Errno.ERR_TY, lineno, "Can't assign PTR value to non-PTR variable!!!");
                     }
                     break;
                 }

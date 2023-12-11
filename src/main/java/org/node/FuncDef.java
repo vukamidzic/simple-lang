@@ -50,6 +50,9 @@ public class FuncDef extends Statement {
                 case BOOL : 
                     ty = "i1";
                     break;
+                case CHAR : 
+                    ty = "i8";
+                    break;
                 case ARRAY : 
                     ty = "%struct.Array";
                     break;
@@ -70,6 +73,9 @@ public class FuncDef extends Statement {
                 break;
             case BOOL : 
                 ty = "i1";
+                break;
+            case CHAR : 
+                ty = "i8";
                 break;
             case ARRAY : 
                 ty = "%struct.Array";
@@ -116,6 +122,19 @@ public class FuncDef extends Statement {
                         exprTypeToString(args.get(name))
                     );
                     System.out.format("    store i1 %%%s, i1* %%%s.%d\n", 
+                        name, 
+                        name, 
+                        tree.symTable.get(tree.findVariableScope(name)).get(name).getValue1()
+                    );
+                    break;
+                }
+                case CHAR : {
+                    System.out.format("    %%%s.%d = alloca %s\n", 
+                        name,
+                        tree.symTable.get(tree.findVariableScope(name)).get(name).getValue1(),
+                        exprTypeToString(args.get(name))
+                    );
+                    System.out.format("    store i8 %%%s, i8* %%%s.%d\n", 
                         name, 
                         name, 
                         tree.symTable.get(tree.findVariableScope(name)).get(name).getValue1()
@@ -171,6 +190,7 @@ public class FuncDef extends Statement {
             case INT : res = "i32"; break;
             case FLOAT : res = "double"; break;
             case BOOL : res = "i1"; break;
+            case CHAR : res = "i8"; break;
             default : res = "void"; break;
         }
         return res;

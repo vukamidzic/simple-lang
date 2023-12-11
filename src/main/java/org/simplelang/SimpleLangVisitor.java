@@ -324,6 +324,13 @@ public interface SimpleLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVariable(SimpleLangParser.VariableContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code Character}
+	 * labeled alternative in {@link SimpleLangParser#atom}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCharacter(SimpleLangParser.CharacterContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code Parens}
 	 * labeled alternative in {@link SimpleLangParser#atom}.
 	 * @param ctx the parse tree

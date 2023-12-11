@@ -41,7 +41,11 @@ public class ExprFuncCall extends Expression {
                 exprTy = ExprTy.BOOL;
                 break;
             }
-            case "{ i32*, i32 }" : {
+            case "i8" : {
+                exprTy = ExprTy.CHAR;
+                break;
+            }
+            case "{ i64, i8* }" : {
                 exprTy = ExprTy.ARRAY;
                 break;
             }
@@ -69,12 +73,16 @@ public class ExprFuncCall extends Expression {
                         System.out.format("i32 %d, i1 %%t%d, ", 2, e.tmpNum);
                         break;
                     }
+                    case CHAR : {
+                        System.out.format("i32 %d, i8 %%t%d, ", 3, e.tmpNum);
+                        break;
+                    }
                     case PTR : {
-                        System.out.format("i32 %d, i32* %%t%d, ", 3, e.tmpNum);
+                        System.out.format("i32 %d, i32* %%t%d, ", 4, e.tmpNum);
                         break;
                     }
                     case ARRAY : {
-                        System.out.format("i32 %d, %%struct.Array %%t%d, ", 4, e.tmpNum);
+                        System.out.format("i32 %d, %%struct.Array %%t%d, ", 5, e.tmpNum);
                         break;
                     }
                     default : {
@@ -82,7 +90,7 @@ public class ExprFuncCall extends Expression {
                     }
                 }
             }
-            System.out.format("i32 %d)\n", 5);
+            System.out.format("i32 %d)\n", 6);
         }
         else {
             System.out.format("    %%t%d = call %s (", tmpNum, funcType);
@@ -101,6 +109,10 @@ public class ExprFuncCall extends Expression {
                     }
                     case BOOL : {
                         System.out.format("i1, ");
+                        break;
+                    }
+                    case CHAR : {
+                        System.out.format("i8, ");
                         break;
                     }
                     case ARRAY : {
@@ -126,8 +138,12 @@ public class ExprFuncCall extends Expression {
                     System.out.format("i1) ");
                     break;
                 }
+                case CHAR : {
+                    System.out.format("i8) ");
+                    break;
+                }
                 case ARRAY : {
-                    System.out.format("%%struct.Array, ");
+                    System.out.format("%%struct.Array) ");
                     break;
                 }
                 default : {
@@ -148,6 +164,10 @@ public class ExprFuncCall extends Expression {
                     }
                     case BOOL : {
                         System.out.format("i1 %%t%d, ", e.tmpNum);
+                        break;
+                    }
+                    case CHAR : {
+                        System.out.format("i8 %%t%d, ", e.tmpNum);
                         break;
                     }
                     case ARRAY : {
@@ -171,6 +191,10 @@ public class ExprFuncCall extends Expression {
                 }
                 case BOOL : {
                     System.out.format("i1 %%t%d)\n", e.tmpNum);
+                    break;
+                }
+                case CHAR : {
+                    System.out.format("i8 %%t%d)\n", e.tmpNum);
                     break;
                 }
                 case ARRAY : {

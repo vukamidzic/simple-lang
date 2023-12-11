@@ -32,6 +32,10 @@ public class Return extends Statement {
                 System.out.format("    ret i1 %%t%d\n", retExpr.tmpNum);
                 break;
             }
+            case CHAR : {
+                System.out.format("    ret i8 %%t%d\n", retExpr.tmpNum);
+                break;
+            }
             default : {
                 return new Err(Errno.ERR_TY, lineno, "Undefined type!!");
             }

@@ -21,7 +21,6 @@ public class Main {
     public static void main(String[] args) throws Exception {
         System.err.println(Files.readString(Paths.get(args[0])));
         String formattedInput = Macros.changeMacros(Files.readString(Paths.get(args[0])));
-        // System.err.println(formattedInput);
 
         if (Macros.infiniteMacros) {
             System.err.format("\033[31merror in file %s: infinite macros!!!\n", args[0]);
@@ -59,7 +58,7 @@ public class Main {
                         break;
                     }
                     case LINUX : {
-                        System.err.format("\033[31merror in file %s, line %d:\n \033[0m",
+                        System.err.format("[\033[31m\033[1mERR\033[0m] (%s) line %d:\n",
                                 args[0], programErr.lineno);
                         break;
                     }

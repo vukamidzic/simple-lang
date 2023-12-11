@@ -5,19 +5,19 @@ typedef enum Types {
     INTEGER,
     DOUBLE,
     BOOL,
+    CHAR,
     PTR,
     ARRAY,
     FUNC_END
 } Types;
 
 typedef struct Array {
-    int* elems;
-    int size;
+    long long data;
+    void* elems;
 } Array;
 
 //*********** PRINT FUNCTIONS ******************
 void print(Types type, ...);
-void println(Types type, ...);
 
 //*********** INPUT FUNCTIONS ******************
 void input(Types type, ...);
@@ -32,9 +32,11 @@ double sini(Types type, ...);
 double cosi(Types type, ...);
 
 //***** ARRAY FUNCTIONS *****************
-Array newArray(Types type, ...);
-int get(Types type, ...);
+Array array(Types type, ...);
+int elemType(Types type, ...);
 int len(Types type, ...);
 void put(Types type, ...);
+int geti(Types type, ...);
+double getf(Types type, ...);
 
 #endif

@@ -66,6 +66,22 @@ public class Var extends Expression {
                     
                     break;
                 }
+                case CHAR : {
+                    if (foundVariableIndex == 0) {
+                        System.out.format(
+                            "    %%t%d = load i8, i8* @%s.%d\n",
+                            tmpNum, varName,
+                            tree.symTable.get(foundVariableIndex).get(varName).getValue1());
+                    }
+                    else {
+                        System.out.format(
+                            "    %%t%d = load i8, i8* %%%s.%d\n",
+                            tmpNum, varName,
+                            tree.symTable.get(foundVariableIndex).get(varName).getValue1());
+                    }
+                    
+                    break;
+                }
                 case PTR : {
                     if (foundVariableIndex == 0) {
                         return new Err(Errno.ERR_VAR, lineno, "Can't use pointers globally");

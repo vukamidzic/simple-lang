@@ -18,7 +18,7 @@ public class Macros {
         HashMap<String, HashSet<String>> graph = new HashMap<>();
 
         Pattern patt = Pattern.compile(
-            "#macro[\\n\\t\\s]*([A-Z]+)[\\n\\t\\s]*\\{[\\n\\t\\s]*([^\\t]*?)[\\n\\t\\s]*\\}"
+            "#macro[\\n\\t\\s]*([A-Z]+)[\\n\\t\\s]*begin[\\n\\t\\s]*([^\\t]*?)[\\n\\t\\s]*end"
         );
         HashMap<String, String> macros = new HashMap<>();
         Matcher match = patt.matcher(str);
@@ -49,8 +49,8 @@ public class Macros {
                 macros.put(k, tmp);
             }
         }
-        System.err.println(macros);
-        System.err.println(graph);
+        // System.err.println(macros);
+        // System.err.println(graph);
         if (hasCycle(graph)) infiniteMacros = true;
 
         for (String k : macros.keySet()) {
@@ -61,6 +61,7 @@ public class Macros {
             }
         }
 
+        System.err.println(newStr);
         return newStr;
     }
 

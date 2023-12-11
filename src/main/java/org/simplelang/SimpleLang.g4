@@ -7,7 +7,7 @@ PTR : 'addr';
 TRUE : 'true';
 FALSE : 'false';
 
-TYPE : 'int'|'float'|'bool'|'array'|'void';
+TYPE : 'int'|'float'|'bool'|'char'|'Array'|'void';
 
 EQ : ':=';
 DSEMIC : '::';
@@ -39,6 +39,7 @@ NL : ('\r\n' | '\n') -> skip;
 
 INT : '-'?[0-9]+;
 FLOAT : '-'? INT '.' INT;
+CHAR : '\''[0-9a-zA-Z]'\'';
 ID : ('_')?[a-zA-Z]+;
 
 program
@@ -138,6 +139,7 @@ atom
     | INT # Integer
     | FLOAT # Float
     | ID # Variable
+    | CHAR # Character
     | LPAR logical RPAR # Parens
 ;
 

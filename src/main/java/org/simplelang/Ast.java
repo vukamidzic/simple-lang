@@ -51,7 +51,7 @@ public class Ast {
             }
         }
         
-        System.out.println("%struct.Array = type { i32*, i32 }");
+        System.out.println("%struct.Array = type { i64, i8* }");
         getStdFuncs();
         System.out.println(";###########################################");
         //System.out.println("define i32 @main() {");
@@ -95,7 +95,7 @@ public class Ast {
         try {
             String str = Files.readString(Paths.get("lib.ll"));
             
-            Pattern pattern = Pattern.compile("(\\{ i32\\*, i32 \\}|i1|double|i32|void) @([a-zA-Z]+)\\(((i32|double|i1).*\\%[0-9]+\\,.*)+\\)");
+            Pattern pattern = Pattern.compile("(\\{ i64, i8\\* \\}|i1|double|i32|void) @([a-zA-Z]+)\\(((i64|i32|double|i1).*\\%[0-9]+\\,.*)+\\)");
             Matcher matcher = pattern.matcher(str);
             
             while (matcher.find()) {

@@ -5,6 +5,7 @@ abstract public class Expression extends Node {
         INT, 
         FLOAT, 
         BOOL, 
+        CHAR,
         PTR,
         ARRAY
     }

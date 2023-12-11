@@ -108,7 +108,10 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
                 case "bool" : 
                     ty = ExprTy.BOOL;
                     break;
-                case "array" : 
+                case "char" : 
+                    ty = ExprTy.CHAR;
+                    break;
+                case "Array" : 
                     ty = ExprTy.ARRAY;
                     break;
             }
@@ -119,7 +122,8 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
             case "int" :  funcDefNode.funcRetType = "i32"; break;
             case "float" :  funcDefNode.funcRetType = "double"; break;
             case "bool" :  funcDefNode.funcRetType = "i1"; break;
-            case "array" :  funcDefNode.funcRetType = "{i32*,i32}"; break;
+            case "char" : funcDefNode.funcRetType = "i8"; break;
+            case "Array" :  funcDefNode.funcRetType = "{ i64, i8* }"; break;
             default : funcDefNode.funcRetType = "void"; break;
         }
 
@@ -245,6 +249,13 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
         floatNode.lineno = ctx.getStart().getLine();
         floatNode.numValue = Float.parseFloat(ctx.FLOAT().getText());
         return floatNode;
+    }
+
+    @Override public Node visitCharacter(SimpleLangParser.CharacterContext ctx) {
+        Char charNode = new Char();
+        charNode.lineno = ctx.getStart().getLine();
+        charNode.charValue = ctx.CHAR().getText().charAt(1);
+        return charNode;
     }
 
     @Override
