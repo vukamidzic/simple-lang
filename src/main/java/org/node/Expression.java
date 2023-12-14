@@ -7,7 +7,8 @@ abstract public class Expression extends Node {
         BOOL, 
         CHAR,
         PTR,
-        ARRAY
+        ARRAY,
+        UNDEFINED
     }
     public ExprTy exprTy;
     public static int tmpCounter;

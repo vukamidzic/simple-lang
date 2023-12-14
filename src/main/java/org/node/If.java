@@ -42,10 +42,11 @@ public class If extends Statement {
         System.err.println("If-node next num: " + nextNum);
         System.err.println(tree.symTable);
         System.err.println("-------------------------------");
+        Stack<Err> stackErrs = new Stack<Err>();
 
         System.out.format("if%d:\n", ifNum);
         Stack<Err> condErrs = cond.codegen(tree);
-        if (condErrs.size() != 0) return condErrs;
+        stackErrs.addAll(condErrs);
 
         Statement nextNode = (children.size() != 0) ? (Statement) children.get(0) : null;
         if (nextNode instanceof If) {
@@ -77,7 +78,7 @@ public class If extends Statement {
         }
 
         Stack<Err> blockErrs = blockOfStmts.codegen(tree);
-        if (blockErrs.size() != 0) return blockErrs;
+        stackErrs.addAll(blockErrs);
 
         int jumpToNum = getJumpToNum();
         if (nextNode != null) {
@@ -94,7 +95,7 @@ public class If extends Statement {
             }
             
             Stack<Err> nextErrs = nextNode.codegen(tree);
-            if (nextErrs.size() != 0) return nextErrs;
+            stackErrs.addAll(nextErrs);
         }
         else {
             if (!blockOfStmts.containsRetStmt()) {
@@ -103,7 +104,7 @@ public class If extends Statement {
             }
         }
 
-        return new Stack<Err>();
+        return stackErrs;
     }
 
     private int getJumpToNum() {

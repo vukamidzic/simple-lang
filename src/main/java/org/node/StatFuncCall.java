@@ -21,10 +21,11 @@ public class StatFuncCall extends Statement {
         System.err.format("(line %d)Node: FuncCall node, depth: %d, num_args: %d\n",
                 lineno, tree.symTable.size(), args.size());
         System.err.println(tree.symTable);
+        Stack<Err> stackErrs = new Stack<Err>();
         
         for (Expression e : this.args) {
             Stack<Err> argErrs = e.codegen(tree);
-            if (argErrs.size() != 0) return argErrs;
+            stackErrs.addAll(argErrs);
         }
 
         System.out.format("    call void (i32, ...) @%s(", this.funcName);        
@@ -70,9 +71,9 @@ public class StatFuncCall extends Statement {
             }
 
             Stack<Err> nextErrs = nextNode.codegen(tree);
-            if (nextErrs.size() != 0) return nextErrs;
+            stackErrs.addAll(nextErrs);
         }
 
-        return new Stack<Err>();
+        return stackErrs;
     }
 }

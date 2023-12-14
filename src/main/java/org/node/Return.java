@@ -17,8 +17,10 @@ public class Return extends Statement {
 
     @Override
     public Stack<Err> codegen(Ast tree) {
+        Stack<Err> stackErrs = new Stack<Err>();
+
         Stack<Err> exprErrs = retExpr.codegen(tree);
-        if (exprErrs.size() != 0) return exprErrs;
+        stackErrs.addAll(exprErrs);
 
         retType = retExpr.exprTy;
         switch (retType) {
@@ -39,9 +41,7 @@ public class Return extends Statement {
                 break;
             }
             default : {
-                Stack<Err> stackErrs = new Stack<Err>();
-                stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
-                return stackErrs;
+                stackErrs.push(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
             }
         }
 
@@ -49,9 +49,9 @@ public class Return extends Statement {
             Statement nextNode = (Statement) children.get(0);
 
             Stack<Err> nextErrs = nextNode.codegen(tree);
-            if (nextErrs.size() != 0) return nextErrs;
+            stackErrs.addAll(nextErrs);
         }
 
-        return new Stack<Err>();
+        return stackErrs;
     }
 }

@@ -27,6 +27,7 @@ public class FuncDef extends Statement {
         System.err.format("(line %d)Node: FuncDef node, depth: %d\n", lineno, tree.symTable.size());
         System.err.println(tree.symTable);
         System.err.println(args);
+        Stack<Err> stackErrs = new Stack<Err>();
 
         Pair<String, Ast.FuncType> funcPair = new Pair<String,Ast.FuncType>(funcRetType, Ast.FuncType.NONLIB);
         tree.functions.put(funcName, funcPair);
@@ -58,9 +59,8 @@ public class FuncDef extends Statement {
                     ty = "%struct.Array";
                     break;
                 default : {
-                    Stack<Err> stackErrs = new Stack<Err>();
-                    stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
-                    return stackErrs;
+                    stackErrs.push(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
+                    break;
                 }
             }
             System.out.format("%s %%%s, ", ty, args_names.get(i));
@@ -85,9 +85,8 @@ public class FuncDef extends Statement {
                 ty = "%struct.Array";
                 break;
             default : {
-                Stack<Err> stackErrs = new Stack<Err>();
-                stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
-                return stackErrs;
+                stackErrs.push(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
+                break;
             }
         }
         System.out.format("%s %%%s", ty, args_names.get(n-1));
@@ -175,7 +174,7 @@ public class FuncDef extends Statement {
         }
 
         Stack<Err> blockErrs = blockOfStmts.codegen(tree);
-        if (blockErrs.size() != 0) return blockErrs;
+        stackErrs.addAll(blockErrs);
         System.out.format("}\n");
 
         for (String v : args_names) {
@@ -186,9 +185,9 @@ public class FuncDef extends Statement {
             Statement nextNode = (Statement) children.get(0);
 
             Stack<Err> nextErrs = nextNode.codegen(tree);
-            if (nextErrs.size() != 0) return nextErrs;
+            stackErrs.addAll(nextErrs);
         }
-        return new Stack<Err>();
+        return stackErrs;
     }
 
     private String exprTypeToString(Expression.ExprTy type) {

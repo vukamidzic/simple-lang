@@ -26,6 +26,7 @@ public class ExprFuncCall extends Expression {
 
         tmpNum = Expression.tmpCounter;
         Expression.tmpCounter++;
+        Stack<Err> stackErrs = new Stack<Err>();
 
         String funcType = tree.functions.get(funcName).getValue0();
         switch (funcType) {
@@ -53,7 +54,8 @@ public class ExprFuncCall extends Expression {
 
         for (Expression e : this.args) {
             Stack<Err> argErrs = e.codegen(tree);
-            if (argErrs.size() != 0) return argErrs;
+            stackErrs.addAll(argErrs);
+            return stackErrs;
         }
 
         if (tree.functions.get(funcName).getValue1() == FuncType.LIB) {
@@ -86,9 +88,7 @@ public class ExprFuncCall extends Expression {
                         break;
                     }
                     default : {
-                        Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!", errText));
-                        return stackErrs;
+                        stackErrs.push(new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!", errText));
                     }
                 }
             }
@@ -122,9 +122,7 @@ public class ExprFuncCall extends Expression {
                         break;
                     }
                     default : {
-                        Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
-                        return stackErrs;
+                        stackErrs.push(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
                     }
                 }
             }
@@ -151,9 +149,7 @@ public class ExprFuncCall extends Expression {
                     break;
                 }
                 default : {
-                    Stack<Err> stackErrs = new Stack<Err>();
-                    stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
-                    return stackErrs;
+                    stackErrs.push(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
                 }
             }
             System.out.format("@%s (", funcName);
@@ -181,9 +177,7 @@ public class ExprFuncCall extends Expression {
                         break;
                     }
                     default : {
-                        Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
-                        return stackErrs;
+                        stackErrs.push(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
                     }
                 }
             }
@@ -210,14 +204,11 @@ public class ExprFuncCall extends Expression {
                     break;
                 }
                 default : {
-                    // return ;
-                    Stack<Err> stackErrs = new Stack<Err>();
-                    stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
-                    return stackErrs;
+                    stackErrs.push(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
                 }
             }
         }
 
-        return new Stack<Err>();
+        return stackErrs;
     }
 }

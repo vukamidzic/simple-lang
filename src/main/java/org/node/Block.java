@@ -14,18 +14,19 @@ public class Block extends Statement {
     public Stack<Err> codegen(Ast tree) {
         System.err.format("(line %d)Node: Block node, depth: %d\n", lineno, tree.symTable.size());
         System.err.println(tree.symTable);
+        Stack<Err> stackErrs = new Stack<Err>();
         
         if (canAddScope) tree.addScope();
         Stack<Err> stmtsErrs = stmts.codegen(tree);
-        if (stmtsErrs.size() != 0) return stmtsErrs;
+        stackErrs.addAll(stmtsErrs);
         tree.removeScope();
         if (children.size() != 0) {
             Statement nextNode = (Statement) children.get(0);
             Stack<Err> nextErrs = nextNode.codegen(tree);
-            if (nextErrs.size() != 0) return nextErrs;
+            stackErrs.addAll(nextErrs);
         }
 
-        return new Stack<Err>();
+        return stackErrs;
     }
 
     // returns first node from inside of block

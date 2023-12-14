@@ -14,6 +14,7 @@ public class Minus extends Expression {
 
     @Override public Stack<Err> codegen(Ast tree) {
         tmpNum = Expression.tmpCounter++;
+        Stack<Err> stackErrs = new Stack<Err>();
 
         HashMap<Pair, Operation> mp = new HashMap<Pair, Operation>(); 
         mp.put(new Pair(ExprTy.INT, ExprTy.INT), new Operation() {
@@ -77,18 +78,16 @@ public class Minus extends Expression {
         Expression rhs = (Expression)children.get(1);
 
         Stack<Err> lhsErrs = lhs.codegen(tree);
-        if (lhsErrs.size() != 0) return lhsErrs;
+        stackErrs.addAll(lhsErrs);
         Stack<Err> rhsErrs = rhs.codegen(tree);
-        if (rhsErrs.size() != 0) return rhsErrs;
+        stackErrs.addAll(rhsErrs);
 
         if (lhs.exprTy == ExprTy.BOOL || rhs.exprTy == ExprTy.BOOL) {
-            Stack<Err> stackErrs = new Stack<Err>();
-            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't do addition with bool and other type!!", errText));
-            return stackErrs;
+            stackErrs.push(new Err(Err.Errno.ERR_TY, lineno, "Can't do addition with bool and other type!!", errText));
         }
 
         mp.get(new Pair(lhs.exprTy, rhs.exprTy)).func(lhs, rhs);
 
-        return new Stack<Err>();
+        return stackErrs;
     }
 }

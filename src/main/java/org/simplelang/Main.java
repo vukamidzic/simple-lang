@@ -59,7 +59,7 @@ public class Main {
 
                             BufferedReader rd = new BufferedReader(new FileReader(Paths.get(args[0]).toFile()));
                             for (int i = 1; i < e.lineno; i++) {
-                                rd.readLine();
+                                rd.readLine(); 
                             }
                             String errLine = rd.readLine();
                             errLine = errLine.trim();
@@ -68,7 +68,7 @@ public class Main {
                             Arrays.fill(underline, '~');
 
                             int pos = errLine.indexOf(e.errChunk);
-                            char[] whitespaces = new char[pos+3];
+                            char[] whitespaces = new char[pos+4];
                             Arrays.fill(whitespaces, ' ');
 
                             System.err.format("%d: %s\n", e.lineno, errLine);

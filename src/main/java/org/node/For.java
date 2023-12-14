@@ -30,6 +30,7 @@ public class For extends Statement {
     public Stack<Err> codegen(Ast tree) {
         tmp = Expression.tmpCounter++;
         forCondNum = Expression.tmpCounter++;
+        Stack<Err> stackErrs = new Stack<Err>();
 
         System.err.format("(line %d)Node: For node, depth: %d\n", lineno, tree.symTable.size());
         System.err.println(tree.symTable);
@@ -38,8 +39,7 @@ public class For extends Statement {
         if (startErrs.size() != 0) return startErrs;
         System.err.println(startExpr.exprTy);
         if (startExpr.exprTy != ExprTy.INT) {
-            Stack<Err> stackErrs = new Stack<Err>();
-            stackErrs.add(new Err(Errno.ERR_TY, lineno, "Can't use float/bool in for counter!!!", errText));
+            stackErrs.push(new Err(Errno.ERR_TY, lineno, "Can't use float/bool in for counter!!!", errText));
             return stackErrs;
         }
 
@@ -54,7 +54,7 @@ public class For extends Statement {
         System.out.format("for%d:\n", forNum);
 
         Stack<Err> endErrs = endExpr.codegen(tree);
-        if (endErrs.size() != 0) return endErrs;
+        stackErrs.addAll(endErrs);
 
         System.out.format("    %%tmp%d = load i32, i32* %%%s.%d\n", 
                     tmp, varName, forAssignNum);
@@ -72,7 +72,7 @@ public class For extends Statement {
             System.out.format("    br label %%while%d\n", ((While)fstStmt).whileNum);
         }
         Stack<Err> blockOfStmtsErrs = blockOfStmts.codegen(tree);
-        if (blockOfStmtsErrs.size() != 0) return blockOfStmtsErrs;
+        stackErrs.addAll(blockOfStmtsErrs);
 
         tmp = Expression.tmpCounter++;
         System.out.format("    %%tmp%d = load i32, i32* %%%s.%d\n", 
@@ -92,7 +92,7 @@ public class For extends Statement {
         if (children.size() != 0) {
             Statement nextNode = (Statement) children.get(0);
             Stack<Err> nextErrs = nextNode.codegen(tree);
-            if (nextErrs.size() != 0) return nextErrs;
+            stackErrs.addAll(nextErrs);
         }
 
         return new Stack<Err>();

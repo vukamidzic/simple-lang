@@ -22,16 +22,15 @@ public class While extends Statement {
     public Stack<Err> codegen(Ast tree) {
         System.err.format("(line %d)Node: While node, depth: %d\n", lineno, tree.symTable.size());
         System.err.println(tree.symTable);
+        Stack<Err> stackErrs = new Stack<Err>();
 
         System.out.format("while%d:\n", whileNum);
 
         Stack<Err> condErrs = cond.codegen(tree);
-        if (condErrs.size() != 0) return condErrs;
+        stackErrs.addAll(condErrs);
 
         if (cond.exprTy != Expression.ExprTy.BOOL) {
-            Stack<Err> stackErrs = new Stack<Err>();
-            stackErrs.add(new Err(Err.Errno.ERR_COND, lineno, "Condition must be bool type!!!", errText));
-            return stackErrs;
+            stackErrs.push(new Err(Err.Errno.ERR_COND, lineno, "Condition must be bool type!!!", errText));
         }
             
 
@@ -47,7 +46,7 @@ public class While extends Statement {
             System.out.format("    br label %%while%d\n", ((While)fstStmt).whileNum);
         }
         Stack<Err> blockOfStmtsErrs = blockOfStmts.codegen(tree);
-        if (blockOfStmtsErrs.size() != 0) return blockOfStmtsErrs;
+        stackErrs.addAll(blockOfStmtsErrs);
         System.out.format("    br label %%while%d\n", whileNum);
 
         System.out.format("next%d:\n", nextNum);
@@ -55,9 +54,9 @@ public class While extends Statement {
         if (children.size() != 0) {
             Statement nextNode = (Statement) children.get(0);
             Stack<Err> nextErrs = nextNode.codegen(tree);
-            if (nextErrs.size() != 0) return nextErrs;
+            stackErrs.addAll(nextErrs);
         }
 
-        return new Stack<Err>();
+        return stackErrs;
     }
 }
