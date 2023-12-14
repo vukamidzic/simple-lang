@@ -59,7 +59,7 @@ public class FuncDef extends Statement {
                     break;
                 default : {
                     Stack<Err> stackErrs = new Stack<Err>();
-                    stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                    stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
                     return stackErrs;
                 }
             }
@@ -86,7 +86,7 @@ public class FuncDef extends Statement {
                 break;
             default : {
                 Stack<Err> stackErrs = new Stack<Err>();
-                stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
                 return stackErrs;
             }
         }

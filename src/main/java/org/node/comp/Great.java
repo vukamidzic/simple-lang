@@ -25,7 +25,7 @@ public class Great extends Expression {
 
         if (lhs.exprTy != rhs.exprTy) {
             Stack<Err> stackErrs = new Stack<Err>();
-            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't compare different types!!"));
+            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't compare different types!!", errText));
             return stackErrs;
         }
         else {
@@ -44,7 +44,7 @@ public class Great extends Expression {
                 }
                 default : {
                     Stack<Err> stackErrs = new Stack<Err>();
-                    stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                    stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
                     return stackErrs;
                 }
             }

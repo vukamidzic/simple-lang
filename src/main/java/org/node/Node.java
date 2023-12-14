@@ -7,6 +7,7 @@ import org.error.Err;
 
 abstract public class Node {
     public int lineno;
+    public String errText;
     public ArrayList<Node> children;
     public Node() {
         children = new ArrayList<>();

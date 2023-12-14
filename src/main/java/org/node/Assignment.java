@@ -112,7 +112,7 @@ public class Assignment extends Statement {
                 }
                 default : {
                     Stack<Err> stackErrs = new Stack<Err>();
-                    stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!"));
+                    stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!", errText));
                     return stackErrs;
                 }
             }
@@ -120,7 +120,7 @@ public class Assignment extends Statement {
         else {
             if (tree.symTable.get(scopeIndex).get(varName).getValue2() == Ast.Mut.CONST) {
                 Stack<Err> stackErrs = new Stack<Err>();
-                stackErrs.add(new Err(Err.Errno.ERR_CONST, lineno, "Can't assign value to constant!!!"));
+                stackErrs.add(new Err(Err.Errno.ERR_CONST, lineno, "Can't assign value to constant!!!", errText));
                 return stackErrs;
             }
                
@@ -138,7 +138,7 @@ public class Assignment extends Statement {
                     }
                     else {
                         Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign INT value to non-INT variable!!!"));
+                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign INT value to non-INT variable!!!", errText));
                         return stackErrs;
                     }
                     break;
@@ -151,7 +151,7 @@ public class Assignment extends Statement {
                     }
                     else {
                         Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign FLOAT value to non-FLOAT variable!!!"));
+                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign FLOAT value to non-FLOAT variable!!!", errText));
                         return stackErrs;
                     }
                     break;
@@ -164,7 +164,7 @@ public class Assignment extends Statement {
                     }
                     else {
                         Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign BOOL value to non-BOOL variable!!!"));
+                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign BOOL value to non-BOOL variable!!!", errText));
                         return stackErrs;
                     }
                     break;
@@ -177,7 +177,7 @@ public class Assignment extends Statement {
                     }
                     else {
                         Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign CHAR value to non-CHAR variable!!!"));
+                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign CHAR value to non-CHAR variable!!!", errText));
                         return stackErrs;
                     }
                     break;
@@ -190,14 +190,14 @@ public class Assignment extends Statement {
                     }
                     else {
                         Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign PTR value to non-PTR variable!!!"));
+                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign PTR value to non-PTR variable!!!", errText));
                         return stackErrs;
                     }
                     break;
                 }
                 default : {
                     Stack<Err> stackErrs = new Stack<Err>();
-                    stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!"));
+                    stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!", errText));
                     return stackErrs;
                 }
             }

@@ -24,7 +24,7 @@ public class Less extends Expression {
 
         if (lhs.exprTy != rhs.exprTy) {
             Stack<Err> stackErrs = new Stack<Err>();
-            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't compare different types!!"));
+            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't compare different types!!", errText));
             return stackErrs;
         }
         else {

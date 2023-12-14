@@ -19,7 +19,7 @@ public class Var extends Expression {
         int foundVariableIndex = tree.findVariableScope(varName);
         if (foundVariableIndex == -1) {
             Stack<Err> stackErrs = new Stack<Err>();
-            stackErrs.add(new Err(Err.Errno.ERR_VAR, lineno, "Variable '" + varName + "' not defined!!"));
+            stackErrs.add(new Err(Err.Errno.ERR_VAR, lineno, "Variable '" + varName + "' not defined!!", errText));
             return stackErrs;
         }  
         else {
@@ -88,7 +88,7 @@ public class Var extends Expression {
                 case PTR : {
                     if (foundVariableIndex == 0) {
                         Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Errno.ERR_VAR, lineno, "Can't use pointers globally"));
+                        stackErrs.add(new Err(Errno.ERR_VAR, lineno, "Can't use pointers globally", errText));
                         return stackErrs;
                     }
                     else {
@@ -102,7 +102,7 @@ public class Var extends Expression {
                 case ARRAY : {
                     if (foundVariableIndex == 0) {
                         Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Errno.ERR_VAR, lineno, "Can't use arrays globally"));
+                        stackErrs.add(new Err(Errno.ERR_VAR, lineno, "Can't use arrays globally", errText));
                         return stackErrs;
                     }
                     else {

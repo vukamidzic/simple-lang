@@ -11,10 +11,12 @@ public class Err {
     public Errno errno;
     public int lineno;
     public String errMsg;
+    public String errChunk;
 
-    public Err(Errno _errno, int _lineno, String _errMsg) {
+    public Err(Errno _errno, int _lineno, String _errMsg, String _errChunk) {
         errno = _errno;
         lineno = _lineno;
         errMsg = _errMsg;
+        errChunk = _errChunk;
     }
 }

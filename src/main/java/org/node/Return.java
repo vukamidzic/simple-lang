@@ -40,7 +40,7 @@ public class Return extends Statement {
             }
             default : {
                 Stack<Err> stackErrs = new Stack<Err>();
-                stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
                 return stackErrs;
             }
         }

@@ -30,7 +30,7 @@ public class While extends Statement {
 
         if (cond.exprTy != Expression.ExprTy.BOOL) {
             Stack<Err> stackErrs = new Stack<Err>();
-            stackErrs.add(new Err(Err.Errno.ERR_COND, lineno, "Condition must be bool type!!!"));
+            stackErrs.add(new Err(Err.Errno.ERR_COND, lineno, "Condition must be bool type!!!", errText));
             return stackErrs;
         }
             

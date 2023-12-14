@@ -87,7 +87,7 @@ public class ExprFuncCall extends Expression {
                     }
                     default : {
                         Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!"));
+                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!", errText));
                         return stackErrs;
                     }
                 }
@@ -123,7 +123,7 @@ public class ExprFuncCall extends Expression {
                     }
                     default : {
                         Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                        stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
                         return stackErrs;
                     }
                 }
@@ -152,7 +152,7 @@ public class ExprFuncCall extends Expression {
                 }
                 default : {
                     Stack<Err> stackErrs = new Stack<Err>();
-                    stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                    stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
                     return stackErrs;
                 }
             }
@@ -182,7 +182,7 @@ public class ExprFuncCall extends Expression {
                     }
                     default : {
                         Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                        stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
                         return stackErrs;
                     }
                 }
@@ -212,7 +212,7 @@ public class ExprFuncCall extends Expression {
                 default : {
                     // return ;
                     Stack<Err> stackErrs = new Stack<Err>();
-                    stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!"));
+                    stackErrs.add(new Err(Errno.ERR_TY, lineno, "Undefined type!!", errText));
                     return stackErrs;
                 }
             }

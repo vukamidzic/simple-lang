@@ -9,6 +9,7 @@ import org.fusesource.jansi.AnsiConsole;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.Ansi.Color;
 
+import java.util.Arrays;
 import java.util.Stack;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -62,7 +63,16 @@ public class Main {
                             }
                             String errLine = rd.readLine();
                             errLine = errLine.trim();
-                            System.err.format("%d: %s\n\n", e.lineno, errLine);
+
+                            char[] underline = new char[e.errChunk.length()];
+                            Arrays.fill(underline, '~');
+
+                            int pos = errLine.indexOf(e.errChunk);
+                            char[] whitespaces = new char[pos+3];
+                            Arrays.fill(whitespaces, ' ');
+
+                            System.err.format("%d: %s\n", e.lineno, errLine);
+                            System.err.println(String.valueOf(whitespaces) + String.valueOf(underline));
                             System.err.println(e.errMsg);
                         }
                         System.err.println("***********************");

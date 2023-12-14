@@ -25,7 +25,7 @@ public class Div extends Expression {
         if (lhs.exprTy == ExprTy.BOOL || rhs.exprTy == ExprTy.BOOL) {
             // return ;
             Stack<Err> stackErrs = new Stack<Err>();
-            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't do addition with bool and other type!!"));
+            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't do addition with bool and other type!!", errText));
             return stackErrs;
         }
 
@@ -47,7 +47,7 @@ public class Div extends Expression {
         else {
             // return ;
             Stack<Err> stackErrs = new Stack<Err>();
-            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't do division with int and float!!"));
+            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't do division with int and float!!", errText));
             return stackErrs;
         }
 

@@ -38,7 +38,7 @@ public class Pointer extends Expression {
                     }
                     else {
                         Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Err.Errno.ERR_VAR, lineno, "Variable '" + varName + "' not defined!!"));
+                        stackErrs.add(new Err(Err.Errno.ERR_VAR, lineno, "Variable '" + varName + "' not defined!!", errText));
                         return stackErrs;
                     }
                 }

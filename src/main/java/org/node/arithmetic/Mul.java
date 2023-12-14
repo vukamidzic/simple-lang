@@ -23,7 +23,7 @@ public class Mul extends Expression {
 
         if (lhs.exprTy == ExprTy.BOOL || rhs.exprTy == ExprTy.BOOL) {
             Stack<Err> stackErrs = new Stack<Err>();
-            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't do addition with bool and other type!!"));
+            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't do addition with bool and other type!!", errText));
             return stackErrs;
         }
 
@@ -44,7 +44,7 @@ public class Mul extends Expression {
         }
         else {
             Stack<Err> stackErrs = new Stack<Err>();
-            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't do multiplication with int and float!!"));
+            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't do multiplication with int and float!!", errText));
             return stackErrs;
         }
 

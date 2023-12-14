@@ -39,7 +39,7 @@ public class For extends Statement {
         System.err.println(startExpr.exprTy);
         if (startExpr.exprTy != ExprTy.INT) {
             Stack<Err> stackErrs = new Stack<Err>();
-            stackErrs.add(new Err(Errno.ERR_TY, lineno, "Can't use float/bool in for counter!!!"));
+            stackErrs.add(new Err(Errno.ERR_TY, lineno, "Can't use float/bool in for counter!!!", errText));
             return stackErrs;
         }
 

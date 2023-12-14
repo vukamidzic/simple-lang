@@ -24,7 +24,7 @@ public class Or extends Expression {
 
         if (!(lhs.exprTy == ExprTy.BOOL && rhs.exprTy == ExprTy.BOOL)) {
             Stack<Err> stackErrs = new Stack<Err>();
-            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't logically OR non-boolean types!!"));
+            stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't logically OR non-boolean types!!", errText));
             return stackErrs;
         }
 
