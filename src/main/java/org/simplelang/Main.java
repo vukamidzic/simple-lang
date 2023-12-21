@@ -11,6 +11,8 @@ import org.fusesource.jansi.Ansi.Color;
 
 import java.util.Arrays;
 import java.util.Stack;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.FileReader;
@@ -21,8 +23,7 @@ import org.error.Err;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        System.err.println(Files.readString(Paths.get(args[0])));
-        String formattedInput = Macros.changeMacros(Files.readString(Paths.get(args[0])));
+        String formattedInput = Macros.changeMacros(stringsToArrays(Files.readString(Paths.get(args[0]))));
 
         if (Macros.infiniteMacros) {
             System.err.format("\033[31merror in file %s: infinite macros!!!\n", args[0]);
@@ -52,8 +53,8 @@ public class Main {
                 switch (Ast.ver) {
                     case WINDOWS : break;
                     case LINUX : {
-                        System.err.println("***********************");
                         for (Err e : programErrs) {
+                            System.err.println("***********************");
                             System.err.format("[\033[31m\033[1mERR\033[0m] (%s) line %d:\n",
                                 args[0], e.lineno);
 
@@ -68,19 +69,47 @@ public class Main {
                             Arrays.fill(underline, '~');
 
                             int pos = errLine.indexOf(e.errChunk);
-                            char[] whitespaces = new char[pos+4];
+                            char[] whitespaces = new char[pos+3];
                             Arrays.fill(whitespaces, ' ');
 
                             System.err.format("%d: %s\n", e.lineno, errLine);
                             System.err.println(String.valueOf(whitespaces) + String.valueOf(underline));
                             System.err.println(e.errMsg);
+                            System.err.println("***********************");
                         }
-                        System.err.println("***********************");
                         break;
                     }
                     default : break;
                 }
             }
         }
+    }
+
+    private static String stringsToArrays(String input) {
+        String new_input = input;
+        Pattern patt = Pattern.compile("\"(.*?)\"");
+        Matcher match = patt.matcher(new_input);
+
+        while (match.find()) {
+            String s = match.group();
+            String chunk = match.group(1);
+            new_input = new_input.replaceAll(s, makeStr(chunk));
+        }
+
+        return new_input;
+    }
+
+    private static String makeStr(String s) {
+        StringBuilder strBuild = new StringBuilder();
+        strBuild.append("arrayFrom(");
+        char[] chars = s.toCharArray();
+
+        for (char c : chars) {
+            strBuild.append(String.format("\'%s\',", c));
+        }
+        strBuild.deleteCharAt(strBuild.length()-1);
+        strBuild.append(')');
+
+        return strBuild.toString();
     }
 }

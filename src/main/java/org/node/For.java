@@ -39,7 +39,7 @@ public class For extends Statement {
         if (startErrs.size() != 0) return startErrs;
         System.err.println(startExpr.exprTy);
         if (startExpr.exprTy != ExprTy.INT) {
-            stackErrs.push(new Err(Errno.ERR_TY, lineno, "Can't use float/bool in for counter!!!", errText));
+            stackErrs.push(new Err(Errno.ERR_TY, lineno, "Can't use float/bool in for-loop counter!!!", errText));
             return stackErrs;
         }
 
@@ -95,6 +95,6 @@ public class For extends Statement {
             stackErrs.addAll(nextErrs);
         }
 
-        return new Stack<Err>();
+        return stackErrs;
     }
 }

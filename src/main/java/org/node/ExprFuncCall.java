@@ -55,7 +55,6 @@ public class ExprFuncCall extends Expression {
         for (Expression e : this.args) {
             Stack<Err> argErrs = e.codegen(tree);
             stackErrs.addAll(argErrs);
-            return stackErrs;
         }
 
         if (tree.functions.get(funcName).getValue1() == FuncType.LIB) {

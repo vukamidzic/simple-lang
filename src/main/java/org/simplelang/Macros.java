@@ -25,7 +25,6 @@ public class Macros {
         while (match.find()) {
             macros.put(match.group(1).strip(), match.group(2).strip());
         }
-        System.err.println(macros);
 
         newStr = newStr.replaceAll(patt.toString(), "");
 
@@ -49,8 +48,6 @@ public class Macros {
                 macros.put(k, tmp);
             }
         }
-        // System.err.println(macros);
-        // System.err.println(graph);
         if (hasCycle(graph)) infiniteMacros = true;
 
         for (String k : macros.keySet()) {
@@ -61,7 +58,6 @@ public class Macros {
             }
         }
 
-        System.err.println(newStr);
         return newStr;
     }
 

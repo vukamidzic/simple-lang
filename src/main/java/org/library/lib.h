@@ -33,6 +33,7 @@ double cosi(Types type, ...);
 
 //***** ARRAY FUNCTIONS *****************
 Array array(Types type, ...);
+Array arrayFrom(Types type, ...);
 int elemType(Types type, ...);
 int len(Types type, ...);
 void put(Types type, ...);

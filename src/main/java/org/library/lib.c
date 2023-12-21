@@ -545,6 +545,73 @@ Array array(Types type, ...) {
     return arr;
 }
 
+Array arrayFrom(Types type, ...) {
+    va_list args;
+    va_start(args, type);
+
+    Array arr;
+    Types arr_type = type;
+    int pos = 0, cnt = 0;
+
+    switch (arr_type) {
+        case INTEGER : {
+            arr.elems = (int*)malloc(sizeof(int));
+            ((int*)arr.elems)[pos++] = va_arg(args, int); 
+            break;
+        }
+        case DOUBLE : {
+            arr.elems = (double*)malloc(sizeof(double));
+            ((double*)arr.elems)[pos++] = va_arg(args, double);
+            break;
+        }
+        case BOOL : {
+            arr.elems = (bool*)malloc(sizeof(bool));
+            ((bool*)arr.elems)[pos++] = va_arg(args, bool);
+            break;
+        }
+        case CHAR : {
+            arr.elems = (char*)malloc(sizeof(char));
+            ((char*)arr.elems)[pos++] = va_arg(args, char);
+            break;
+        }
+    }
+
+    type = va_arg(args, Types);
+
+    while (type != FUNC_END) {
+        switch (type) {
+            case INTEGER : {
+                arr.elems = (int*)realloc(arr.elems, sizeof(int)); 
+                cnt++;
+                ((int*)arr.elems)[pos++] = va_arg(args, int);
+                break;
+            }
+            case DOUBLE : {
+                arr.elems = (double*)realloc(arr.elems, sizeof(double));
+                cnt++;
+                ((double*)arr.elems)[pos++] = va_arg(args, double);
+                break;
+            }
+            case BOOL : {
+                arr.elems = (bool*)realloc(arr.elems, sizeof(bool));
+                cnt++;
+                ((bool*)arr.elems)[pos++] = va_arg(args, bool);
+                break;
+            }
+            case CHAR : {
+                arr.elems = (char*)realloc(arr.elems, sizeof(char));
+                cnt++;
+                ((char*)arr.elems)[pos++] = va_arg(args, char);
+                break;
+            }
+        }
+        type = va_arg(args, Types);
+    }
+
+    arr.data = (arr_type << 16) | (cnt+1);
+    return arr;
+}
+
 int elemType(Types type, ...) { 
     va_list args;
     va_start(args, type);

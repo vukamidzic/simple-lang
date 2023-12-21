@@ -4,7 +4,6 @@ import java.util.Stack;
 
 import org.simplelang.Ast;
 import org.error.Err;
-// import org.javatuples.Triplet;
 import org.node.basic.Bool;
 import org.node.basic.Char;
 import org.node.basic.FloatP;

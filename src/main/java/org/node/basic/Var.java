@@ -15,12 +15,11 @@ public class Var extends Expression {
     public Stack<Err> codegen(Ast tree) {
         tmpNum = Expression.tmpCounter;
         Expression.tmpCounter++;
+        Stack<Err> stackErrs = new Stack<>();
 
         int foundVariableIndex = tree.findVariableScope(varName);
         if (foundVariableIndex == -1) {
-            Stack<Err> stackErrs = new Stack<Err>();
-            stackErrs.add(new Err(Err.Errno.ERR_VAR, lineno, "Variable '" + varName + "' not defined!!", errText));
-            return stackErrs;
+            stackErrs.push(new Err(Err.Errno.ERR_VAR, lineno, "Variable '" + varName + "' not defined!!", errText));
         }  
         else {
             exprTy = tree.symTable.get(foundVariableIndex).get(varName).getValue0();
@@ -87,8 +86,7 @@ public class Var extends Expression {
                 }
                 case PTR : {
                     if (foundVariableIndex == 0) {
-                        Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Errno.ERR_VAR, lineno, "Can't use pointers globally", errText));
+                        stackErrs.push(new Err(Errno.ERR_VAR, lineno, "Can't use pointers globally", errText));
                         return stackErrs;
                     }
                     else {
@@ -101,9 +99,7 @@ public class Var extends Expression {
                 }
                 case ARRAY : {
                     if (foundVariableIndex == 0) {
-                        Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Errno.ERR_VAR, lineno, "Can't use arrays globally", errText));
-                        return stackErrs;
+                        stackErrs.push(new Err(Errno.ERR_VAR, lineno, "Can't use arrays globally", errText));
                     }
                     else {
                         System.out.format(
@@ -113,9 +109,10 @@ public class Var extends Expression {
                     }
                     break;
                 }
+                default : break;
             }
 
-            return new Stack<Err>();
         }
+        return stackErrs;
     }
 }
