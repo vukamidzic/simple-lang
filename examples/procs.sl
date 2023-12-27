@@ -1,11 +1,11 @@
-proc f(a array, x int) int {
+proc f(a Array, x int) int {
     n := len(a)
     l := 0
     d := n - 1
 
     while (l < d or l = d) {
         s := (l + d) / 2
-        e := get(a, s)
+        e := geti(a, s)
 
         (e = x)? { ret s }
         (e > x)? { d := s }
@@ -19,7 +19,7 @@ proc main(argc int) int {
     n := 0
     input(addr(n))
 
-    a := newArray(n, 0)
+    a := array(n, 0)
     for (i <- 0,n - 1) {
         t := 0
         input(addr(t))
@@ -30,7 +30,7 @@ proc main(argc int) int {
     input(addr(x))
 
     b := f(a, x)
-    println(b)
+    print(b)
 
     ret 0
 }

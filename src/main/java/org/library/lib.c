@@ -678,9 +678,12 @@ void put(Types type, ...) {
                     ((bool*)arr.elems)[index] = x;
                     return;    
                 }
+                case CHAR : {
+                    char x = va_arg(args, char);
+                    ((char*)arr.elems)[index] = x;
+                    return;    
+                }
             }
-            
-            
         }
         default : {
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 

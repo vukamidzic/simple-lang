@@ -11,7 +11,7 @@ proc main(n int) int {
     n := 0
     input(addr(n))
 
-    println(fib(n))
+    print(fib(n))
 
     ret 0
 }

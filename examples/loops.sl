@@ -5,10 +5,10 @@ proc main(argc int) int {
     i := 1
     while (i < n) {
         (i < 5)? {
-            println(i * i)
+            print(i * i)
         }
         ()? {
-            println((-1) * i * i)
+            print((-1) * i * i)
         }
 
         i := i + 1
@@ -16,10 +16,10 @@ proc main(argc int) int {
 
     for (j <- 1,n - 1) {
         (j < 5)? {
-            println(j * j)
+            print(j * j)
         }
         ()? {
-            println((-1) * j * j)
+            print((-1) * j * j)
         }
     }
 
