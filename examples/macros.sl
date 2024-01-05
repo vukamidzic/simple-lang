@@ -1,12 +1,6 @@
-#macro A begin 
-    10 
-end
-#macro B begin 
-    A! + A! 
-end
-#macro C begin 
-    2 * B! + 3 * A! 
-end
+#macro A |[ 10 ]|
+#macro B |[ A! + A! ]|
+#macro C |[ 2 * B! + 3 * A! ]|
 
 proc main(x int) int {
     a := A!
