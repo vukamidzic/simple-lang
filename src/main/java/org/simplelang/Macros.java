@@ -18,7 +18,7 @@ public class Macros {
         HashMap<String, HashSet<String>> graph = new HashMap<>();
 
         Pattern patt = Pattern.compile(
-            "#macro[\\n\\t\\s]*([A-Z]+)[\\n\\t\\s]*begin[\\n\\t\\s]*([^\\t]*?)[\\n\\t\\s]*end"
+            "#macro[\\n\\t\\s]*([A-Z]+)[\\n\\t\\s]*\\|\\[[\\n\\t\\s]*([^\\t]*?)[\\n\\t\\s]*\\]\\|"
         );
         HashMap<String, String> macros = new HashMap<>();
         Matcher match = patt.matcher(str);

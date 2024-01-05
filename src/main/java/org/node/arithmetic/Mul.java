@@ -1,10 +1,13 @@
 package org.node.arithmetic;
 
+import java.util.HashMap;
 import java.util.Stack;
 
 import org.simplelang.Ast;
 import org.error.Err;
 import org.node.Expression;
+import org.node.Operation;
+import org.javatuples.Pair;
 
 public class Mul extends Expression {
     public Mul() {super();}
@@ -14,6 +17,8 @@ public class Mul extends Expression {
         Expression.tmpCounter++;
         Stack<Err> stackErrs = new Stack<Err>();
 
+        HashMap<Pair, Operation> ops = genOperations();
+
         Expression lhs = (Expression)children.get(0);
         Expression rhs = (Expression)children.get(1);
 
@@ -22,33 +27,47 @@ public class Mul extends Expression {
         Stack<Err> rhsErrs = rhs.codegen(tree);
         stackErrs.addAll(rhsErrs);
 
-        if (lhs.exprTy == ExprTy.BOOL || rhs.exprTy == ExprTy.BOOL) {
-            stackErrs.push(new Err(Err.Errno.ERR_TY, lineno, "Can't do addition with bool and other type!!", errText));
+        if (!ops.containsKey(new Pair(lhs.exprTy, rhs.exprTy))) {
+            exprTy = ExprTy.UNDEFINED;
+            stackErrs.push(new Err(
+                Err.Errno.ERR_TY, 
+                lineno, 
+                String.format("Can't multiply %s and %s", lhs.exprTy.toString(), rhs.exprTy.toString()), 
+                errText
+            ));
         }
-
-        if (lhs.exprTy == rhs.exprTy) {
-            switch (lhs.exprTy) {
-                case INT : {
-                    exprTy = ExprTy.INT;
-                    System.out.format("    %%t%d = mul i32 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
-                    break;
-                }
-                case FLOAT : {
-                    exprTy = ExprTy.FLOAT;
-                    System.out.format("    %%t%d = fmul double %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
-                    break;
-                }
-                default : {
-                    exprTy = ExprTy.UNDEFINED;
-                    stackErrs.push(new Err(Err.Errno.ERR_TY, lineno, "Can't do multiplication with undefined values!!", errText));
-                    break;
-                }
-            }
-        }
-        else {
-            stackErrs.push(new Err(Err.Errno.ERR_TY, lineno, "Can't do multiplication with int and float!!", errText));
-        }
+        else ops.get(new Pair(lhs.exprTy, rhs.exprTy)).func(lhs, rhs);
 
         return stackErrs;
+    }
+
+    private HashMap<Pair, Operation> genOperations() {
+        HashMap<Pair, Operation> mp = new HashMap<Pair, Operation>(); 
+        mp.put(new Pair(ExprTy.INT, ExprTy.INT), new Operation() {
+            @Override
+            public void func(Expression lhs, Expression rhs) {
+                exprTy = ExprTy.INT;
+                System.out.format("    %%t%d = mul i32 %%t%d, %%t%d\n", 
+                    tmpNum, lhs.tmpNum, rhs.tmpNum);
+            }
+        });
+        mp.put(new Pair(ExprTy.FLOAT, ExprTy.FLOAT), new Operation() {
+            @Override
+            public void func(Expression lhs, Expression rhs) {
+                exprTy = ExprTy.FLOAT;
+                System.out.format("    %%t%d = fmul double %%t%d, %%t%d\n", 
+                    tmpNum, lhs.tmpNum, rhs.tmpNum);
+            }
+        });
+        mp.put(new Pair(ExprTy.CHAR, ExprTy.CHAR), new Operation() {
+            @Override
+            public void func(Expression lhs, Expression rhs) {
+                exprTy = ExprTy.CHAR;
+                System.out.format("    %%t%d = mul i8 %%t%d, %%t%d\n", 
+                    tmpNum, lhs.tmpNum, rhs.tmpNum);
+            }
+        });
+
+        return mp;
     }
 }

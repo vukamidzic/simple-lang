@@ -124,13 +124,7 @@ plusOrMinus
 mulOrDiv
     : mulOrDiv MUL atom # Mul
     | mulOrDiv DIV atom # Div
-    | ptrOp # ToPtr 
-;
-
-ptrOp 
-    : PTR LPAR atom RPAR # ToPointer
-    | 'at' LPAR atom RPAR  # FromPointer
-    | atom # ToAtom
+    | atom # ToAtom 
 ;
 
 atom

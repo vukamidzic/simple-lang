@@ -84,19 +84,6 @@ public class Var extends Expression {
                     }
                     break;
                 }
-                case PTR : {
-                    if (foundVariableIndex == 0) {
-                        stackErrs.push(new Err(Errno.ERR_VAR, lineno, "Can't use pointers globally", errText));
-                        return stackErrs;
-                    }
-                    else {
-                        System.out.format(
-                            "    %%t%d = load i32*, i32** %%%s.%d\n",
-                            tmpNum, varName,
-                            tree.symTable.get(foundVariableIndex).get(varName).getValue1());
-                    }
-                    break;
-                }
                 case ARRAY : {
                     if (foundVariableIndex == 0) {
                         stackErrs.push(new Err(Errno.ERR_VAR, lineno, "Can't use arrays globally", errText));

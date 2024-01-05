@@ -7,7 +7,7 @@ proc fib(n int) int {
     }
 }
 
-proc main(n int) int {
+proc main(x int) int {
     n := 0
     input(addr(n))
 

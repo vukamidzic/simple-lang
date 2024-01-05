@@ -1,10 +1,10 @@
 package org.simplelang;
 
-import org.javatuples.Triplet;
 import org.node.Expression;
 import org.node.Node;
 import org.error.Err;
 import org.javatuples.Pair;
+import org.javatuples.Triplet;
 
 import java.util.ArrayList;
 import java.util.HashMap;

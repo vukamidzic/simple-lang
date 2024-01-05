@@ -247,13 +247,6 @@ public interface SimpleLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMinus(SimpleLangParser.MinusContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ToPtr}
-	 * labeled alternative in {@link SimpleLangParser#mulOrDiv}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitToPtr(SimpleLangParser.ToPtrContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code Div}
 	 * labeled alternative in {@link SimpleLangParser#mulOrDiv}.
 	 * @param ctx the parse tree
@@ -268,22 +261,8 @@ public interface SimpleLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMul(SimpleLangParser.MulContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ToPointer}
-	 * labeled alternative in {@link SimpleLangParser#ptrOp}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitToPointer(SimpleLangParser.ToPointerContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code FromPointer}
-	 * labeled alternative in {@link SimpleLangParser#ptrOp}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFromPointer(SimpleLangParser.FromPointerContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code ToAtom}
-	 * labeled alternative in {@link SimpleLangParser#ptrOp}.
+	 * labeled alternative in {@link SimpleLangParser#mulOrDiv}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */

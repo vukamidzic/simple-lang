@@ -8,7 +8,7 @@ end
     2 * B! + 3 * A! 
 end
 
-proc main(argc int) int {
+proc main(x int) int {
     a := A!
     b := B! + B!
     c := C!

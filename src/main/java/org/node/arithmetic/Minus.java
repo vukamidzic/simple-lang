@@ -14,9 +14,35 @@ public class Minus extends Expression {
 
     @Override public Stack<Err> codegen(Ast tree) {
         tmpNum = Expression.tmpCounter++;
-        Stack<Err> stackErrs = new Stack<Err>();
+        Stack<Err> stackErrs = new Stack<Err>(); 
+        
+        HashMap<Pair, Operation> ops = genOperations();
 
-        HashMap<Pair, Operation> mp = new HashMap<Pair, Operation>(); 
+        Expression lhs = (Expression)children.get(0);
+        Expression rhs = (Expression)children.get(1);
+
+        Stack<Err> lhsErrs = lhs.codegen(tree);
+        stackErrs.addAll(lhsErrs);
+        Stack<Err> rhsErrs = rhs.codegen(tree);
+        stackErrs.addAll(rhsErrs);
+
+        if (!ops.containsKey(new Pair(lhs.exprTy, rhs.exprTy))) {
+            exprTy = ExprTy.UNDEFINED;
+            stackErrs.push(new Err(
+                Err.Errno.ERR_TY, 
+                lineno, 
+                String.format("Can't subtract %s from %s", rhs.exprTy.toString(), lhs.exprTy.toString()), 
+                errText
+            ));
+        }
+        else ops.get(new Pair(lhs.exprTy, rhs.exprTy)).func(lhs, rhs);
+
+        return stackErrs;
+    }
+
+    private HashMap<Pair, Operation> genOperations() {
+        HashMap<Pair, Operation> mp = new HashMap<Pair, Operation>();
+
         mp.put(new Pair(ExprTy.INT, ExprTy.INT), new Operation() {
             @Override
             public void func(Expression lhs, Expression rhs) {
@@ -41,53 +67,7 @@ public class Minus extends Expression {
                     tmpNum, lhs.tmpNum, rhs.tmpNum);
             }
         });
-        mp.put(new Pair(ExprTy.INT, ExprTy.PTR), new Operation() {
-            @Override
-            public void func(Expression lhs, Expression rhs) {
-                exprTy = ExprTy.PTR;
-                System.out.format("    %%t%d = ptrtoint ptr %%t%d to i32\n", 
-                    tmpNum, rhs.tmpNum);
-                tmpNum = Expression.tmpCounter++;
-                System.out.format("    %%t%d = sub i32 %%t%d, %%t%d\n", 
-                    tmpNum, tmpNum-3, lhs.tmpNum);
-                tmpNum = Expression.tmpCounter++;
-                System.out.format("    %%t%d = alloca i32\n", 
-                    tmpNum);
-                System.out.format("    store i32 %%t%d, i32* %%t%d\n", 
-                    tmpNum-1, tmpNum);
-            }
-        });
-        mp.put(new Pair(ExprTy.PTR, ExprTy.INT), new Operation() {
-            @Override
-            public void func(Expression lhs, Expression rhs) {
-                exprTy = ExprTy.PTR;
-                System.out.format("    %%t%d = ptrtoint ptr %%t%d to i32\n", 
-                    tmpNum, lhs.tmpNum);
-                tmpNum = Expression.tmpCounter++;
-                System.out.format("    %%t%d = sub i32 %%t%d, %%t%d\n", 
-                    tmpNum, tmpNum-3, rhs.tmpNum);
-                tmpNum = Expression.tmpCounter++;
-                System.out.format("    %%t%d = alloca i32\n", 
-                    tmpNum);
-                System.out.format("    store i32 %%t%d, i32* %%t%d\n", 
-                    tmpNum-1, tmpNum);
-            }
-        });
 
-        Expression lhs = (Expression)children.get(0);
-        Expression rhs = (Expression)children.get(1);
-
-        Stack<Err> lhsErrs = lhs.codegen(tree);
-        stackErrs.addAll(lhsErrs);
-        Stack<Err> rhsErrs = rhs.codegen(tree);
-        stackErrs.addAll(rhsErrs);
-
-        if (lhs.exprTy == ExprTy.BOOL || rhs.exprTy == ExprTy.BOOL) {
-            stackErrs.push(new Err(Err.Errno.ERR_TY, lineno, "Can't do addition with bool and other type!!", errText));
-        }
-
-        mp.get(new Pair(lhs.exprTy, rhs.exprTy)).func(lhs, rhs);
-
-        return stackErrs;
+        return mp;
     }
 }

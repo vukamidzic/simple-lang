@@ -5,6 +5,7 @@ import java.util.Stack;
 import org.error.Err;
 import org.error.Err.Errno;
 import org.node.Expression.ExprTy;
+import org.node.basic.Var;
 import org.simplelang.Ast;
 
 public class Return extends Statement {
@@ -38,6 +39,18 @@ public class Return extends Statement {
             }
             case CHAR : {
                 System.out.format("    ret i8 %%t%d\n", retExpr.tmpNum);
+                break;
+            }
+            case ARRAY : {
+                if (retExpr instanceof Var) {
+                    System.out.format("    %%t%d = bitcast %%struct.Array* %%t%d to { i64, i8* }*\n", 
+                        retExpr.tmpNum+1, retExpr.tmpNum);
+                    System.out.format("    %%t%d = load { i64, i8* }, { i64, i8* }* %%t%d\n", 
+                        retExpr.tmpNum+2, retExpr.tmpNum+1);
+                    System.out.format("    ret { i64, i8* } %%t%d\n", retExpr.tmpNum+2);
+                    Expression.tmpCounter += 2;
+                }
+                else System.out.format("    ret { i64, i8* } %%t%d\n", retExpr.tmpNum);
                 break;
             }
             default : {

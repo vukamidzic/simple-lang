@@ -24,10 +24,15 @@ public class And extends Expression {
         stackErrs.addAll(rhsErrs);
 
         if (!(lhs.exprTy == ExprTy.BOOL && rhs.exprTy == ExprTy.BOOL)) {
-            stackErrs.push(new Err(Err.Errno.ERR_TY, lineno, "Can't logically AND non-boolean types!!", errText));
+            exprTy = ExprTy.UNDEFINED;
+            stackErrs.push(new Err(
+                Err.Errno.ERR_TY, 
+                lineno, 
+                String.format("Can't logand %s and %s", lhs.exprTy.toString(), rhs.exprTy.toString()), 
+                errText
+            ));
         }
-
-        System.out.format("    %%t%d = and i1 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
+        else System.out.format("    %%t%d = and i1 %%t%d, %%t%d\n", tmpNum, lhs.tmpNum, rhs.tmpNum);
         return stackErrs;
     }
 }

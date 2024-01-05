@@ -78,10 +78,6 @@ public class ExprFuncCall extends Expression {
                         System.out.format("i32 %d, i8 %%t%d, ", 3, e.tmpNum);
                         break;
                     }
-                    case PTR : {
-                        System.out.format("i32 %d, i32* %%t%d, ", 4, e.tmpNum);
-                        break;
-                    }
                     case ARRAY : {
                         System.out.format("i32 %d, %%struct.Array %%t%d, ", 5, e.tmpNum);
                         break;

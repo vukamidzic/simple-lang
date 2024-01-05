@@ -1,6 +1,5 @@
-proc main(argc int) int {
-    n := 0
-    input(addr(n))
+proc main(x int) int {
+    n := 10
 
     i := 1
     while (i < n) {

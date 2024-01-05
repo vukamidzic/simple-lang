@@ -91,14 +91,6 @@ public class Assignment extends Statement {
                     }
                     break;
                 }
-                case PTR : {
-                    tree.addVariable(varName, Expression.ExprTy.PTR, assignNum, assignTy);
-                    System.out.format("    %%%s.%d = alloca i32*\n", varName, assignNum);
-                    System.out.format(
-                            "    store i32* %%t%d, i32** %%%s.%d\n",
-                            exprValue.tmpNum, varName, assignNum);
-                    break;
-                }
                 case ARRAY : {
                     tree.addVariable(varName, Expression.ExprTy.ARRAY, assignNum, assignTy);
                     System.out.format("    %%%s.%d = alloca %%struct.Array\n", varName, assignNum);
@@ -177,19 +169,6 @@ public class Assignment extends Statement {
                     else {
                         Stack<Err> stackErrs = new Stack<Err>();
                         stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign CHAR value to non-CHAR variable!!!", errText));
-                        return stackErrs;
-                    }
-                    break;
-                }
-                case PTR : {
-                    if (exprValue.exprTy == varTy) {
-                        System.out.format(
-                                "    store i32* %%t%d, i32** %s\n",
-                                exprValue.tmpNum, register);
-                    }
-                    else {
-                        Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign PTR value to non-PTR variable!!!", errText));
                         return stackErrs;
                     }
                     break;

@@ -5,7 +5,6 @@ import org.node.*;
 import org.node.Expression.ExprTy;
 import org.node.arithmetic.*;
 import org.node.basic.*;
-import org.node.basic.Pointer.PtrTy;
 import org.node.comp.*;
 import org.node.logic.*;
 
@@ -152,7 +151,7 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
             case "float" :  funcDefNode.funcRetType = "double"; break;
             case "bool" :  funcDefNode.funcRetType = "i1"; break;
             case "char" : funcDefNode.funcRetType = "i8"; break;
-            case "Array" :  funcDefNode.funcRetType = "{ i64, i8* }"; break;
+            // case "Array" :  funcDefNode.funcRetType = "{ i64, i8* }"; break;
             default : funcDefNode.funcRetType = "void"; break;
         }
 
@@ -299,30 +298,6 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
         divNode.children.add(visit(ctx.mulOrDiv()));
         divNode.children.add(visit(ctx.atom()));
         return divNode;
-    }
-
-    @Override
-    public Node visitToPointer(SimpleLangParser.ToPointerContext ctx) {
-        Pointer ptrNode = new Pointer(PtrTy.TO_PTR);
-        ptrNode.lineno = ctx.getStart().getLine();
-        int a = ctx.start.getStartIndex();
-        int b =  ctx.stop.getStopIndex();
-        Interval interval = new Interval(a, b);
-        ptrNode.errText = ctx.start.getInputStream().getText(interval);
-        ptrNode.children.add(visit(ctx.atom()));
-        return ptrNode;
-    }
-
-    @Override
-    public Node visitFromPointer(SimpleLangParser.FromPointerContext ctx) {
-        Pointer ptrNode = new Pointer(PtrTy.FROM_PTR);
-        ptrNode.lineno = ctx.getStart().getLine();
-        int a = ctx.start.getStartIndex();
-        int b =  ctx.stop.getStopIndex();
-        Interval interval = new Interval(a, b);
-        ptrNode.errText = ctx.start.getInputStream().getText(interval);
-        ptrNode.children.add(visit(ctx.atom()));
-        return ptrNode;
     }
 
     @Override public Node visitFloat(SimpleLangParser.FloatContext ctx) {
