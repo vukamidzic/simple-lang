@@ -1,8 +1,10 @@
+<<<<<<< HEAD
 #macro A |[ 5 ]|
 #macro B |[ A! + A! ]|
 #macro C |[ 2 * B! + 3 * A! ]|
 
 #import "Basic"
+=======
 
 proc main(x int) int {
     a := A!
