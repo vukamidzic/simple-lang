@@ -2,7 +2,7 @@ grammar SimpleLang;
 
 WHILE : 'while';
 FOR : 'for';
-PTR : 'addr';
+PTR : '@';
 
 TRUE : 'true';
 FALSE : 'false';
@@ -122,9 +122,13 @@ plusOrMinus
 ;
 
 mulOrDiv
-    : mulOrDiv MUL atom # Mul
-    | mulOrDiv DIV atom # Div
-    | atom # ToAtom 
+    : mulOrDiv MUL pointer # Mul
+    | mulOrDiv DIV pointer # Div
+    | pointer # ToPointer
+;
+
+pointer : PTR atom #Ptr
+        | atom #ToAtom
 ;
 
 atom

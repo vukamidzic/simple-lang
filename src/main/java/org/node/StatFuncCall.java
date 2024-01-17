@@ -23,6 +23,16 @@ public class StatFuncCall extends Statement {
         System.err.println(tree.symTable);
         Stack<Err> stackErrs = new Stack<Err>();
         
+        if (!tree.functions.containsKey(funcName)) {
+            stackErrs.push(new Err(
+                Err.Errno.ERR_FUNC, 
+                lineno, 
+                String.format("Function \'%s\' doesn't exist", funcName), 
+                errText
+            ));
+            return stackErrs;
+        }
+
         for (Expression e : this.args) {
             Stack<Err> argErrs = e.codegen(tree);
             stackErrs.addAll(argErrs);
@@ -49,12 +59,12 @@ public class StatFuncCall extends Statement {
                     break;
                 }
                 case ARRAY : {
-                    System.out.format("i32 %d, %%struct.Array %%t%d, ", 5, e.tmpNum);
+                    System.out.format("i32 %d, %%struct.Array %%t%d, ", 6, e.tmpNum);
                     break;
                 }
             }
         }
-        System.out.format("i32 %d)\n", 6);
+        System.out.format("i32 %d)\n", 7);
 
         if (children.size() != 0) {
             Statement nextNode = (Statement) children.get(0);

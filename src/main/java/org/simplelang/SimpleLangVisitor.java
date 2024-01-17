@@ -261,8 +261,22 @@ public interface SimpleLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMul(SimpleLangParser.MulContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ToAtom}
+	 * Visit a parse tree produced by the {@code ToPointer}
 	 * labeled alternative in {@link SimpleLangParser#mulOrDiv}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitToPointer(SimpleLangParser.ToPointerContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Ptr}
+	 * labeled alternative in {@link SimpleLangParser#pointer}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPtr(SimpleLangParser.PtrContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ToAtom}
+	 * labeled alternative in {@link SimpleLangParser#pointer}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */

@@ -7,6 +7,8 @@ import org.simplelang.Ast;
 import org.simplelang.Ast.FuncType;
 import org.error.Err;
 import org.error.Err.Errno;
+import org.node.basic.Pointer;
+import org.node.basic.Pointer.PtrType;
 
 public class ExprFuncCall extends Expression {
     public String funcName;
@@ -27,6 +29,16 @@ public class ExprFuncCall extends Expression {
         tmpNum = Expression.tmpCounter;
         Expression.tmpCounter++;
         Stack<Err> stackErrs = new Stack<Err>();
+
+        if (!tree.functions.containsKey(funcName)) {
+            stackErrs.push(new Err(
+                Err.Errno.ERR_FUNC, 
+                lineno, 
+                String.format("Function \'%s\' doesn't exist", funcName), 
+                errText
+            ));
+            return stackErrs;
+        }
 
         String funcType = tree.functions.get(funcName).getValue0();
         switch (funcType) {
@@ -78,8 +90,15 @@ public class ExprFuncCall extends Expression {
                         System.out.format("i32 %d, i8 %%t%d, ", 3, e.tmpNum);
                         break;
                     }
+                    case PTR : {
+                        if (((Pointer)e).ptrTy == PtrType.PTRINT)
+                            System.out.format("i32 %d, i32** %%t%d, ", 4, e.tmpNum);
+                        else 
+                            System.out.format("i32 %d, double** %%t%d, ", 5, e.tmpNum);
+                        break;
+                    }
                     case ARRAY : {
-                        System.out.format("i32 %d, %%struct.Array %%t%d, ", 5, e.tmpNum);
+                        System.out.format("i32 %d, %%struct.Array %%t%d, ", 6, e.tmpNum);
                         break;
                     }
                     default : {
@@ -87,7 +106,7 @@ public class ExprFuncCall extends Expression {
                     }
                 }
             }
-            System.out.format("i32 %d)\n", 6);
+            System.out.format("i32 %d)\n", 7);
         }
         else {
             System.out.format("    %%t%d = call %s (", tmpNum, funcType);

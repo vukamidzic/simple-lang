@@ -52,7 +52,7 @@ public class Ast {
         }
         
         System.out.println("%struct.Array = type { i64, i8* }");
-        getStdFuncs();
+        getLibFuncs();
         System.out.println(";###########################################");
         //System.out.println("define i32 @main() {");
         Stack<Err> errs = root.codegen(this);
@@ -91,7 +91,7 @@ public class Ast {
         return -1;
     }
     
-    private void getStdFuncs() {
+    private void getLibFuncs() {
         try {
             String str = Files.readString(Paths.get("lib.ll"));
             

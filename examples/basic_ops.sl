@@ -1,3 +1,5 @@
+#import "Basic"
+
 proc main(x int) int {
     a := 1
     b := a + a + a

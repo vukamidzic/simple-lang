@@ -1,5 +1,8 @@
+#import "Basic"
+
 proc main(x int) int {
-    n := 10
+    n := 0
+    errno := input(@n)
 
     i := 1
     while (i < n) {

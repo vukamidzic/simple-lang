@@ -1,3 +1,5 @@
+#import "Basic"
+
 proc fib(n int) int {
     (n < 2)? { 
         ret n 
@@ -9,7 +11,7 @@ proc fib(n int) int {
 
 proc main(x int) int {
     n := 0
-    input(addr(n))
+    errno := input(@n)
 
     print(fib(n))
 

@@ -37,7 +37,7 @@ ID=35
 'ret'=2
 'while'=3
 'for'=4
-'addr'=5
+'@'=5
 'true'=6
 'false'=7
 ':='=9

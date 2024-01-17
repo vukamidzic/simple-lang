@@ -103,7 +103,12 @@ public class Assignment extends Statement {
                 }
                 default : {
                     Stack<Err> stackErrs = new Stack<Err>();
-                    stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!", errText));
+                    stackErrs.add(new Err(
+                        Err.Errno.ERR_TY, 
+                        lineno, 
+                        String.format("Type %s not implemented", exprValue.exprTy.toString()), 
+                        errText
+                    ));
                     return stackErrs;
                 }
             }
@@ -175,7 +180,12 @@ public class Assignment extends Statement {
                 }
                 default : {
                     Stack<Err> stackErrs = new Stack<Err>();
-                    stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Unsupported type!!!", errText));
+                    stackErrs.add(new Err(
+                        Err.Errno.ERR_TY, 
+                        lineno, 
+                        String.format("Type %s not implemented", exprValue.exprTy.toString()), 
+                        errText
+                    ));
                     return stackErrs;
                 }
             }

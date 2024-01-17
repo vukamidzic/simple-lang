@@ -24,7 +24,6 @@ import org.error.Err;
 public class Main {
     public static void main(String[] args) throws Exception {
         String formattedInput = Macros.changeMacros(stringsToArrays(Files.readString(Paths.get(args[0]))));
-
         if (Macros.infiniteMacros) {
             System.err.format("\033[31merror in file %s: infinite macros!!!\n", args[0]);
             return;

@@ -125,7 +125,7 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
         int sz = ctx.ID().size();
         
         for (int i = 1; i < sz; ++i) {
-            Expression.ExprTy ty = ExprTy.INT;
+            Expression.ExprTy ty = ExprTy.UNDEFINED;
             switch (ctx.TYPE(i-1).getText()) {
                 case "int" : 
                     ty = ExprTy.INT;
@@ -283,7 +283,7 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
         Interval interval = new Interval(a, b);
         mulNode.errText = ctx.start.getInputStream().getText(interval);
         mulNode.children.add(visit(ctx.mulOrDiv()));
-        mulNode.children.add(visit(ctx.atom()));
+        mulNode.children.add(visit(ctx.pointer()));
         return mulNode;
     }
 
@@ -296,8 +296,19 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
         Interval interval = new Interval(a, b);
         divNode.errText = ctx.start.getInputStream().getText(interval);
         divNode.children.add(visit(ctx.mulOrDiv()));
-        divNode.children.add(visit(ctx.atom()));
+        divNode.children.add(visit(ctx.pointer()));
         return divNode;
+    }
+
+    @Override public Node visitPtr(SimpleLangParser.PtrContext ctx) {
+        Pointer ptrNode = new Pointer();
+        ptrNode.lineno = ctx.getStart().getLine();
+        int a = ctx.start.getStartIndex();
+        int b =  ctx.stop.getStopIndex();
+        Interval interval = new Interval(a, b);
+        ptrNode.errText = ctx.start.getInputStream().getText(interval);
+        ptrNode.children.add(visit(ctx.atom()));
+        return ptrNode;
     }
 
     @Override public Node visitFloat(SimpleLangParser.FloatContext ctx) {

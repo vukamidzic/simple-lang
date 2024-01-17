@@ -6,7 +6,8 @@ public class Err {
         ERR_VAR,
         ERR_TY,
         ERR_COND,
-        ERR_CONST
+        ERR_CONST,
+        ERR_FUNC
     }
     public Errno errno;
     public int lineno;
