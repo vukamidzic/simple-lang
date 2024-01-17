@@ -1,3 +1,6 @@
+#import "Basic"
+#import "Arrays"
+
 proc f(a Array, x int) int {
     n := len(a)
     l := 0
@@ -17,17 +20,17 @@ proc f(a Array, x int) int {
 
 proc main(x int) int {
     n := 0
-    input(addr(n))
+    errno := input(@n)
 
     a := array(n, 0)
     for (i <- 0,n - 1) {
         t := 0
-        input(addr(t))
+        errno := input(@t)
         put(a, i, t)
     }
 
     x := 0
-    input(addr(x))
+    errno := input(@x)
 
     b := f(a, x)
     print(b)
