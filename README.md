@@ -23,7 +23,7 @@
 ## Requirements
 Java| LLVM
 ---|---
-21 (preferably) |17.0.1
+20 (preferably) |17.0.1
 ## Examples
 
 You can find the examples in the ```examples``` folder.
