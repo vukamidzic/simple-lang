@@ -35,6 +35,10 @@ void print(Types type, ...) {
                 printf("%c ", va_arg(args, char));
                 break;
 
+            case STRING :
+                printf("%s ", va_arg(args, char*));
+                break;
+
             case ARRAY : {
                 Array arr = va_arg(args, Array);
                 uint32_t size = arr.data & (((1 << 16) - 1));
@@ -55,10 +59,6 @@ void print(Types type, ...) {
                                 printf("%d", ((bool*)arr.elems)[i]);
                                 break;
                             }
-                            case CHAR : { 
-                                printf("%c", ((char*)arr.elems)[i]);
-                                break;
-                            }
                         }
                     } 
                     else {
@@ -75,10 +75,6 @@ void print(Types type, ...) {
                                 printf("%d, ", ((bool*)arr.elems)[i]);
                                 break;
                             }
-                            case CHAR : { 
-                                printf("%c, ", ((char*)arr.elems)[i]);
-                                break;
-                            }
                         }
                     }
                         
@@ -89,7 +85,7 @@ void print(Types type, ...) {
 
             default : 
                 fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
-                    get_filename(__FILE__),
+                    __FILE__,
                     __func__,
                     type_to_str(type)
                 );
@@ -104,7 +100,7 @@ void print(Types type, ...) {
     return;
 }
 
-int input(Types type, ...) {
+void input(Types type, ...) {
     va_list args;
     va_start(args, type);
 
@@ -119,16 +115,15 @@ int input(Types type, ...) {
         }
         else {
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Non-pointer argument\n", 
-                get_filename(__FILE__),
+                __FILE__,
                 __func__
             );
-            return -1;
+            exit(EXIT_FAILURE);
         }
         type = va_arg(args, Types);
     }
 
     va_end(args);
-    return 0;
 }
 
 #endif

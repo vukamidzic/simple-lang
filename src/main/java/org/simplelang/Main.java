@@ -23,7 +23,7 @@ import org.error.Err;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        String formattedInput = Macros.changeMacros(stringsToArrays(Files.readString(Paths.get(args[0]))));
+        String formattedInput = Macros.changeMacros(Files.readString(Paths.get(args[0])));
         if (Macros.infiniteMacros) {
             System.err.format("\033[31merror in file %s: infinite macros!!!\n", args[0]);
             return;
@@ -39,6 +39,8 @@ public class Main {
         SimpleLangVisitorImpl simpleLangVisitor = new SimpleLangVisitorImpl();
         Ast tree = new Ast();
 
+        tree.getStrings(input.toString()); //get all strings and convert them into LLVM IR strings
+        System.err.println(tree.strings);
         tree.root = simpleLangVisitor.visit(parseTree); //defining root of AST
         if (tree.root != null) {
             tree.addScope(); //generating a global scope
@@ -84,31 +86,31 @@ public class Main {
         }
     }
 
-    private static String stringsToArrays(String input) {
-        String new_input = input;
-        Pattern patt = Pattern.compile("\"(.*?)\"");
-        Matcher match = patt.matcher(new_input);
+    // private static String stringsToArrays(String input) {
+    //     String new_input = input;
+    //     Pattern patt = Pattern.compile("\"(.*?)\"");
+    //     Matcher match = patt.matcher(new_input);
 
-        while (match.find()) {
-            String s = match.group();
-            String chunk = match.group(1);
-            new_input = new_input.replaceAll(s, makeStr(chunk));
-        }
+    //     while (match.find()) {
+    //         String s = match.group();
+    //         String chunk = match.group(1);
+    //         new_input = new_input.replaceAll(s, makeStr(chunk));
+    //     }
 
-        return new_input;
-    }
+    //     return new_input;
+    // }
 
-    private static String makeStr(String s) {
-        StringBuilder strBuild = new StringBuilder();
-        strBuild.append("arrayFrom(");
-        char[] chars = s.toCharArray();
+    // private static String makeStr(String s) {
+    //     StringBuilder strBuild = new StringBuilder();
+    //     strBuild.append("arrayFrom(");
+    //     char[] chars = s.toCharArray();
 
-        for (char c : chars) {
-            strBuild.append(String.format("\'%s\',", c));
-        }
-        strBuild.deleteCharAt(strBuild.length()-1);
-        strBuild.append(')');
+    //     for (char c : chars) {
+    //         strBuild.append(String.format("\'%s\',", c));
+    //     }
+    //     strBuild.deleteCharAt(strBuild.length()-1);
+    //     strBuild.append(')');
 
-        return strBuild.toString();
-    }
+    //     return strBuild.toString();
+    // }
 }

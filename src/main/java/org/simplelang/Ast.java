@@ -21,12 +21,14 @@ public class Ast {
     public enum Mut {VAR, CONST}
     public enum FuncType {LIB, NONLIB}
     public HashMap<String, Pair<String, FuncType>> functions;
+    public HashMap<String, String> strings;
     public ArrayList<HashMap<String, Triplet<Expression.ExprTy, Integer, Mut>>> symTable;
     public Node root;
 
     public Ast() {
         symTable = new ArrayList<>();
         functions = new HashMap<>();
+        strings = new HashMap<>();
         switch (System.getProperty("os.name")) {
             case "Windows 10" : {
                 ver = OSVersion.WINDOWS;
@@ -40,18 +42,7 @@ public class Ast {
     }
 
     public Stack<Err> generate() {
-        switch (ver) {
-            case WINDOWS : {
-                System.out.println("target triple = \"x86_64-pc-windows-msvc19.29.30138\"\n");
-                break;
-            }
-            case LINUX : {
-                System.out.println("target triple = \"x86_64-pc-linux-gnu\"\n");
-                break;
-            }
-        }
-        
-        System.out.println("%struct.Array = type { i64, i8* }");
+        System.out.println("%struct.Array = type { i64, i8* }\n");
         getLibFuncs();
         System.out.println(";###########################################");
         //System.out.println("define i32 @main() {");
@@ -91,6 +82,30 @@ public class Ast {
         return -1;
     }
     
+    public void getStrings(String input) {
+        switch (ver) {
+            case WINDOWS : {
+                System.out.println("target triple = \"x86_64-pc-windows-msvc19.29.30138\"\n");
+                break;
+            }
+            case LINUX : {
+                System.out.println("target triple = \"x86_64-pc-linux-gnu\"\n");
+                break;
+            }
+        }
+
+        Pattern pattern = Pattern.compile("\"(.*?)\"");
+        Matcher matcher = pattern.matcher(input);
+        
+        int stringCounter = 1;
+        while (matcher.find()) {
+            String foundStr = matcher.group(1);
+            this.strings.put(foundStr, String.format("@str%d", stringCounter));
+            System.out.format("@str%d = private unnamed_addr constant [%d x i8] c\"%s\\00\", align 1\n", 
+                stringCounter++, foundStr.length()+1, foundStr);
+        }
+    }
+
     private void getLibFuncs() {
         try {
             String str = Files.readString(Paths.get("lib.ll"));
@@ -99,10 +114,10 @@ public class Ast {
             Matcher matcher = pattern.matcher(str);
             
             while (matcher.find()) {
-                String foundStr = matcher.group(1);
+                String foundFunc = matcher.group(1);
                 String funcType = matcher.group(2);
                 String funcString = matcher.group(3);
-                System.out.println("declare " + foundStr);
+                System.out.println("declare " + foundFunc);
                 Pair<String, FuncType> funcPair = new Pair<>(funcType, FuncType.LIB); 
                 this.functions.put(funcString, funcPair);
             }

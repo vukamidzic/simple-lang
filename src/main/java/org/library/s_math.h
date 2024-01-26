@@ -39,7 +39,7 @@ int maxValue(Types type, ...) {
 			}    
             default : 
                 fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n", 
-                    get_filename(__FILE__),
+                    __FILE__,
                     __func__,
                     type_to_str(type)
                 );
@@ -78,7 +78,7 @@ int minValue(Types type, ...) {
 			}
             default : 
                 fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
-                    get_filename(__FILE__),
+                    __FILE__,
                     __func__,
                     type_to_str(type)
                 );
@@ -123,7 +123,7 @@ int gcd(Types type, ...) {
 
         default : 
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
-                get_filename(__FILE__),
+                __FILE__,
                 __func__,
                 type_to_str(type)
             );
@@ -151,7 +151,7 @@ int gcd(Types type, ...) {
 			}
             default : 
                 fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
-                    get_filename(__FILE__),
+                    __FILE__,
                     __func__,
                     type_to_str(type)
                 );
@@ -186,7 +186,7 @@ int lcm(Types type, ...) {
 
         default : 
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
-                get_filename(__FILE__),
+                __FILE__,
                 __func__,
                 type_to_str(type)
             );
@@ -214,7 +214,7 @@ int lcm(Types type, ...) {
 			}
             default : 
                 fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
-                    get_filename(__FILE__),
+                    __FILE__,
                     __func__,
                     type_to_str(type)
                 );
@@ -249,7 +249,7 @@ int mod(Types type, ...) {
             
         default : 
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
-                get_filename(__FILE__),
+                __FILE__,
                 __func__,
                 type_to_str(type)
             );
@@ -273,7 +273,7 @@ int mod(Types type, ...) {
             
         default : 
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
-                get_filename(__FILE__),
+                __FILE__,
                 __func__,
                 type_to_str(type)
             );
@@ -284,7 +284,7 @@ int mod(Types type, ...) {
 
     if (type != FUNC_END) {
         fprintf(stderr, "[\033[35m%s\033[0m] %s(): Too many arguments for this function (expected 2)\n", 
-            get_filename(__FILE__),
+            __FILE__,
             __func__
         );
         exit(EXIT_FAILURE);
@@ -300,7 +300,7 @@ double sini(Types type, ...) {
 
     if (type != INTEGER) {
         fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected INT, got %s\n", 
-            get_filename(__FILE__),
+            __FILE__,
             __func__, 
             type_to_str(type)
         );
@@ -316,7 +316,7 @@ double cosi(Types type, ...) {
 
     if (type != INTEGER) {
         fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected INT, got %s\n", 
-            get_filename(__FILE__),
+            __FILE__,
             __func__, 
             type_to_str(type)
         );

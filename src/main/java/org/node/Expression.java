@@ -8,6 +8,7 @@ abstract public class Expression extends Node {
         CHAR,
         ARRAY,
         PTR,
+        STRING,
         UNDEFINED
     }
     public ExprTy exprTy;

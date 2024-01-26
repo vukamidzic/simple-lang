@@ -2,7 +2,7 @@
 
 proc main(x int) int {
     n := 0
-    errno := input(@n)
+    input(@n)
 
     i := 1
     while (i < n) {

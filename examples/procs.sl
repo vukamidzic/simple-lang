@@ -20,17 +20,17 @@ proc f(a Array, x int) int {
 
 proc main(x int) int {
     n := 0
-    errno := input(@n)
+    input(@n)
 
     a := array(n, 0)
     for (i <- 0,n - 1) {
         t := 0
-        errno := input(@t)
+        input(@t)
         put(a, i, t)
     }
 
     x := 0
-    errno := input(@x)
+    input(@x)
 
     b := f(a, x)
     print(b)

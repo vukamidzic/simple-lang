@@ -5,6 +5,8 @@ import java.util.Stack;
 
 import org.simplelang.Ast;
 import org.error.Err;
+import org.node.basic.Pointer;
+import org.node.basic.Pointer.PtrType;
 
 public class StatFuncCall extends Statement {
     public String funcName;
@@ -58,13 +60,24 @@ public class StatFuncCall extends Statement {
                     System.out.format("i32 %d, i8 %%t%d, ", 3, e.tmpNum);
                     break;
                 }
+                case PTR : {
+                    if (((Pointer) e).ptrTy == PtrType.PTRINT)
+                        System.out.format("i32 %d, i32** %%t%d, ", 4, e.tmpNum);
+                    else if (((Pointer) e).ptrTy == PtrType.PTRFLOAT)
+                        System.out.format("i32 %d, double** %%t%d, ", 5, e.tmpNum);
+                    break;
+                }
                 case ARRAY : {
                     System.out.format("i32 %d, %%struct.Array %%t%d, ", 6, e.tmpNum);
                     break;
                 }
+                case STRING : {
+                    System.out.format("i32 %d, i8* %%t%d, ", 7, e.tmpNum);
+                    break;
+                }
             }
         }
-        System.out.format("i32 %d)\n", 7);
+        System.out.format("i32 %d)\n", 8);
 
         if (children.size() != 0) {
             Statement nextNode = (Statement) children.get(0);

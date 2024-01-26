@@ -20,7 +20,7 @@ Array array(Types type, ...) {
     int size = va_arg(args, int);
     if (size < 1) {
         fprintf(stderr, "[\033[35m%s\033[0m] %s(): Array size should be greater or equal to 1\n", 
-            get_filename(__FILE__), 
+            __FILE__,
             __func__
         );
         exit(EXIT_FAILURE);
@@ -59,18 +59,9 @@ Array array(Types type, ...) {
             }
             break;
         }
-        case CHAR : {
-            char elem = va_arg(args, char);
-            arr.elems = (char*)malloc(size*sizeof(char));
-            
-            for (int i = 0; i < size; ++i) {
-                ((char*)arr.elems)[i] = elem;
-            }
-            break;
-        }
         default : {
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected INT|FLOAT|BOOL, got %s\n", 
-                get_filename(__FILE__),
+                __FILE__,
                 __func__, 
                 type_to_str(type)
             );
@@ -105,10 +96,11 @@ Array arrayFrom(Types type, ...) {
             ((bool*)arr.elems)[pos++] = va_arg(args, bool);
             break;
         }
-        case CHAR : {
-            arr.elems = (char*)malloc(sizeof(char));
-            ((char*)arr.elems)[pos++] = va_arg(args, char);
-            break;
+        case ARRAY : {
+            Array a = va_arg(args, Array);
+            memcpy(arr.elems, a.elems, a.data & (((1 << 16) - 1)));
+            arr.data = a.data;
+            return arr;
         }
     }
 
@@ -134,12 +126,6 @@ Array arrayFrom(Types type, ...) {
                 ((bool*)arr.elems)[pos++] = va_arg(args, bool);
                 break;
             }
-            case CHAR : {
-                arr.elems = (char*)realloc(arr.elems, sizeof(char));
-                cnt++;
-                ((char*)arr.elems)[pos++] = va_arg(args, char);
-                break;
-            }
         }
         type = va_arg(args, Types);
     }
@@ -154,7 +140,7 @@ int elemType(Types type, ...) {
 
     if (type != ARRAY) {
         fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
-            get_filename(__FILE__),
+            __FILE__,
             __func__, 
             type_to_str(type)
         );
@@ -178,7 +164,7 @@ int len(Types type, ...) {
         }
         default : {
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
-                get_filename(__FILE__),
+                __FILE__,
                 __func__, 
                 type_to_str(type)
             );
@@ -214,16 +200,11 @@ void put(Types type, ...) {
                     ((bool*)arr.elems)[index] = x;
                     return;    
                 }
-                case CHAR : {
-                    char x = va_arg(args, char);
-                    ((char*)arr.elems)[index] = x;
-                    return;    
-                }
             }
         }
         default : {
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
-                get_filename(__FILE__),
+                __FILE__,
                 __func__, 
                 type_to_str(type)
             );
@@ -238,7 +219,7 @@ int geti(Types type, ...) {
 
     if (type != ARRAY) {
         fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
-            get_filename(__FILE__),
+            __FILE__,
             __func__, 
             type_to_str(type)
         );
@@ -259,7 +240,7 @@ double getf(Types type, ...) {
 
     if (type != ARRAY) {
         fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
-            get_filename(__FILE__),
+            __FILE__,
             __func__, 
             type_to_str(type)
         );
@@ -270,27 +251,6 @@ double getf(Types type, ...) {
         type = va_arg(args, Types);
         int index = va_arg(args, int);
         double res = ((double*)arr.elems)[index];
-        return res;
-    }
-}
-
-char getch(Types type, ...) {
-    va_list args;
-    va_start(args, type);
-
-    if (type != ARRAY) {
-        fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
-            get_filename(__FILE__),
-            __func__, 
-            type_to_str(type)
-        );
-        exit(EXIT_FAILURE);
-    }
-    else {
-        Array arr = va_arg(args, Array);
-        type = va_arg(args, Types);
-        int index = va_arg(args, int);
-        char res = ((char*)arr.elems)[index];
         return res;
     }
 }

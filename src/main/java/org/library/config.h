@@ -1,0 +1,2 @@
+#define BASIC 
+#define ARRAYS  

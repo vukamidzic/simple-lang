@@ -11,7 +11,7 @@ proc fib(n int) int {
 
 proc main(x int) int {
     n := 0
-    errno := input(@n)
+    input(@n)
 
     print(fib(n))
 

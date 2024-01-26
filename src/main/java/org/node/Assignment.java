@@ -27,6 +27,8 @@ public class Assignment extends Statement {
         System.err.println(tree.symTable);
         int scopeIndex = tree.findVariableScope(varName);
 
+        Stack<Err> stackErrs = new Stack<Err>();
+
         if (tree.symTable.size() > 1) {
             Stack<Err> exprErrs = exprValue.codegen(tree);
             if (exprErrs.size() != 0) return exprErrs;
@@ -91,6 +93,13 @@ public class Assignment extends Statement {
                     }
                     break;
                 }
+                case STRING : {
+                    tree.addVariable(varName, Expression.ExprTy.STRING, assignNum, assignTy);
+                    System.out.format("    %%%s.%d = alloca i8*\n", varName, assignNum);
+                    System.out.format("    store i8* %%t%d, i8** %%%s.%d\n", 
+                            exprValue.tmpNum, varName, assignNum);
+                    break;
+                }
                 case ARRAY : {
                     tree.addVariable(varName, Expression.ExprTy.ARRAY, assignNum, assignTy);
                     System.out.format("    %%%s.%d = alloca %%struct.Array\n", varName, assignNum);
@@ -102,8 +111,7 @@ public class Assignment extends Statement {
                     break;
                 }
                 default : {
-                    Stack<Err> stackErrs = new Stack<Err>();
-                    stackErrs.add(new Err(
+                    stackErrs.push(new Err(
                         Err.Errno.ERR_TY, 
                         lineno, 
                         String.format("Type %s not implemented", exprValue.exprTy.toString()), 
@@ -115,8 +123,12 @@ public class Assignment extends Statement {
         }
         else {
             if (tree.symTable.get(scopeIndex).get(varName).getValue2() == Ast.Mut.CONST) {
-                Stack<Err> stackErrs = new Stack<Err>();
-                stackErrs.add(new Err(Err.Errno.ERR_CONST, lineno, "Can't assign value to constant!!!", errText));
+                stackErrs.push(new Err(
+                    Err.Errno.ERR_CONST, 
+                    lineno, 
+                    "Can't assign value to constant!!!", 
+                    errText
+                ));
                 return stackErrs;
             }
                
@@ -133,8 +145,12 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign INT value to non-INT variable!!!", errText));
+                        stackErrs.push(new Err(
+                            Err.Errno.ERR_TY, 
+                            lineno, 
+                            "Can't assign INT value to non-INT variable!!!", 
+                            errText
+                        ));
                         return stackErrs;
                     }
                     break;
@@ -146,8 +162,12 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign FLOAT value to non-FLOAT variable!!!", errText));
+                        stackErrs.push(new Err(
+                            Err.Errno.ERR_TY, 
+                            lineno, 
+                            "Can't assign FLOAT value to non-FLOAT variable!!!", 
+                            errText
+                        ));
                         return stackErrs;
                     }
                     break;
@@ -159,8 +179,12 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign BOOL value to non-BOOL variable!!!", errText));
+                        stackErrs.push(new Err(
+                            Err.Errno.ERR_TY, 
+                            lineno, 
+                            "Can't assign BOOL value to non-BOOL variable!!!", 
+                            errText
+                        ));
                         return stackErrs;
                     }
                     break;
@@ -172,15 +196,18 @@ public class Assignment extends Statement {
                                 exprValue.tmpNum, register);
                     }
                     else {
-                        Stack<Err> stackErrs = new Stack<Err>();
-                        stackErrs.add(new Err(Err.Errno.ERR_TY, lineno, "Can't assign CHAR value to non-CHAR variable!!!", errText));
+                        stackErrs.push(new Err(
+                            Err.Errno.ERR_TY, 
+                            lineno, 
+                            "Can't assign CHAR value to non-CHAR variable!!!", 
+                            errText
+                        ));
                         return stackErrs;
                     }
                     break;
                 }
                 default : {
-                    Stack<Err> stackErrs = new Stack<Err>();
-                    stackErrs.add(new Err(
+                    stackErrs.push(new Err(
                         Err.Errno.ERR_TY, 
                         lineno, 
                         String.format("Type %s not implemented", exprValue.exprTy.toString()), 

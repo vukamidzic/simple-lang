@@ -14,7 +14,8 @@ typedef enum Types {
     INT_PTR = 4,
     FLOAT_PTR = 5,
     ARRAY = 6,
-    FUNC_END = 7
+    STRING = 7,
+    FUNC_END = 8
 } Types;
 
 static inline char* type_to_str(Types type) {
@@ -40,15 +41,13 @@ static inline char* type_to_str(Types type) {
         case ARRAY : {
             return "ARRAY";
         }
+        case STRING : {
+            return "STRING";
+        }
         default : {
             return "UNDEFINED";
         }
     }
-}
-
-static inline char* get_filename(char* path) {
-    char* file = strrchr(path, '/');
-    return file+1;
 }
 
 typedef struct Array {

@@ -33,7 +33,6 @@ RCURL : '}';
 QMARK : '?';
 COMMA : ',';
 
-COMMENT : '//{' .*? '}//' -> skip;
 WS : ([ \t\r] | [ \t]) -> skip;
 NL : ('\r\n' | '\n') -> skip;
 
@@ -41,6 +40,7 @@ INT : '-'?[0-9]+;
 FLOAT : '-'? INT '.' INT;
 CHAR : '\''[0-9a-zA-Z]'\'';
 ID : ('_')?[a-zA-Z]+;
+STR : '"'(.*?)'"';
 
 program
     : statements # ToStatements
@@ -138,6 +138,7 @@ atom
     | FLOAT # Float
     | ID # Variable
     | CHAR # Character
+    | STR # String
     | LPAR logical RPAR # Parens
 ;
 

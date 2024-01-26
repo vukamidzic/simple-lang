@@ -333,6 +333,17 @@ public class SimpleLangVisitorImpl extends SimpleLangBaseVisitor<Node> {
         return charNode;
     }
 
+    @Override public Node visitString (SimpleLangParser.StringContext ctx) {
+        String content = ctx.getText();
+        Str stringNode = new Str(content.substring(1, content.length()-1));
+        stringNode.lineno = ctx.getStart().getLine();
+        int a = ctx.start.getStartIndex();
+        int b =  ctx.stop.getStopIndex();
+        Interval interval = new Interval(a, b);
+        stringNode.errText = ctx.start.getInputStream().getText(interval);
+        return stringNode;
+    }
+
     @Override
     public Node visitInteger(SimpleLangParser.IntegerContext ctx) {
         Int intNode = new Int();
