@@ -84,6 +84,7 @@ void print(Types type, ...) {
             }
 
             default : 
+                va_end(args);
                 fprintf(stderr, "[\033[35m%s\033[0m] %s(): Unknown type specifier %s\n",
                     __FILE__,
                     __func__,
@@ -114,6 +115,7 @@ void input(Types type, ...) {
             scanf("%lf", p);
         }
         else {
+            va_end(args);
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Non-pointer argument\n", 
                 __FILE__,
                 __func__
@@ -124,6 +126,32 @@ void input(Types type, ...) {
     }
 
     va_end(args);
+}
+
+int len(Types type, ...) {
+    va_list args;
+    va_start(args, type);
+
+    switch (type) {
+        case ARRAY : {
+            Array arr = va_arg(args, Array);
+            va_end(args);
+            return arr.data & (((1 << 16) - 1)); 
+        }
+        case STRING : {
+            va_end(args);
+            return strlen(va_arg(args, char*));
+        }
+        default : {
+            va_end(args);
+            fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
+                __FILE__,
+                __func__, 
+                type_to_str(type)
+            );
+            exit(EXIT_FAILURE);
+        }
+    }
 }
 
 #endif

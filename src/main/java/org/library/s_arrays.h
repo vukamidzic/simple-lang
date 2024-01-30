@@ -19,6 +19,7 @@ Array array(Types type, ...) {
 
     int size = va_arg(args, int);
     if (size < 1) {
+        va_end(args);
         fprintf(stderr, "[\033[35m%s\033[0m] %s(): Array size should be greater or equal to 1\n", 
             __FILE__,
             __func__
@@ -60,6 +61,7 @@ Array array(Types type, ...) {
             break;
         }
         default : {
+            va_end(args);
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected INT|FLOAT|BOOL, got %s\n", 
                 __FILE__,
                 __func__, 
@@ -98,6 +100,7 @@ Array arrayFrom(Types type, ...) {
         }
         case ARRAY : {
             Array a = va_arg(args, Array);
+            va_end(args);
             memcpy(arr.elems, a.elems, a.data & (((1 << 16) - 1)));
             arr.data = a.data;
             return arr;
@@ -130,6 +133,7 @@ Array arrayFrom(Types type, ...) {
         type = va_arg(args, Types);
     }
 
+    va_end(args);
     arr.data = (arr_type << 16) | (cnt+1);
     return arr;
 }
@@ -139,6 +143,7 @@ int elemType(Types type, ...) {
     va_start(args, type);
 
     if (type != ARRAY) {
+        va_end(args);
         fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
             __FILE__,
             __func__, 
@@ -149,27 +154,8 @@ int elemType(Types type, ...) {
     else {
         Array arr = va_arg(args, Array);
         uint32_t ty = arr.data >> 16;
+        va_end(args);
         return ty;
-    }
-}
-
-int len(Types type, ...) {
-    va_list args;
-    va_start(args, type);
-
-    switch (type) {
-        case ARRAY : {
-            Array arr = va_arg(args, Array);
-            return arr.data & (((1 << 16) - 1)); 
-        }
-        default : {
-            fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
-                __FILE__,
-                __func__, 
-                type_to_str(type)
-            );
-            exit(EXIT_FAILURE);
-        }
     }
 }
 
@@ -187,22 +173,26 @@ void put(Types type, ...) {
             switch (type) {
                 case INTEGER : {
                     int x = va_arg(args, int);
+                    va_end(args);
                     ((int*)arr.elems)[index] = x;
                     return;    
                 }
                 case DOUBLE : {
                     double x = va_arg(args, double);
+                    va_end(args);
                     ((double*)arr.elems)[index] = x;
                     return;    
                 }
                 case BOOL : {
                     bool x = va_arg(args, bool);
+                    va_end(args);
                     ((bool*)arr.elems)[index] = x;
                     return;    
                 }
             }
         }
         default : {
+            va_end(args);
             fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
                 __FILE__,
                 __func__, 
@@ -218,6 +208,7 @@ int geti(Types type, ...) {
     va_start(args, type);
 
     if (type != ARRAY) {
+        va_end(args);
         fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
             __FILE__,
             __func__, 
@@ -229,6 +220,7 @@ int geti(Types type, ...) {
         Array arr = va_arg(args, Array);
         type = va_arg(args, Types);
         int index = va_arg(args, int);
+        va_end(args);
         int res = ((int*)arr.elems)[index];
         return res;
     }
@@ -239,6 +231,7 @@ double getf(Types type, ...) {
     va_start(args, type);
 
     if (type != ARRAY) {
+        va_end(args);
         fprintf(stderr, "[\033[35m%s\033[0m] %s(): Expected ARRAY, got %s\n", 
             __FILE__,
             __func__, 
@@ -250,6 +243,7 @@ double getf(Types type, ...) {
         Array arr = va_arg(args, Array);
         type = va_arg(args, Types);
         int index = va_arg(args, int);
+        va_end(args);
         double res = ((double*)arr.elems)[index];
         return res;
     }
